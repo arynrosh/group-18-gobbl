@@ -13,6 +13,15 @@ Members present: Barha, Aryan, Andrea, Ayla
 Wed Feb 18th
 Members present: Barha, Aryan, Andrea, Ayla
 
-- We want to further break down our high level requirements into subtasks that we can individually tackle
+- We want to further break down our high level requirements into subtasks that we can individually tackle.
 - First task: Everyone should add the subtasks from the sprint backlog document onto the project board, and assign themselves to ones they see fit.
+- We did this in the meeting, creating sub issues off the high level requirements.
+
+
+Schedule
+- Everyone work on 4 issues a week, so 12 issues in total each week
+- There is a total of 44 subissues
+- HR1
 - 
+
+
