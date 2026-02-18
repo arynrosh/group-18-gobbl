@@ -22,6 +22,38 @@ Schedule
 - Everyone work on 4 issues a week, so 12 issues in total each week
 - There is a total of 44 subissues
 - HR1
-- 
+  - Task 1.1: Ayla
+  - Task 1.2: Drea
+  - Task 1.3: Aryan
+  - Task 1.4: Barha
+  - Task 1.5: Everyone
+
+- HR2
+  - Task 2.1: Drea
+  - Task 2.2: Aryan
+  - Task 2.3: Aryan
+  - Task 2.4: Barha
+  - Task 2.5: Everyone
+ 
+- HR3
+ - Task 3.1: Barha
+ - Task 3.2: Ayla
+ - Task 3.3: Drea
+ - Task 3.4: Everyone
+
+- HR4
+ - Task 4.1: Drea
+ - Task 4.2: Barha
+ - Task 4.3: Aryan
+ - Task 4.4: Ayla
+ - Task 4.5: Everyone
+
+
+
+
+
+
+
+
 
 
