@@ -103,14 +103,57 @@ Task 8.4: Unit tests for notification delivery and logging.
 
 Optional (If Time Permits)
 
-Rating & Reviews (HR9)
+9. Rating & Reviews (HR9) (Optional – If Time Permits)
 
-Database tables and APIs for adding/retrieving reviews and ratings.
+Task 9.1: Design database tables for Reviews and Ratings
 
+Store rating score, review text, reviewer (customer), restaurant reference
 
-Statistics for System Administrators (HR10)
+Enforce constraints (one review per customer per order/restaurant)
 
-APIs to compute average delivery times and popular restaurants.
+Task 9.2: Implement API to submit a rating and review for a completed order
+
+Validate that the order is completed
+
+Ensure only customers who placed the order can review
+
+Task 9.3: Implement API to retrieve reviews and average ratings for a restaurant
+
+Support sorting (most recent, highest rating)
+
+Include pagination for large review sets
+
+Task 9.4: Implement validation and moderation rules
+
+Prevent duplicate reviews
+
+Handle empty or invalid rating values
+
+Task 9.5: Unit tests for review creation, validation, and retrieval
+
+10. Statistics for System Administrators (HR10) (Optional – If Time Permits)
+
+Task 10.1: Design data queries or views for administrative statistics
+
+Orders, deliveries, restaurants, and drivers
+
+Time-based aggregations (daily, weekly)
+
+Task 10.2: Implement API to compute average delivery times
+
+Per restaurant
+
+System-wide averages
+
+Task 10.3: Implement API to retrieve popular restaurants
+
+Based on number of orders
+
+Based on average rating (if HR9 implemented)
+
+Task 10.4: Implement access control to restrict statistics APIs to admin users only
+
+Task 10.5: Unit tests for statistics calculations and access control
 
 
 Deliverables for Sprint 1
