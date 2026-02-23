@@ -1,18 +1,18 @@
-//import mysql.connector 
-//resolve later
+import mysql.connector
+#resolve later
 
 from abc import ABC, abstractmethod
-class User {
+class User :
+
     users = mysql.connector.connect(
         host="localhost",
-        user="gobbl",
+        user="root",
         password="group18"
     )
 
-    usercursor = user.cursor()
+    usercursor = users.cursor()
 
     usercursor.execute("CREATE DATABASE users")
 
-    usercursor.execute("CREATE TABLE user (type VARCHAR(9), username VARCHAR(20), password VARCHAR(), makeOrder BOOLEAN, collectOrder BOOLEAN, recieveOrder BOOLEAN)")
-
-}
+    usercursor.execute("CREATE TABLE user (type VARCHAR(9), username VARCHAR(20), password VARCHAR(), custPermissions BOOLEAN, drivPermissions BOOLEAN, restPermissions BOOLEAN)")
+    #Just Going with blanket permissions for the classes as they will be the same for all of those within their type
