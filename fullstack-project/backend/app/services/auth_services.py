@@ -1,0 +1,1 @@
+from schemas.auth_schemas import RegisterRequest
