@@ -3,7 +3,10 @@ import mysql.connector
 
 from abc import ABC, abstractmethod
 class User :
-
+    type = "   "
+    username = "   "
+    password = "  "
+    
     users = mysql.connector.connect(
         host="localhost",
         user="root",
