@@ -14,4 +14,9 @@ def load_all_users -> List[Dict[str, any]]:
 with DATA_PATH.open("r", encoding="utf-8") as f: 
   return json.load(f)
 
-def save_all_users(
+def save_all_users(users: List[Dict[str, Any]]) -> None:
+  tmp = DATA_PATH.with.suffix(".tmp")
+  with tmp.open("w", encoding="utf-8") as f: 
+    json.dump(users, f, ensure_ascii = False, indent=2)
+  os.replace(tmp, DATA_PATH)
+  
