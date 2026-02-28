@@ -8,4 +8,4 @@ def health():
     return {"status": "ok"}
 
 app.include_router(items_router)
-app.include_router(items_router)
+app.include_router(auth_router)
