@@ -26,3 +26,19 @@ def ensure_unique_user(payload: RegisterRequest) -> None:
 
     if u.get("email", "").strip().lower() == email:
       raise HTTPException(status_code=409, detail = "This email already exists with an account")
+
+def register_user(payload: RegisterRequest) -> None:
+  validate_registration_input(payload)
+  ensure_unique_user(payload)
+
+  user = load_all_users()
+
+  new_user = {
+    "username": payload.username.strip(),
+    "email": payload.email.strip(),
+    "password": payload.password,
+}
+  user.append(new_user)
+  save_all_users(users)
+  
+  
