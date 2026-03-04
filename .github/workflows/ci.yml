@@ -35,7 +35,7 @@ jobs:
             --junitxml=test_reports/results.xml
 
       - name: Upload test reports as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-reports
