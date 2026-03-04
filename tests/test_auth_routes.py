@@ -102,3 +102,15 @@ def test_me_returns_correct_user_info():
     assert r.status_code == 200
     assert r.json()["username"] == "alice"
     assert r.json()["role"] == "customer"
+
+# testing logout route
+def test_logout_returns_200():
+    r = client.get("/auth/logout")
+    assert r.status_code == 200
+    assert r.json()["message"] == "Logout successful (client should delete token)"
+
+def test_logout_does_not_invalidate_jwt_token():
+    token = get_token("alice", "password123")
+    client.get("/auth/logout")
+    r = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert r.status_code == 200

@@ -24,15 +24,14 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
         raise credentials_exception
 
 
-def require_role(required_role: str):
-
+def require_roles(required_roles: str):
     #Returns a dependency that enforces a specific role.
-
-    def check_role(current_user: dict = Depends(get_current_user)) -> dict:
-        if current_user.get("role") != required_role:
+    def check_roles(current_user: dict = Depends(get_current_user)) -> dict:
+        user_role = current_user.get("role")
+        if user_role != required_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Access denied. Required role: {required_role}"
+                detail=f"Access denied. Required role: {required_roles}"
             )
         return current_user
-    return check_role
+    return check_roles
