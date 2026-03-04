@@ -9,7 +9,6 @@ FAKE_USERS = {
     "admin": {"password": "adminpass",   "role": "admin"},
 }
 
-
 def login_user(username: str, password: str) -> dict:
     # Validates credentials and returns a JWT token dict if correct.
 
