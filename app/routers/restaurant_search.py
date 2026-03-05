@@ -14,7 +14,7 @@ def search_restaurants_by_name(name:str):
     Searches restaurants by name type.
 
     Args:
-        name (str): The cuisine type to search for.
+        name (str): The name type to search for.
 
     Returns:
         List[Restaurant]: Matching restaurants.
