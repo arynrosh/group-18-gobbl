@@ -17,8 +17,8 @@ class User :
    
     #Apparently we don't need to make any databases for this, so I'll be making a stock customer, driver, resturant and maybe admin
 
-def getPassword(Person):
-    return Person.password
+def getPassword(User):
+    return User.password
 
 customer = User("cust", "customer", "badPassword", "cus@gmail.com", 12345)
 driver = User("drv", "driver", "123456", "drv@gmail.com", 98765)
