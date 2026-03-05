@@ -9,7 +9,7 @@ class Restaurant(BaseModel):
         cuisine (str): Cuisine type.
         location (str): Restaurant location.
     """
-    id:str
+    id:int
     name: str
     cuisine: str
     location: str
