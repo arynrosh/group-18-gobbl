@@ -1,6 +1,7 @@
-from fastapi import HTTPException, status
-from typing import List, Dict, Any
-import uuid
+
+from typing import List
+from app.schemas.restaurant import Restaurant 
+
 
 #hardcoded  temporary restaurant database
 restaurants_db = {
@@ -11,12 +12,36 @@ restaurants_db = {
 }
 
 def search_by_name(name:str) -> List[Restaurant]:
-    
+    """
+    Searches restaurants by name.
+
+    Args:
+        name (str): The name type to search for.
+
+    Returns:
+        List[Restaurant]: Matching restaurants.
+    """
     results = []
     for restaurant in restaurants_db.values(): #loop through all values
         if name.lower() in restaurant["name"].lower():
             #add matching restaurants to results list
-            results.append(restaurant(**Restaurant))
+            results.append(Restaurant(**restaurant))
     return results 
+
+def search_by_cuisine(cuisine: str) -> List[Restaurant]:
+    """
+    Searches restaurants by cuisine type.
+
+    Args:
+        cuisine (str): The cuisine type to search for.
+
+    Returns:
+        List[Restaurant]: Matching restaurants.
+    """
+    results = []
+    for restaurant in restaurants_db.values():
+        if cuisine.lower() in restaurant["cuisine"].lower():
+            results.append(Restaurant(**restaurant))
+    return results
 
 
