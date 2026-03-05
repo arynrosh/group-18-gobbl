@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+.coverage
+.DS_Store
+test_reports/coverage_html/
