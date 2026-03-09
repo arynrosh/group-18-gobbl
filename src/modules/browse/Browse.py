@@ -12,6 +12,7 @@ rest_url = "https://www.kaggle.com/datasets/niszarkiah/food-delivery"
 #should be attached to the app
 #orderinfo = ""
 
+
 def searchBar():
     food = str(input("Search for"))
     url = f"{rest_url}/{food}" # will only work if it fully matches the url
