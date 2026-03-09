@@ -108,6 +108,8 @@ def find_nearest_available_driver(delivery_id: str) -> dict:
 
 def auto_assign_driver(delivery_id: str) -> dict:
         delivery = get_delivery_or_404(delivery_id)
+        dest_x = delivery["destination"]["x"]
+        dest_y = delivery["destination"]["y"]
         nearest_driver = find_nearest_available_driver(delivery_id)
         
         delivery["assigned_driver_id"] = nearest_driver["id"]
@@ -122,6 +124,12 @@ def auto_assign_driver(delivery_id: str) -> dict:
 def assign_driver_to_delivery(delivery_id: str, driver_id: str) -> dict:
     delivery = get_delivery_or_404(delivery_id)
     driver = get_driver_or_404(driver_id)
+
+    if delivery["assigned_driver_id"] is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Delivery already has an assigned driver"
+        )
 
     if driver["status"] != "available":
         raise HTTPException(
