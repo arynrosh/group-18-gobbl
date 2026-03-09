@@ -19,10 +19,13 @@ try:
 except:
     print("Could not connect to database")
 
-db = "https://www.kaggle.com/datasets/niszarkiah/food-delivery"
+db = ""
 #don't know how to get it to give all info under the columns
 parameters = {"order_id", "food_item", "resturant_id", "order_value"}
-response = requests.get(db, parameters)
+try:
+    response = requests.get(db, parameters)
+except:
+    print("Could not connect to Kaggle database")
 
 gobblcursor = gobbl.cursor()
 
