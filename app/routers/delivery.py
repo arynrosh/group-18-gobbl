@@ -4,4 +4,54 @@ from app.auth.dependencies import require_roles
 from app.services.delivery_service import (
     update_driver_location,
     update_driver_status,
-    
+    auto_assign_driver,
+    assign_driver_to_delivery,
+)
+
+router = APIRouter(prefix="/delivery", tags=["delivery"])
+
+class DriverLocationUpdate(BaseModel):
+    x: float
+    y: float
+
+class DriverStatusUpdate(BaseModel):
+    status: str
+
+@router.put("/drivers/{driver_id}/location")
+def update_location(
+    driver_id: str,
+    body: DriverLocationUpdate,
+    current_user: dict = Depends(require_roles("driver")),
+):
+    updated_driver = update_driver_location(driver_id, body.x, body.y)
+    return {
+        "message": "Driver location updated",
+        "driver": updated_driver
+    }
+
+@router.put("/drivers/{driver_id}/status")
+def update_status(
+    driver_id: str,
+    body: DriverStatusUpdate,
+    current_user: dict = Depends(require_roles("driver")),
+):
+    updated_driver = update_driver_status(driver_id, body.status)
+    return {
+        "message": "Driver status updated",
+        "driver": updated_driver
+    }
+
+@router.post("/deliveries/{delivery_id}/auto-assign")
+def auto_assign(
+    delivery_id: str,
+    current_user: dict = Depends(require_roles("restaurant_owner")),
+):
+    return auto_assign_driver(delivery_id)
+
+@router.post("/deliveries/{delivery_id}/assign/{driver_id}")
+def assign_driver(
+    delivery_id:str,
+    driver_id:str,
+    current_user: dict = Depends(require_roles("restaurant_owner")),
+):
+    return assign_driver_to_delivery(delivery_id, driver_id)
