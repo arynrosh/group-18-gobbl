@@ -53,6 +53,15 @@ class orderItem:
         val = (nam, rID, pri)
 
         gobblcursor.execute(sql)
+    
+    def getName(self):
+        return self.name
+    
+    def getRestid(self):
+        return self.restID
+    
+    def getPrice(self):
+        return self.price
 
 
 
@@ -68,55 +77,56 @@ class order:
 
     def add(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
-        if sent == False:
-            foods.append(item)
-            orderPrice = 0.00
-            getPrice()
+        if self.sent == False:
+            self.foods.append(item)
+            self.orderPrice = 0.00
+            self.getPrice()
     
     def remove(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
-        if sent == False:
-            foods.remove(orderItem)
-            orderPrice = 0.00
-            getPrice()
+        if self.sent == False:
+            self.foods.remove(orderItem)
+            self.orderPrice = 0.00
+            self.getPrice()
 
     def getPrice(self):
-        for i in foods:
-            orderPrice += foods.price
-        return orderPrice
+        for i in self.foods:
+            self.orderPrice += i.price
+        return self.orderPrice
 
     def sendOrder(self):
-        getPrice(self)
+        self.getPrice(self)
         #billing process
         #Have it equal a finalPrice
 
         #order table
         sql = "INSERT INTO order (orderID, custName, totalPrice) VALUES (%s, %s, %s)"
-        val = (orderID, custName, finalPrice)
+        val = (self.orderID, self.custName, finalPrice) #finalPrice is a placeholder for now
         gobblcursor.execute(sql)
        
         #statusTable
         sql2 = "INSERT INTO status (orderID, current, complete) VALUES (%s, %s, %s)"
-        val = (orderID, "Sent", False)
-        ordStat = status(orderID)
+        val = (self.orderID, "Sent", False)
+        ordStat = status(self.orderID)
         gobblcursor.execute(sql2)
 
-        sent = true
-        return sent
+        self.sent = True
+        return self.sent
 
 class status:
-
     def __init__(self, oID: str):
         self.orderID = oID
         self.current = "Sent"
         self.complete = False
 
-    def updateOrder(stat):
-        if complete == False:
-            current = stat
+    def updateOrder(self, stat):
+        if self.complete == False:
+            self.current = stat
+            return self.current
         else:
             return "A completed order can not be updated"
         
-    def complOrd():
-        complete = True
+    def complOrd(self):
+        self.complete = True
+        return self.complete
 
