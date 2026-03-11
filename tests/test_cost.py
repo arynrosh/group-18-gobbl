@@ -63,11 +63,8 @@ def test_calculate_cost_invalid_order_value():
     })
     assert response.status_code == 422
 
-<<<<<<< HEAD
 # Unit tests
-=======
 
->>>>>>> 8615406 (Task 3.2: fix menu search and tests with csv data)
 def test_unit_calculate_cost_subtotal():
     # Test service function calculates subtotal correctly
     order = Order(
