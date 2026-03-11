@@ -43,9 +43,6 @@ gobblcursor.execute("CREATE TABLE order (orderID CHAR(7), custName VARCHAR(50), 
 gobblcursor.execute("CREATE TABLE status (orderID CHAR(7), current VARCHAR(20), complete BOOL)")
 
 class orderItem:
-    name = ""
-    price = 0.00
-    restID = 0
 
     def __init__(self, nam: str, pri: int, rID: int):
         self.name = nam
@@ -61,15 +58,13 @@ class orderItem:
 
 
 class order:
-    orderID = ""
-    custName = ""
-    sent = False
-    foods = []
-    orderPrice = 0.00
 
     def __init__(self, oID, cNam):
         self.orderID = oID
         self.custName = cNam
+        self.sent = False
+        self.foods = []
+        self.orderPrice = 0.00
 
     def add(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
@@ -110,13 +105,11 @@ class order:
         return sent
 
 class status:
-    orderID = ""
-    current = ""
-    complete = False
 
     def __init__(self, oID: str):
         self.orderID = oID
         self.current = "Sent"
+        self.complete = False
 
     def updateOrder(stat):
         if complete == False:
