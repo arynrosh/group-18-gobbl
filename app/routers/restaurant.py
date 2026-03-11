@@ -60,7 +60,7 @@ def create_menu_item(
     menu_db[menu_id_counter] = new_item
     menu_id_counter += 1
 
-    return {"message": "Menu item created", "item": new_item}\
+    return {"message": "Menu item created", "item": new_item}
     
 # UPDATE menu item (restaurant owner only)
 @router.put("/{restaurant_id}/{menu_id}", 

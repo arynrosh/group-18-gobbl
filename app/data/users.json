@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "username": "alice",
+    "email": "alice@example.com",
+    "password": "password123",
+    "role": "customer"
+  },
+  {
+    "username": "bob",
+    "email": "bob@example.com",
+    "password": "securepass",
+    "role": "restaurant_owner"
+  },
+  {
+    "username": "dave",
+    "email": "dave@example.com",
+    "password": "driverpass",
+    "role": "driver"
+  },
+  {
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "adminpass",
+    "role": "admin"
+  }
+]
