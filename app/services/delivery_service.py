@@ -25,7 +25,7 @@ drivers_db = {
 
 deliveries_db = {}
 
-with open("app/repositories/food_delivery.csv", mode="r", encoding="utf-8") as file:
+with open("app/data/food_delivery.csv", mode="r", encoding="utf-8") as file:
     reader = csv.DictReader(file)
     for row in reader:
         deliveries_db[row["order_id"]] = {
