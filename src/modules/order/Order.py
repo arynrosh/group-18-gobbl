@@ -1,7 +1,7 @@
 import requests
 import json
 import mysql.connector
-import fastAPI
+from fastapi import fastAPI
 import pytest
 
 #Task 4.1: Design database tables for Orders, Order Items, and Status Tracking
@@ -10,7 +10,6 @@ import pytest
 #Task 4.4: Implement API to fetch order status for a customer or restaurant
 #Task 4.5: Unit tests for order creation, modification, and status updates
 
-#need to figure out how to connect to the online database provided
 try: 
     gobbl = mysql.connector.connect(
     host="localhost",
@@ -25,11 +24,12 @@ db = "src\modules\order\food_delivery.csv" #might have path changed after
 parameters = {"order_id", "food_item", "resturant_id", "order_value"}
 try:
     response = requests.get(db, parameters)
-    
+    data = response.json()
 except:
     print("Could not connect to Kaggle database")
 
-for i in response:
+gobblResult = data.fetchall()
+for i in gobblResult:
     #figure out how to get the info by row
 
     foodItem = orderItem(i.food_item, i.order_value, i.resturant_id)
