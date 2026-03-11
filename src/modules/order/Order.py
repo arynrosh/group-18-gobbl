@@ -19,7 +19,7 @@ try:
 except:
     print("Could not connect to database")
 
-db = ""
+db = "src\modules\order\food_delivery.csv" #might have path changed after
 #don't know how to get it to give all info under the columns
 parameters = {"order_id", "food_item", "resturant_id", "order_value"}
 try:
@@ -31,7 +31,6 @@ gobblcursor = gobbl.cursor()
 
 gobblcursor.execute("CREATE TABLE food (name VARCHAR(50), restID SMALLINT(3), price FLOAT(9, 2))")
 
-#not sure how to add in an array for the individual items, or python classes
 gobblcursor.execute("CREATE TABLE order (orderID CHAR(7), custName VARCHAR(50), totalPrice FLOAT(9, 2))")
 
 gobblcursor.execute("CREATE TABLE status (orderID CHAR(7), current VARCHAR(20), complete BOOL)")
@@ -41,7 +40,7 @@ class orderItem:
     price = 0.00
     restID = 0
 
-    def __init__(self, nam, pri, rID):
+    def __init__(self, nam: str, pri: int, rID: int):
         self.name = nam
         self.price = pri
         self.restID = rID
@@ -54,8 +53,7 @@ class orderItem:
 for i in response:
     #figure out how to get the info by row
 
-    
-    foodItem = new orderItem(i.food_item, i.order_value, i.resturant_id)
+    foodItem = orderItem(i.food_item, i.order_value, i.resturant_id)
 
 class order:
     orderID = ""
@@ -68,27 +66,27 @@ class order:
         self.orderID = oID
         self.custName = cNam
 
-    def add(item: orderItem):
+    def add(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
         if sent == false:
             foods.append(item)
             orderPrice = 0.00
             getPrice()
     
-    def remove(item: orderItem):
+    def remove(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
         if sent == false:
             foods.remove(orderItem)
             orderPrice = 0.00
             getPrice()
 
-    def getPrice():
+    def getPrice(self):
         for i in foods:
             orderPrice += foods.price
         return orderPrice
 
-    def sendOrder():
-        getPrice()
+    def sendOrder(self):
+        getPrice(self)
         #billing process
         #Have it equal a finalPrice
 
@@ -100,7 +98,7 @@ class order:
         #statusTable
         sql2 = "INSERT INTO status (orderID, current, complete) VALUES (%s, %s, %s)"
         val = (orderID, "Sent", False)
-        ordStat = new status(orderID)
+        ordStat = status(orderID)
         tempcursor.execute(sql2)
 
         sent = true
@@ -111,7 +109,7 @@ class status:
     current = ""
     complete = False
 
-    def __init__(self, oID):
+    def __init__(self, oID: str):
         self.orderID = oID
         self.current = "Sent"
 
