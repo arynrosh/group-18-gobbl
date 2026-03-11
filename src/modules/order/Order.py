@@ -2,6 +2,7 @@ import requests
 import json
 import mysql.connector
 import fastAPI
+import pytest
 
 #Task 4.1: Design database tables for Orders, Order Items, and Status Tracking
 #Task 4.2: Implement API to create, modify, and submit orders (cart system)
@@ -24,8 +25,14 @@ db = "src\modules\order\food_delivery.csv" #might have path changed after
 parameters = {"order_id", "food_item", "resturant_id", "order_value"}
 try:
     response = requests.get(db, parameters)
+    
 except:
     print("Could not connect to Kaggle database")
+
+for i in response:
+    #figure out how to get the info by row
+
+    foodItem = orderItem(i.food_item, i.order_value, i.resturant_id)
 
 gobblcursor = gobbl.cursor()
 
@@ -50,10 +57,8 @@ class orderItem:
 
         gobblcursor.execute(sql)
 
-for i in response:
-    #figure out how to get the info by row
 
-    foodItem = orderItem(i.food_item, i.order_value, i.resturant_id)
+
 
 class order:
     orderID = ""
@@ -68,14 +73,14 @@ class order:
 
     def add(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
-        if sent == false:
+        if sent == False:
             foods.append(item)
             orderPrice = 0.00
             getPrice()
     
     def remove(self, item: orderItem):
         #I don't know why it doesn't recognize things in its own class
-        if sent == false:
+        if sent == False:
             foods.remove(orderItem)
             orderPrice = 0.00
             getPrice()
@@ -93,13 +98,13 @@ class order:
         #order table
         sql = "INSERT INTO order (orderID, custName, totalPrice) VALUES (%s, %s, %s)"
         val = (orderID, custName, finalPrice)
-        tempcursor.execute(sql)
+        gobblcursor.execute(sql)
        
         #statusTable
         sql2 = "INSERT INTO status (orderID, current, complete) VALUES (%s, %s, %s)"
         val = (orderID, "Sent", False)
         ordStat = status(orderID)
-        tempcursor.execute(sql2)
+        gobblcursor.execute(sql2)
 
         sent = true
         return sent
