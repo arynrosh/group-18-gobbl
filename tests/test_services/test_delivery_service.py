@@ -30,13 +30,13 @@ def reset_test_data():
         "delivery1": {
             "id": "delivery1",
             "restaurant_id": "rest1",
-            "destination": {"x": 3.0, "y": 4.0},
+            "delivery_distance": 5.0,
             "assigned_driver_id": None,
         },
         "delivery2": {
             "id": "delivery2",
             "restaurant_id": "rest2",
-            "destination": {"x": 6.0, "y": 8.0},
+            "delivery_distance": 8.0,
             "assigned_driver_id": None,
         }
     })
@@ -61,6 +61,7 @@ def test_get_driver_or_404_raises_exception_for_missing_driver():
 def test_get_delivery_or_404_returns_delivery():
     delivery = delivery_service.get_delivery_or_404("delivery1")
     assert delivery["restaurant_id"] == "rest1"
+    assert delivery["delivery_distance"] == 5.0
 
 def test_get_delivery_or_404_raises_exception_for_missing_delivery():
     with pytest.raises(HTTPException) as exc:
@@ -79,12 +80,12 @@ def test_update_driver_status_to_busy():
 
 def test_update_driver_status_invalid_value():
     with pytest.raises(HTTPException) as exc:
-        delivery_service.update_driver_status("driver1", "offline")
+        delivery_service.update_driver_status("driver1", "invalid_status")
     assert exc.value.status_code == 400
 
 def test_find_nearest_available_driver():
     nearest = delivery_service.find_nearest_available_driver("delivery1")
-    assert nearest["id"] == "driver3"  # Eve should be selected as she's the closest available driver
+    assert nearest["id"] == "driver3"
 
 def test_find_nearest_available_driver_no_available():
     delivery_service.update_driver_status("driver1", "busy")
@@ -113,8 +114,15 @@ def test_assign_driver_to_delivery_already_assigned():
     assert exc.value.status_code == 400
     assert exc.value.detail == "Delivery already has an assigned driver"
 
-def test_assign_driver_to_delivery_driver_busy():
+def test_assign_driver_to_delivery_driver_busy_or_offline():
     with pytest.raises(HTTPException) as exc:
         delivery_service.assign_driver_to_delivery("delivery2", "driver2")
     assert exc.value.status_code == 400
     assert exc.value.detail == "Driver is not available"
+
+def test_csv_loaded_deliveries_have_delivery_distance():
+    for delivery in delivery_service.deliveries_db.values():
+        assert "delivery_distance" in delivery
+
+def test_csv_loaded_drivers_are_not_empty():
+    assert len(delivery_service.drivers_db) > 0

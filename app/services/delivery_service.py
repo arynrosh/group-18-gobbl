@@ -1,3 +1,4 @@
+import csv
 from fastapi import HTTPException, status
 from math import sqrt
 
@@ -22,20 +23,17 @@ drivers_db = {
     }
 }
 
-deliveries_db = {
-    "delivery1": {
-        "id": "delivery1",
-        "restaurant_id": "rest1",
-        "destination": {"x": 3.0, "y": 4.0},
-        "assigned_driver_id": None,
-    },
-    "delivery2": {
-        "id": "delivery2",
-        "restaurant_id": "rest2",
-        "destination": {"x": 6.0, "y": 8.0},
-        "assigned_driver_id": None,
-    }
-}
+deliveries_db = {}
+
+with open("app/repositories/food_delivery.csv", mode="r", encoding="utf-8") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        deliveries_db[row["order_id"]] = {
+            "id": row["order_id"],
+            "restaurant_id": row["restaurant_id"],
+            "delivery_distance": float(row["delivery_distance"]),
+            "assigned_driver_id": None,
+        }
 
 #helper functions
 def calculate_distance(x1: float, y1: float, x2: float, y2: float) -> float:
@@ -81,8 +79,7 @@ def update_driver_status(driver_id:str, status_value:str) -> dict:
 #delivery assignment logic
 def find_nearest_available_driver(delivery_id: str) -> dict:
     delivery = get_delivery_or_404(delivery_id)
-    dest_x = delivery["destination"]["x"]
-    dest_y = delivery["destination"]["y"]
+    target_distance = delivery["delivery_distance"]
 
     nearest_driver = None
     min_distance = float("inf")
@@ -93,9 +90,10 @@ def find_nearest_available_driver(delivery_id: str) -> dict:
     
         drx = driver["location"]["x"] 
         dry = driver["location"]["y"]
-        distance = calculate_distance(drx, dry, dest_x, dest_y)
-        if distance < min_distance:
-            min_distance = distance
+        driver_distance = calculate_distance(0, 0, drx, dry)
+        diff = abs(driver_distance - target_distance)
+        if diff < min_distance:
+            min_distance = diff
             nearest_driver = driver
 
     if not nearest_driver:
@@ -108,8 +106,6 @@ def find_nearest_available_driver(delivery_id: str) -> dict:
 
 def auto_assign_driver(delivery_id: str) -> dict:
         delivery = get_delivery_or_404(delivery_id)
-        dest_x = delivery["destination"]["x"]
-        dest_y = delivery["destination"]["y"]
         nearest_driver = find_nearest_available_driver(delivery_id)
         
         delivery["assigned_driver_id"] = nearest_driver["id"]
