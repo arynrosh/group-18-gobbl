@@ -1,7 +1,9 @@
 import pytest
-#from fastapi.testclient import TestClient
+from fastapi.testclient import TestClient
 from src.modules.order import Order
 #src\modules\order\Order.py
+
+client = TestClient(Order)
 
 #testing methods for status class
 statusTester = status("1d8e87M")

@@ -3,6 +3,8 @@ import json
 from fastapi import fastAPI
 import pytest
 
+Order = fastAPI()
+
 #Task 4.1: Design database tables for Orders, Order Items, and Status Tracking
 #Task 4.2: Implement API to create, modify, and submit orders (cart system)
 #Task 4.3: Implement logic to prevent modifications after order completion
