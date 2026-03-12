@@ -62,13 +62,16 @@ class orderItem:
     
     def getPrice(self):
         return self.price
+    
+    def toString(self):
+        return "Name: " + self.name + ", price: " + self.price + ", resturant ID: " + self.restID
 
 
 
 
 class order:
 
-    def __init__(self, oID, cNam):
+    def __init__(self, oID: str, cNam: str):
         self.orderID = oID
         self.custName = cNam
         self.sent = False
@@ -76,26 +79,29 @@ class order:
         self.orderPrice = 0.00
 
     def add(self, item: orderItem):
-        #I don't know why it doesn't recognize things in its own class
         if self.sent == False:
             self.foods.append(item)
-            self.orderPrice = 0.00
-            self.getPrice()
+            #self.orderPrice = 0.00
+            #self.getPrice()
     
     def remove(self, item: orderItem):
-        #I don't know why it doesn't recognize things in its own class
         if self.sent == False:
-            self.foods.remove(orderItem)
-            self.orderPrice = 0.00
-            self.getPrice()
+            if self.any(self.foods, orderItem):
+                self.foods.remove(orderItem)
+            #self.orderPrice = 0.00
+            #self.getPrice()
 
     def getPrice(self):
         for i in self.foods:
             self.orderPrice += i.price
         return self.orderPrice
 
+    def showCart(self):
+        for i in self.foods:
+            print(i.toString())
+
     def sendOrder(self):
-        self.getPrice(self)
+        orderPrice = self.getPrice(self)
         #billing process
         #Have it equal a finalPrice
 
@@ -119,7 +125,7 @@ class status:
         self.current = "Sent"
         self.complete = False
 
-    def updateOrder(self, stat):
+    def updateOrder(self, stat: str):
         if self.complete == False:
             self.current = stat
             return self.current
