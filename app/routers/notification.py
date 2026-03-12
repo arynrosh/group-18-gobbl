@@ -1,18 +1,11 @@
 from fastapi import APIRouter
 from typing import List
-from app.schemas.notification import Notification
 from app.services.notification_service import send_notification, get_notifications_for_customer, get_notifications_for_restaurant
-from pydantic import BaseModel
+from app.schemas.notification import Notification, NotificationRequest
 
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
-class NotificationRequest(BaseModel):
-    """
-    Request body for sending a notification.
-    """
-    customer_id: str
-    restaurant_id: int
-    message: str
+
 
 @router.post("/send", response_model=Notification)
 def send_notification_endpoint(request: NotificationRequest):
