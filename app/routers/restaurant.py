@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from app.auth.dependencies import require_roles
 
 router = APIRouter(prefix="/menu", tags=["menu"])
@@ -8,15 +8,19 @@ router = APIRouter(prefix="/menu", tags=["menu"])
 class MenuItemCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     price: float = Field(..., gt=0)
+    category: str = Field(None, min_length=1, max_length=50)
+    available: bool = True
 
 class MenuItemUpdate(BaseModel):
     name: str = Field(None, min_length=1, max_length=100)
     price: float = Field(None, gt=0)
+    category: Optional[str] = Field(None, min_length=1, max_length=50)
+    available: Optional[bool] = None
 
 # In-memory menu storage  (idk what DB looks like yet)
 menu_db: Dict[int, Dict[str, Any]] = {}
 menu_id_counter: int = 1
-
+ 
 def _get_menu_item(item_id: int) -> Dict[str, Any]:
     item = menu_db.get(item_id)
     if not item:
@@ -35,10 +39,29 @@ def _validate_item_belongs_to_restaurant(item: Dict[str, Any], restaurant_id: in
         )
 
 @router.get("/{restaurant_id}", response_model=List[Dict[str, Any]])
-# Returns all menu items for a given restaurant
-def list_menu_items(restaurant_id: int):
-    return [item for item in menu_db.values() if item.get("restaurant_id") == restaurant_id]
+def list_menu_items(
+    restaurant_id: int,
+    available: Optional[bool] = Query(None),
+    category: Optional[str] = Query(None)
+):
+    items = [
+        item for item in menu_db.values() 
+        if item.get("restaurant_id") == restaurant_id
+    ]
 
+    if available is not None:
+        items = [
+            item for item in items
+            if item.get("available") == available
+        ]
+
+    if category is not None:
+        items = [
+            item for item in items
+            if item.get("category", "").lower() == category.lower()
+        ]
+
+    return items
 
 # CREATE menu item for restaurant (restaurant owner only)
 @router.post("/{restaurant_id}",
@@ -55,6 +78,8 @@ def create_menu_item(
         "id": menu_id_counter,
         "name": item_data.name,
         "price": item_data.price,
+        "category": item_data.category,
+        "available": item_data.available,
         "restaurant_id": restaurant_id
     }
     menu_db[menu_id_counter] = new_item
@@ -79,7 +104,10 @@ def update_menu_item(
         item["name"] = item_data.name
     if item_data.price is not None:
         item["price"] = item_data.price
-
+    if item_data.category is not None:
+        item["category"] = item_data.category
+    if item_data.available is not None:
+        item["available"] = item_data.available
     return {"message": "Menu item updated", "item": item}
 
 # DELETE menu item (restaurant owner only)
