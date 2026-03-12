@@ -1,5 +1,5 @@
 import pytest
-from fastapi.testclient import TestClient
+#from fastapi.testclient import TestClient
 from src.modules.order import Order
 #src\modules\order\Order.py
 
@@ -57,5 +57,7 @@ def test_getPrice():
     result = orderTester.getPrice()
     assert expected == result
 
-
+def test_sendOrder():
+    result = orderTester.sendOrder()
+    assert result
 

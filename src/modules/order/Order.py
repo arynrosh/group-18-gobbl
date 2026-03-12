@@ -1,6 +1,5 @@
 import requests
 import json
-import mysql.connector
 from fastapi import fastAPI
 import pytest
 
@@ -10,37 +9,18 @@ import pytest
 #Task 4.4: Implement API to fetch order status for a customer or restaurant
 #Task 4.5: Unit tests for order creation, modification, and status updates
 
-try: 
-    gobbl = mysql.connector.connect(
-    host="localhost",
-    user="Group18",
-    password="Gobbl"
-    )
-except:
-    print("Could not connect to database")
 
 db = "src\modules\order\food_delivery.csv" #might have path changed after
-#don't know how to get it to give all info under the columns
 parameters = {"order_id", "food_item", "resturant_id", "order_value"}
 try:
     response = requests.get(db, parameters)
     data = response.json()
+    #menuOpt[]
+    #for i in data:
+    #    menuOpt.add(food_item, order_value, resturant_id)
 except:
     print("Could not connect to Kaggle database")
 
-gobblResult = data.fetchall()
-for i in gobblResult:
-    #figure out how to get the info by row
-
-    foodItem = orderItem(i.food_item, i.order_value, i.resturant_id)
-
-gobblcursor = gobbl.cursor()
-
-gobblcursor.execute("CREATE TABLE food (name VARCHAR(50), restID SMALLINT(3), price FLOAT(9, 2))")
-
-gobblcursor.execute("CREATE TABLE order (orderID CHAR(7), custName VARCHAR(50), totalPrice FLOAT(9, 2))")
-
-gobblcursor.execute("CREATE TABLE status (orderID CHAR(7), current VARCHAR(20), complete BOOL)")
 
 class orderItem:
 
@@ -48,11 +28,6 @@ class orderItem:
         self.name = nam
         self.price = pri
         self.restID = rID
-
-        sql = "INSERT INTO food (name, restID, price) VALUES (%s, %s, %s)"
-        val = (nam, rID, pri)
-
-        gobblcursor.execute(sql)
     
     def getName(self):
         return self.name
@@ -65,9 +40,6 @@ class orderItem:
     
     def toString(self):
         return "Name: " + self.name + ", price: " + self.price + ", resturant ID: " + self.restID
-
-
-
 
 class order:
 
@@ -104,17 +76,6 @@ class order:
         orderPrice = self.getPrice(self)
         #billing process
         #Have it equal a finalPrice
-
-        #order table
-        sql = "INSERT INTO order (orderID, custName, totalPrice) VALUES (%s, %s, %s)"
-        val = (self.orderID, self.custName, finalPrice) #finalPrice is a placeholder for now
-        gobblcursor.execute(sql)
-       
-        #statusTable
-        sql2 = "INSERT INTO status (orderID, current, complete) VALUES (%s, %s, %s)"
-        val = (self.orderID, "Sent", False)
-        ordStat = status(self.orderID)
-        gobblcursor.execute(sql2)
 
         self.sent = True
         return self.sent
