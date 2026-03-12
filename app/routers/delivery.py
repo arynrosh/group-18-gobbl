@@ -7,15 +7,9 @@ from app.services.delivery_service import (
     auto_assign_driver,
     assign_driver_to_delivery,
 )
+from app.schemas.delivery import DriverLocationUpdate, DriverStatusUpdate
 
 router = APIRouter(prefix="/delivery", tags=["delivery"])
-
-class DriverLocationUpdate(BaseModel):
-    x: float
-    y: float
-
-class DriverStatusUpdate(BaseModel):
-    status: str
 
 @router.put("/drivers/{driver_id}/location")
 def update_location(
