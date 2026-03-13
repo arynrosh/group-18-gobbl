@@ -1,21 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel, Field
 from typing import Dict, List, Any, Optional
 from app.auth.dependencies import require_roles
+from app.schemas.restaurant import MenuItemCreate, MenuItemUpdate
 
 router = APIRouter(prefix="/menu", tags=["menu"])
-
-class MenuItemCreate(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
-    price: float = Field(..., gt=0)
-    category: str = Field(None, min_length=1, max_length=50)
-    available: bool = True
-
-class MenuItemUpdate(BaseModel):
-    name: str = Field(None, min_length=1, max_length=100)
-    price: float = Field(None, gt=0)
-    category: Optional[str] = Field(None, min_length=1, max_length=50)
-    available: Optional[bool] = None
 
 # In-memory menu storage  (idk what DB looks like yet)
 menu_db: Dict[int, Dict[str, Any]] = {}
