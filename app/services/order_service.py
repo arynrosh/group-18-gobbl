@@ -1,9 +1,10 @@
 import requests
 import json
-from fastapi import fastAPI
+from fastapi import HTTPException
 import pytest
+from app.schemas.order import OrderItem, Order, Status
 
-Order = fastAPI()
+#Order = fastAPI()
 
 #Task 4.1: Design database tables for Orders, Order Items, and Status Tracking
 #Task 4.2: Implement API to create, modify, and submit orders (cart system)
@@ -13,19 +14,15 @@ Order = fastAPI()
 
 #FastAPI lab presentation 
 
-db = "app/data/food_delivery.csv"
+"""db = "app/data/food_delivery.csv"
 parameters = {"order_id", "food_item", "resturant_id", "order_value"}
 try:
     response = requests.get(db, parameters)
     data = response.json()
-    #menuOpt[]
-    #for i in data:
-    #    menuOpt.add(food_item, order_value, resturant_id)
 except:
-    print("Could not connect to Kaggle database")
+    print("Could not connect to Kaggle database")"""
 
-
-class orderItem:
+"""class orderItem:
 
     def __init__(self, nam: str, pri: int, rID: int):
         self.name = nam
@@ -42,9 +39,21 @@ class orderItem:
         return self.price
     
     def toString(self):
-        return "Name: " + self.name + ", price: " + self.price + ", resturant ID: " + self.restID
+        return "Name: " + self.name + ", price: " + self.price + ", resturant ID: " + self.restID"""
 
-class order:
+def addToOrder(orderItem: OrderItem) -> Order:
+    if Order.sent == False:
+        Order.items.append(orderItem)
+
+def removeFromOrder(orderItem: OrderItem) -> Order:
+    if Order.sent == False:
+            if any(Order.foods, orderItem):
+                Order.foods.remove(orderItem)
+
+def sendOrder(orderId: str) -> Order:
+    Order.sent = True
+
+"""class order:
 
     def __init__(self, oID: str, cNam: str):
         self.orderID = oID
@@ -81,9 +90,16 @@ class order:
         #Have it equal a finalPrice
 
         self.sent = True
-        return self.sent
+        return self.sent"""
 
-class status:
+def updateStatus(status: str) -> Status:
+    if Status.complete == False:
+        current = status
+
+def completeOrderStatus() -> Status:
+    Status.complete = True
+
+"""class status:
     def __init__(self, oID: str):
         self.orderID = oID
         self.current = "Sent"
@@ -98,5 +114,5 @@ class status:
         
     def complOrd(self):
         self.complete = True
-        return self.complete
+        return self.complete"""
 
