@@ -32,7 +32,7 @@ except:
     def getName(self):
         return self.name
     
-    def getRestid(self):
+    def getRestid(self): 
         return self.restID
     
     def getPrice(self):

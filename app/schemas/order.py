@@ -35,7 +35,7 @@ class Order(BaseModel):
     sent: bool
 
 
-class CostBreakdown(BaseModel):
+class CostBreakdown(BaseModel): 
     """
     Represents the cost breakdown of an order.
 
