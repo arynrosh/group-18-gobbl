@@ -146,3 +146,14 @@ def test_filter_menu_items_by_category_and_availability():
     data = response.json()
     assert len(data) == 1
     assert data[0]["name"] == "Cola"
+
+def test_filter_menu_items_no_results():
+    owner_token = get_token("bob", "securepass")
+    client.post("/menu/1",
+                json={"name": "Cola", "price": 2.99, "category": "Drinks", "available": True},
+                headers=auth_header(owner_token)
+            )
+    response = client.get("/menu/1?available=True&category=Dessert")
+    assert response.status_code == 200
+    data = response.json()
+    assert data == []
