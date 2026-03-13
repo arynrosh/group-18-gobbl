@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from fastapi import HTTPException
 from app.schemas.payment import PaymentRequest
+from app.repositories.payments_repo import load_all_payments, save_all_payments
 
 def validate_card(payload: PaymentRequest) -> None:
     # Card number has to be exactly 16 digits
@@ -35,9 +36,38 @@ def process_payment(payload: PaymentRequest) -> dict:
 
     # All valid cards will be approved
     transaction_id = str(uuid.uuid4())
+    record = {
+        "transaction_id": transaction_id,
+        "order_id": payload.order_id,
+        "amount": payload.amount,
+        "status": "approved",
+        "timestamp": datetime.now().isoformat()
+    }
+
+    # Save payment record
+    payments = load_all_payments()
+    payments.append(record)
+    save_all_payments(payments)
+
     return {
         "order_id": payload.order_id,
         "status": "approved",
         "message": "Payment approved",
         "transaction_id": transaction_id
     }
+
+def get_payment_by_order(order_id: str) -> dict:
+    # Returns the payment record for a given order, or raises 404
+    payments = load_all_payments()
+    for p in payments:
+        if p.get("order_id") == order_id:
+            return p
+    raise HTTPException(status_code=404, detail="No payment found for this order")
+
+def get_payment_by_transaction(transaction_id: str) -> dict:
+    # Returns the payment record for a given transaction ID, or raises 404
+    payments = load_all_payments()
+    for p in payments:
+        if p.get("transaction_id") == transaction_id:
+            return p
+    raise HTTPException(status_code=404, detail="Transaction not found")
