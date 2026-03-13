@@ -1,10 +1,10 @@
 import requests
 import json
-from fastapi import HTTPException
+from fastapi import FastAPI, HTTPException
 import pytest
 from app.schemas.order import OrderItem, Order, Status
 
-#Order = fastAPI()
+App = FastAPI()
 
 #Task 4.1: Design database tables for Orders, Order Items, and Status Tracking
 #Task 4.2: Implement API to create, modify, and submit orders (cart system)

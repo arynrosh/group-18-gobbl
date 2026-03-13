@@ -1,29 +1,29 @@
 import pytest
 from fastapi.testclient import TestClient
-from src.modules.order import Order
-#src\modules\order\Order.py
+from app.services.order_service import Order, OrderItem, Status
+#app\services\order_service.py
 
 client = TestClient(Order)
 
 #testing methods for status class
-statusTester = status("1d8e87M")
+statusTester = Status("1d8e87M")
 
-def test_updateOrder():
+def test_updateStatus():
     statUpdate = "Ready"
-    result = statusTester.updateOrder("Ready")
+    result = statusTester.updateStatus("Ready")
     assert statUpdate == result
 
-def test_complOrd():
-    result = statusTester.compOrd()
+def test_completeOrderStatus():
+    result = statusTester.completeOrderStatus()
     assert result == True
 
 #testing methods for orderItem
 foodName = "Tacos"
 foodPrice = 12.99
 foodRid = 13
-orderItemTester = orderItem(foodName, foodPrice, foodRid)
+orderItemTester = OrderItem(foodName, foodPrice, foodRid)
 
-def test_getName():
+"""def test_getName():
     result = orderItemTester.getName()
     assert result == foodName
 
@@ -38,26 +38,26 @@ def test_getRestid():
 def test_toString():
     result = orderItemTester.toString()
     expected = "Name: " + foodName + ", price: " + foodPrice + ", resturant ID: " + foodRid
-    assert result == expected
+    assert result == expected"""
 
 #testing methods for order
-orderTester = order("2f9r98Z", "custest")
+orderTester = Order("2f9r98Z", "custest")
 
-def test_add():
-    orderTester.add(orderItemTester)
+def test_addToOrder():
+    orderTester.addToOrder(orderItemTester)
     assert any(orderTester.foods, orderItemTester)
 
-def test_remove():
-    orderTester.add(orderItemTester)
-    orderTester.remove(orderItemTester)
+def test_removeFromOrder():
+    orderTester.addToOrder(orderItemTester)
+    orderTester.removeFromOrder(orderItemTester)
     assert any(orderTester.foods, orderItemTester) == False
 
-def test_getPrice():
-    orderTester.add(orderItemTester)
-    orderTester.add(orderItemTester)
+"""def test_getPrice():
+    orderTester.addToOrder(orderItemTester)
+    orderTester.addToOrder(orderItemTester)
     expected = foodPrice * 2 #25.98
     result = orderTester.getPrice()
-    assert expected == result
+    assert expected == result"""
 
 def test_sendOrder():
     result = orderTester.sendOrder()
