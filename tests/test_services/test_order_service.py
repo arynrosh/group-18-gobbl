@@ -1,7 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.services.order_service import Order, OrderItem, Status
+from app.schemas.order import Order, OrderItem, Status
 #app\services\order_service.py
+from app.services import order_service
 
 client = TestClient(Order)
 
