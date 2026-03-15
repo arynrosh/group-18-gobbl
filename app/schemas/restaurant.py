@@ -13,3 +13,10 @@ class MenuItemUpdate(BaseModel):
     price: float = Field(None, gt=0)
     category: Optional[str] = Field(None, min_length=1, max_length=50)
     available: Optional[bool] = None
+
+class Restaurant(BaseModel):
+
+    id: int
+    name: str
+    cuisine: str
+    location: str
