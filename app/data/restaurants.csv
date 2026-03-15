@@ -1,0 +1,12 @@
+restaurant_id,name,cuisine,location
+1,Cactus Club Cafe,American,City_1
+3,Momo Sushi,Japanese,City_3
+5,Earls Kitchen and Bar,American,City_5
+16,Tandoori Garden,Indian,City_6
+30,Pagoda Restaurant,Chinese,City_7
+36,The Curious Cafe,Breakfast,City_8
+45,Bouchons Bistro,French,City_9
+60,Fiesta Villa,Mexican,City_2
+75,Anatoli Souvlaki,Greek,City_4
+93,Bliss Bakery,Desserts,City_10
+100,Twisted Tomato,Italian,City_5
