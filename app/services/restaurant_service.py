@@ -1,6 +1,6 @@
 import csv
 from typing import List
-from app.schemas.restaurant import Restaurant
+from app.schemas.menu import Restaurant
 
 restaurants = []
 

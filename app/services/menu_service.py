@@ -1,24 +1,20 @@
-import csv
-from fastapi import Depends, HTTPException, status
+import json
+from fastapi import HTTPException, status
 from typing import Dict, Any, List, Optional
 
 menu_db: Dict[int, Dict[str, Any]] = {}
 menu_id_counter: int = 1
 
-with open("app/data/food_delivery.csv", mode="r", encoding="utf-8") as file:
-    reader = csv.DictReader(file)
-    for row in reader:
-        item_id = int(row["item_id"])
-        menu_db[item_id] = {
-            "id": item_id,
-            "name": row["name"],
-            "price": float(row["price"]),
-            "category": row["category"],
-            "available": row["available"].lower() == "true",
-            "restaurant_id": int(row["restaurant_id"])
-        }
+def reset_menu_data():
+    global menu_id_counter
+    menu_db.clear()
+    menu_id_counter = 1
 
-        menu_id_counter = max(menu_id_counter, item_id + 1)
+    with open("app/data/menu.json", mode="r", encoding="utf-8") as file:
+        items = json.load(file)
+        for item in items:
+            menu_db[item["id"]] = item
+            menu_id_counter = max(menu_id_counter, item["id"] + 1)
 
 def get_menu_item(item_id: int) -> Dict[str, Any]:
     item = menu_db.get(item_id)
@@ -37,10 +33,20 @@ def validate_item_belongs_to_restaurant(item: Dict[str, Any], restaurant_id: int
             detail="Menu item does not belong to this restaurant"
         )
     
+def get_price_tier(price: float) -> str:
+    if price < 15:
+        return "$"
+    elif price < 25:
+        return "$$"
+    elif price < 40:
+        return "$$$"
+    else:
+        return "$$$$"
+
 def list_menu_items(
         restaurant_id: int,
-        available: Optional[bool],
-        category: Optional[str]
+        price_tier: Optional[str] = None,
+        min_rating: Optional[float] = None,
 ):
     
     items = [
@@ -48,28 +54,27 @@ def list_menu_items(
         if item.get("restaurant_id") == restaurant_id
     ]
 
-    if available is not None:
+    if price_tier is not None:
         items = [
             item for item in items
-            if item.get("available") == available
+            if get_price_tier(item.get("order_value", 0)) == price_tier
         ]
 
-    if category is not None:
+    if min_rating is not None:
         items = [
             item for item in items
-            if item.get("category", "").lower() == category.lower()
+            if item.get("customer_rating") is not None 
+            and item.get("customer_rating") >= min_rating
         ]
-
+    
     return items
 
 def create_menu_item(restaurant_id, item_data):
     global menu_id_counter
     new_item = {
         "id": menu_id_counter,
-        "name": item_data.name,
-        "price": item_data.price,
-        "category": item_data.category,
-        "available": item_data.available,
+        "food_item": item_data.food_item,
+        "order_value": item_data.order_value,
         "restaurant_id": restaurant_id
     }
 
@@ -82,14 +87,10 @@ def update_menu_item(restaurant_id, menu_id, item_data):
     item = get_menu_item(menu_id)
     validate_item_belongs_to_restaurant(item, restaurant_id)
 
-    if item_data.name is not None:
-        item["name"] = item_data.name
-    if item_data.price is not None:
-        item["price"] = item_data.price
-    if item_data.category is not None:
-        item["category"] = item_data.category
-    if item_data.available is not None:
-        item["available"] = item_data.available
+    if item_data.food_item is not None:
+        item["food_item"] = item_data.food_item
+    if item_data.order_value is not None:
+        item["order_value"] = item_data.order_value
     
     return item
 

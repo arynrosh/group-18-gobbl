@@ -10,14 +10,14 @@ router = APIRouter(prefix="/menu", tags=["menu"])
 @router.get("/{restaurant_id}", response_model=List[Dict[str, Any]])
 def list_menu_items(
     restaurant_id: int,
-    available: Optional[bool] = Query(None),
-    category: Optional[str] = Query(None)
+    price_tier: Optional[str] = Query(None, pattern=r"^\${1,4}$"),
+    min_rating: Optional[float] = Query(None, ge=0, le=5),
 ):
 
     return menu_service.list_menu_items(
         restaurant_id, 
-        available, 
-        category
+        price_tier, 
+        min_rating,
     )
 
 @router.post("/{restaurant_id}", status_code=status.HTTP_201_CREATED, response_model=Dict[str, Any],)
