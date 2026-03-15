@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from app.auth.dependencies import require_roles
 from app.services.delivery_service import (
-    update_driver_location,
+    update_driver_distance,
     update_driver_status,
     auto_assign_driver,
     assign_driver_to_delivery,
@@ -17,7 +17,7 @@ def update_distance(
     body: DriverDistanceUpdate,
     current_user: dict = Depends(require_roles("driver")),
 ):
-    updated_driver = update_driver_location(driver_id, body.driver_distance)
+    updated_driver = update_driver_distance(driver_id, body.driver_distance)
     return {
         "message": "Driver distance updated",
         "driver": updated_driver
