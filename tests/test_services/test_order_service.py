@@ -26,11 +26,13 @@ def orderTester():
 
 def test_updateStatus(statusTester):
     statusUpdate = "Ready"
-    result = statusTester.updateStatus("Ready")
+    statusTester.updateStatus("Ready")
+    result = statusTester.current
     assert statusUpdate == result
 
 def test_completeOrderStatus(statusTester):
-    result = statusTester.completeOrderStatus()
+    statusTester.completeOrderStatus()
+    result = statusTester.complete
     assert result == True
 
 def test_addToOrder(orderTester, orderItemTester):
@@ -43,6 +45,7 @@ def test_removeFromOrder(orderTester, orderItemTester):
     assert any(orderTester.foods, orderItemTester) == False
 
 def test_sendOrder(orderTester):
-    result = orderTester.sendOrder()
+    orderTester.sendOrder()
+    result = orderTester.sent
     assert result
 
