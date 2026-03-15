@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app.routers import restaurant as menu_router
+from app.routers import menu as menu_router
 from app.main import app
 
 client = TestClient(app)
