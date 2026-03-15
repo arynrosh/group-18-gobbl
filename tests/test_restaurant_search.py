@@ -44,3 +44,23 @@ def test_search_by_cuisine_case_insensitive():
     response = client.get("/restaurant/search/cuisine?cuisine=mexican")
     assert response.status_code == 200
     assert len(response.json()) > 0
+
+def test_search_by_name_empty_string():
+    response = client.get("/restaurant/search/name?name=")
+    assert response.status_code == 200
+
+def test_search_by_cuisine_empty_string():
+    response = client.get("/restaurant/search/cuisine?cuisine=")
+    assert response.status_code == 200
+
+def test_search_by_name_partial_match():
+    response = client.get("/restaurant/search/name?name=bis")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) > 0
+
+def test_search_by_cuisine_partial_match():
+    response = client.get("/restaurant/search/cuisine?cuisine=ital")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) > 0
