@@ -9,7 +9,7 @@ def test_search_by_name_valid():
     assert response.status_code == 200
     data = response.json()
     assert len(data) > 0
-    assert any("club" in r["name"] for r in data)
+    assert any("Club" in r["name"] for r in data)
 
 def test_search_by_name_no_match():
     
