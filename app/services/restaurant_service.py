@@ -1,6 +1,7 @@
 import csv
 from typing import List
-from app.schemas.restaurant import Restaurant
+# andrea i think i messed up the merge for the schemas file, should be an easy fix if you just move your part to a restaurant schemas file and then import it here
+from app.schemas.menu import Restaurant
 
 restaurants = []
 

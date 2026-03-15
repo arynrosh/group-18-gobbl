@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from app.services.restaurant_service import search_by_name, search_by_cuisine
-from app.schemas.restaurant import Restaurant
+# andrea i think i messed up the merge for the schemas file, should be an easy fix if you just move your part to a restaurant schemas file and then import it here
+from app.schemas.menu import Restaurant
 from typing import List
 
 router = APIRouter(prefix = "/restaurant", tags=["restaurant"])
