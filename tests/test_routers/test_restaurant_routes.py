@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app.routers import restaurant as menu_router
+from app.services import restaurant_service
 from app.main import app
 
 client = TestClient(app)
@@ -15,8 +15,7 @@ def auth_header(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
 def reset_menu_data():
-    menu_router.menu_db.clear()
-    menu_router.menu_id_counter = 1
+    restaurant_service.reset_menu_data()
 
 def setup_function():
     reset_menu_data()
@@ -24,56 +23,52 @@ def setup_function():
 def test_create_menu_item_as_owner_only():
     owner_token = get_token("bob", "securepass")
     response = client.post("/menu/1",
-                            json={"name": "Burger", "price": 9.99, "category": "Main", "available": True},
+                            json={"food_item": "Burger", "order_value": 9.99},
                             headers=auth_header(owner_token)
                         )
     assert response.status_code == 201, response.text
     data = response.json()
     assert data["item"]["restaurant_id"] == 1
-    assert data["item"]["name"] == "Burger"
+    assert data["item"]["food_item"] == "Burger"
+    assert data["item"]["order_value"] == 9.99
 
 def test_create_menu_item_forbidden_for_customer():
     customer_token = get_token("alice", "password123")
     response = client.post("/menu/1",
-                            json={"name": "Fries", "price": 4.99, "category": "Sides", "available": True},
+                            json={"food_item": "Fries", "order_value": 4.99},
                             headers=auth_header(customer_token)
                         )
     assert response.status_code == 403, response.text
 
 def test_update_menu_item_validates_restaurant_ownership():
     owner_token = get_token("bob", "securepass")
-    # First create an item for restaurant 1
-    response = client.post("/menu/1",
-                                  json={"name": "Grass", "price": 5.99, "category": "Sides", "available": True},
+    create_response = client.post("/menu/1",
+                                  json={"food_item": "Grass", "order_value": 5.99},
                                   headers=auth_header(owner_token)
                               )
-    assert response.status_code == 201, response.text
-    menu_id = response.json()["item"]["id"]
+    assert create_response.status_code == 201, create_response.text
+    menu_id = create_response.json()["item"]["id"]
 
-    # Updating it with a different restaurant ID i.e. 2, should fail with 403
     update_response = client.put(f"/menu/2/{menu_id}",
-                                 json={"name": "Salad"},
+                                 json={"food_item": "Salad", "order_value": 6.99},
                                  headers=auth_header(owner_token)
                              )
     assert update_response.status_code == 403, update_response.text
 
 def test_delete_menu_item_validates_restaurant_ownership():
     owner_token = get_token("bob", "securepass")
-    # First create an item for restaurant 3
-    response = client.post("/menu/3",
-                            json={"name": "Soda", "price": 1.99, "category": "Drinks", "available": True},
+    create_response = client.post("/menu/3",
+                            json={"food_item": "Soda", "order_value": 1.99},
                             headers=auth_header(owner_token)
                         )
-    assert response.status_code == 201, response.text
-    menu_id = response.json()["item"]["id"]
+    assert create_response.status_code == 201, create_response.text
+    menu_id = create_response.json()["item"]["id"]
 
-    # Wrong restaurant in path mean it fails with 403
     delete_response = client.delete(f"/menu/2/{menu_id}",
                                    headers=auth_header(owner_token)
                                )
     assert delete_response.status_code == 403, delete_response.text
 
-    # Correct restaurant should succeed
     delete_response = client.delete(f"/menu/3/{menu_id}",
                                    headers=auth_header(owner_token)
                                )
@@ -83,11 +78,11 @@ def test_delete_menu_item_validates_restaurant_ownership():
 def test_list_menu_items_without_filters():
     owner_token = get_token("bob", "securepass")
     client.post("/menu/1",
-                json={"name": "Burger", "price": 9.99, "category": "Main", "available": True},
+                json={"food_item": "Burger", "order_value": 9.99},
                 headers=auth_header(owner_token)
     )
     client.post("/menu/1",
-                json={"name": "Fries", "price": 4.99, "category": "Sides", "available": True},
+                json={"food_item": "Fries", "order_value": 4.99},
                 headers=auth_header(owner_token)
     )
     response = client.get("/menu/1")
@@ -95,65 +90,39 @@ def test_list_menu_items_without_filters():
     data = response.json()
     assert len(data) == 2 
 
-def test_filter_menu_items_by_category():
+def test_filter_menu_items_by_price_tier():
     owner_token = get_token("bob", "securepass")
     client.post("/menu/1",
-                json={"name": "Cola", "price": 2.99, "category": "Drinks", "available": True},
+                json={"food_item": "Burger", "order_value": 9.99},
                 headers=auth_header(owner_token)
     )
     client.post("/menu/1",
-                json={"name": "Burger", "price": 9.99, "category": "Main", "available": True},
+                json={"food_item": "Tacos", "order_value": 42.21},
                 headers=auth_header(owner_token)
     )
-    response = client.get("/menu/1?category=Drinks")
+    response = client.get("/menu/1?price_tier=$$$$")
     assert response.status_code == 200, response.text
     data = response.json()
     assert len(data) == 1
-    assert data[0]["name"] == "Cola"
+    assert data[0]["food_item"] == "Tacos"
 
-def test_filter_menu_items_by_availability():
-    owner_token = get_token("bob", "securepass")
-    client.post("/menu/1",
-                json={"name": "Burger", "price": 9.99, "category": "Main", "available": True},
-                headers=auth_header(owner_token)
-    )
-    client.post("/menu/1",
-                json={"name": "Fries", "price": 4.99, "category": "Sides", "available": False},
-                headers=auth_header(owner_token)
-    )
-    response = client.get("/menu/1?available=True")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert len(data) == 1
-    assert data[0]["name"] == "Burger"
 
-def test_filter_menu_items_by_category_and_availability():
-    owner_token = get_token("bob", "securepass")
-    client.post("/menu/1",
-                json={"name": "Cola", "price": 2.99, "category": "Drinks", "available": True},
-                headers=auth_header(owner_token)
-    )
-    client.post("/menu/1",
-                json={"name": "Orange Juice", "price": 3.99, "category": "Drinks", "available": False},
-                headers=auth_header(owner_token)
-    )
-    client.post("/menu/1",
-                json={"name": "Burger", "price": 9.99, "category": "Main", "available": True},
-                headers=auth_header(owner_token)
-    )
-    response = client.get("/menu/1?available=True&category=Drinks")
+def test_filter_menu_items_by_rating():
+    #references json file since schemas don't have customer_rating field (cuz restaurant owner doesn't set it when creating/updating menu item)
+    response = client.get("/menu/53?min_rating=3.0")
     assert response.status_code == 200, response.text
     data = response.json()
     assert len(data) == 1
-    assert data[0]["name"] == "Cola"
+    assert data[0]["food_item"] == "Burger"
+    assert data[0]["customer_rating"] == 3.0
 
 def test_filter_menu_items_no_results():
     owner_token = get_token("bob", "securepass")
     client.post("/menu/1",
-                json={"name": "Cola", "price": 2.99, "category": "Drinks", "available": True},
+                json={"food_item": "Cola", "order_value": 2.99, "customer_rating": 2.0},
                 headers=auth_header(owner_token)
             )
-    response = client.get("/menu/1?available=True&category=Dessert")
+    response = client.get("/menu/1?order_value=$$&min_rating=4.0")
     assert response.status_code == 200
     data = response.json()
     assert data == []
