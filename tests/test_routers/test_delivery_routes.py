@@ -1,3 +1,4 @@
+import json
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
@@ -15,26 +16,10 @@ def auth_header(token: str) -> dict:
 
 def reset_test_data():
     delivery_service.drivers_db.clear()
-    delivery_service.drivers_db.update({
-        "driver1": {
-            "id": "driver1",
-            "name": "Charlie",
-            "status": "available",
-            "location": {"x": 0.0, "y": 0.0}
-        },
-        "driver2": {
-            "id": "driver2",
-            "name": "Dave",
-            "status": "busy",
-            "location": {"x": 5.0, "y": 5.0}
-        },
-        "driver3": {
-            "id": "driver3",
-            "name": "Eve",
-            "status": "available",
-            "location": {"x": 2.0, "y": 1.0}
-        }
-    })
+    with open("app/data/drivers.json", mode="r", encoding="utf-8") as file:
+        drivers = json.load(file)
+        for driver in drivers:
+            delivery_service.drivers_db[driver["id"]] = driver
 
     delivery_service.deliveries_db.clear()
     delivery_service.deliveries_db.update({
@@ -55,14 +40,14 @@ def reset_test_data():
 def setup_function():
     reset_test_data()
 
-def test_driver_can_update_location():
+def test_driver_can_update_distance():
     driver_token =  get_token("dave", "driverpass")
-    response = client.put("/delivery/drivers/driver1/location",
-                            json={"x": 7.0, "y": 8.0},
+    response = client.put("/delivery/drivers/driver1/distance",
+                            json={"driver_distance": 7.0},
                             headers=auth_header(driver_token)
                           )
     assert response.status_code == 200, response.text
-    assert response.json()["driver"]["location"] == {"x": 7.0, "y": 8.0}
+    assert response.json()["driver"]["driver_distance"] == 7.0
 
 def test_driver_can_update_status():
     driver_token = get_token("dave", "driverpass")
@@ -79,7 +64,7 @@ def test_restaurant_owner_can_auto_assign_driver():
                            headers=auth_header(owner_token),
                            )
     assert response.status_code == 200, response.text
-    assert response.json()["delivery"]["assigned_driver_id"] == "driver2" or response.json()["delivery"]["assigned_driver_id"] == "driver3"
+    assert response.json()["delivery"]["assigned_driver_id"] == "driver1"
 
 def test_restaurant_owner_can_assign_specific_driver():
     owner_token = get_token("bob", "securepass")
@@ -89,7 +74,7 @@ def test_restaurant_owner_can_assign_specific_driver():
     assert response.status_code == 200, response.text
     assert response.json()["delivery"]["assigned_driver_id"] == "driver1"
 
-def test_customer_cannot_update_driver_location():
+def test_customer_cannot_assign_driver():
     customer_token = get_token("alice", "password123")
     response = client.post("/delivery/deliveries/delivery2/assign/driver1", 
                             headers=auth_header(customer_token),

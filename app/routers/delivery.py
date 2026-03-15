@@ -2,24 +2,24 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from app.auth.dependencies import require_roles
 from app.services.delivery_service import (
-    update_driver_location,
+    update_driver_distance,
     update_driver_status,
     auto_assign_driver,
     assign_driver_to_delivery,
 )
-from app.schemas.delivery import DriverLocationUpdate, DriverStatusUpdate
+from app.schemas.delivery import DriverDistanceUpdate, DriverStatusUpdate
 
 router = APIRouter(prefix="/delivery", tags=["delivery"])
 
-@router.put("/drivers/{driver_id}/location")
-def update_location(
+@router.put("/drivers/{driver_id}/distance")
+def update_distance(
     driver_id: str,
-    body: DriverLocationUpdate,
+    body: DriverDistanceUpdate,
     current_user: dict = Depends(require_roles("driver")),
 ):
-    updated_driver = update_driver_location(driver_id, body.x, body.y)
+    updated_driver = update_driver_distance(driver_id, body.driver_distance)
     return {
-        "message": "Driver location updated",
+        "message": "Driver distance updated",
         "driver": updated_driver
     }
 

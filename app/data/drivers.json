@@ -1,0 +1,20 @@
+[
+  {
+    "id": "driver1",
+    "name": "Charlie",
+    "status": "available",
+    "driver_distance": 15.0
+  },
+  {
+    "id": "driver2",
+    "name": "Dave",
+    "status": "busy",
+    "driver_distance": 10.0
+  },
+  {
+    "id": "driver3",
+    "name": "Eve",
+    "status": "available",
+    "driver_distance": 20.0
+  }
+]

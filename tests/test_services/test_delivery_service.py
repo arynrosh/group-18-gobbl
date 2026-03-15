@@ -1,29 +1,14 @@
 import pytest
+import json
 from fastapi import HTTPException
 from app.services import delivery_service
 
 def reset_test_data():
     delivery_service.drivers_db.clear()
-    delivery_service.drivers_db.update({
-        "driver1": {
-            "id": "driver1",
-            "name": "Charlie",
-            "status": "available",
-            "location": {"x": 0.0, "y": 0.0}
-        },
-        "driver2": {
-            "id": "driver2",
-            "name": "Dave",
-            "status": "busy",
-            "location": {"x": 5.0, "y": 5.0}
-        },
-        "driver3": {
-            "id": "driver3",
-            "name": "Eve",
-            "status": "available",
-            "location": {"x": 2.0, "y": 1.0}
-        }
-    })
+    with open("app/data/drivers.json", mode="r", encoding="utf-8") as file:
+        drivers = json.load(file)
+        for driver in drivers:
+            delivery_service.drivers_db[driver["id"]] = driver
 
     delivery_service.deliveries_db.clear()
     delivery_service.deliveries_db.update({
@@ -43,10 +28,6 @@ def reset_test_data():
 
 def setup_function():
     reset_test_data()
-
-def test_calculate_distance():
-    dist = delivery_service.calculate_distance(0, 0, 3, 4)
-    assert dist == 5.0
 
 def test_get_driver_or_404_returns_driver():
     driver = delivery_service.get_driver_or_404("driver1")
@@ -69,10 +50,9 @@ def test_get_delivery_or_404_raises_exception_for_missing_delivery():
     assert exc.value.status_code == 404
     assert exc.value.detail == "Delivery not found"
 
-def test_update_driver_location():
-    driver = delivery_service.update_driver_location("driver1", 7.5, 8.5)
-    assert driver["location"]["x"] == 7.5
-    assert driver["location"]["y"] == 8.5
+def test_update_driver_distance():
+    driver = delivery_service.update_driver_distance("driver1", 7.5)
+    assert driver["driver_distance"] == 7.5
 
 def test_update_driver_status_to_busy():
     driver = delivery_service.update_driver_status("driver1", "busy")
@@ -85,7 +65,7 @@ def test_update_driver_status_invalid_value():
 
 def test_find_nearest_available_driver():
     nearest = delivery_service.find_nearest_available_driver("delivery1")
-    assert nearest["id"] == "driver3"
+    assert nearest["id"] == "driver1"
 
 def test_find_nearest_available_driver_no_available():
     delivery_service.update_driver_status("driver1", "busy")
@@ -97,8 +77,8 @@ def test_find_nearest_available_driver_no_available():
 
 def test_auto_assign_driver():
     result = delivery_service.auto_assign_driver("delivery1")
-    assert result["delivery"]["assigned_driver_id"] == "driver3"
-    assert result["driver"]["id"] == "driver3"
+    assert result["delivery"]["assigned_driver_id"] == "driver1"
+    assert result["driver"]["id"] == "driver1"
     assert result["driver"]["status"] == "busy"
 
 def test_assign_driver_to_delivery():
