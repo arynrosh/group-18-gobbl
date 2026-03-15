@@ -7,29 +7,17 @@ router = APIRouter(prefix = "/restaurant", tags=["restaurant"])
 
 @router.get("/search/name", response_model = List[Restaurant])
 def search_restaurants_by_name(name:str):
-   
+   #searches restaurant by name
     
     return search_by_name(name)
-    """
-    Searches restaurants by name type.
-
-    Args:
-        name (str): The cuisine type to search for.
-
-    Returns:
-        List[Restaurant]: Matching restaurants.
-        """
+    
 
 @router.get("/search/cuisine", response_model=List[Restaurant])
 def search_restaurants_by_cuisine(cuisine: str):
-    """
-    Searches restaurants by cuisine type.
+    
+   # Searches restaurants by cuisine type.
 
-    Args:
-        cuisine (str): The cuisine type to search for.
-
-    Returns:
-        List[Restaurant]: Matching restaurants.
-    """
+    
+    
     return search_by_cuisine(cuisine)
             
