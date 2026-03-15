@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from app.services import restaurant_service
+from app.services import menu_service
 from app.main import app
 
 client = TestClient(app)
@@ -15,7 +15,7 @@ def auth_header(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
 def reset_menu_data():
-    restaurant_service.reset_menu_data()
+    menu_service.reset_menu_data()
 
 def setup_function():
     reset_menu_data()
