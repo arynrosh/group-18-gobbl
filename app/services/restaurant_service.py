@@ -4,7 +4,7 @@ from app.schemas.restaurant import Restaurant
 
 restaurants = []
 
-with open("data/restaurants.csv", newline="") as f:
+with open("app/data/restaurants.csv", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
         restaurants.append({

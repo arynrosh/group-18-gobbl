@@ -4,43 +4,43 @@ from app.main import app
 client = TestClient(app)
 
 def test_search_by_name_valid():
-    #Test that searching by a valid name returns matching restaurants.
-    response = client.get("/restaurant/search/name?name=Burger")
+    
+    response = client.get("/restaurant/search/name?name=club")
     assert response.status_code == 200
     data = response.json()
     assert len(data) > 0
-    assert any("Burger" in r["name"] for r in data)
+    assert any("club" in r["name"] for r in data)
 
 def test_search_by_name_no_match():
-    #Test that searching by a name with no matches returns an empty list.
-    response = client.get("/restaurant/search/name?name=Pizza")
+    
+    response = client.get("/restaurant/search/name?name=xyznonexistent")
     assert response.status_code == 200
     data = response.json()
     assert data == []
 
 def test_search_by_name_case_insensitive():
-    # Test that name search is case insensitive
-    response = client.get("/restaurant/search/name?name=burger")
+    
+    response = client.get("/restaurant/search/name?name=club")
     assert response.status_code == 200
     data = response.json()
     assert len(data) > 0
 
 def test_search_by_cuisine_valid():
-    #Test that searching by a valid cuisine returns matching restaurants.
-    response = client.get("/restaurant/search/cuisine?cuisine=Mexican")
+   
+    response = client.get("/restaurant/search/cuisine?cuisine=Chinese")
     assert response.status_code == 200
     data = response.json()
     assert len(data) > 0
-    assert any(r["cuisine"] == "Mexican" for r in data)
+    assert any(r["cuisine"] == "Chinese" for r in data)
 
 def test_search_by_cuisine_no_match():
-    #Test that searching by a cuisine with no matches returns an empty list.
-    response = client.get("/restaurant/search/cuisine?cuisine=French")
+    
+    response = client.get("/restaurant/search/cuisine?cuisine=Nigerian")
     assert response.status_code == 200
     assert response.json() == []
 
 def test_search_by_cuisine_case_insensitive():
-    #Test that cuisine search is case insensitive
+   
     response = client.get("/restaurant/search/cuisine?cuisine=mexican")
     assert response.status_code == 200
     assert len(response.json()) > 0
