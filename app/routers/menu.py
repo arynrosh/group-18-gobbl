@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from typing import Dict, List, Any, Optional
 
 from app.auth.dependencies import require_roles
-from app.schemas.restaurant import MenuItemCreate, MenuItemUpdate
-from app.services import restaurant_service
+from app.schemas.menu import MenuItemCreate, MenuItemUpdate
+from app.services import menu_service
 
 router = APIRouter(prefix="/menu", tags=["menu"])
 
@@ -14,7 +14,7 @@ def list_menu_items(
     category: Optional[str] = Query(None)
 ):
 
-    return restaurant_service.list_menu_items(
+    return menu_service.list_menu_items(
         restaurant_id, 
         available, 
         category
@@ -27,7 +27,7 @@ def create_menu_item(
     current_user: dict = Depends(require_roles("restaurant_owner"))
 ):
     
-    item = restaurant_service.create_menu_item(
+    item = menu_service.create_menu_item(
         restaurant_id,
         item_data
     )
@@ -41,7 +41,7 @@ def update_menu_item(
     item_data: MenuItemUpdate,
     current_user: dict = Depends(require_roles("restaurant_owner"))
 ):
-    item = restaurant_service.update_menu_item(
+    item = menu_service.update_menu_item(
         restaurant_id,
         menu_id,
         item_data
@@ -55,7 +55,7 @@ def delete_menu_item(
     menu_id: int,
     current_user: dict = Depends(require_roles("restaurant_owner"))
 ):
-    restaurant_service.delete_menu_item(
+    menu_service.delete_menu_item(
         restaurant_id,
         menu_id
     )
