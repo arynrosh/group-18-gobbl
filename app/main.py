@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from app.routers.auth import router as auth_router
 from app.routers.restaurant import router as menu_router
-from app.routers.restaurant_search import router as restaurant_search_router
+from app.routers.cost import router as cost_router
+from app.routers.users import router as users_router
+from app.routers.delivery import router as delivery_router
+from app.routers.payment import router as payment_router
+from app.routers.notification import router as notifications_router
 
 app = FastAPI(
     title="Gobbl Food Delivery API",
@@ -10,14 +14,16 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
-# everyone should add their routers here
 app.include_router(menu_router)
-app.include_router(restaurant_search_router)
+app.include_router(cost_router)
+app.include_router(users_router)
+app.include_router(delivery_router)
+app.include_router(payment_router)
+app.include_router(notifications_router)
 
 @app.get("/")
 def root():
     return {"message": "Gobbl API is running"}
-
 
 @app.get("/health")
 def health():

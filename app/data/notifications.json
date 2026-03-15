@@ -1,0 +1,66 @@
+[
+  {
+    "notification_id": 1,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:00:52.919408"
+  },
+  {
+    "notification_id": 2,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:00:53.740774"
+  },
+  {
+    "notification_id": 3,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:00:53.775375"
+  },
+  {
+    "notification_id": 4,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:00:53.806530"
+  },
+  {
+    "notification_id": 5,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:02:29.715277"
+  },
+  {
+    "notification_id": 6,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:02:29.835151"
+  },
+  {
+    "notification_id": 7,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:02:29.867127"
+  },
+  {
+    "notification_id": 8,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-11T19:02:29.901245"
+  }
+]
