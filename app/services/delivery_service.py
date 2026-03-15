@@ -1,27 +1,13 @@
 import csv
+import json
 from fastapi import HTTPException, status
-from math import sqrt
 
-drivers_db = {
-    "driver1": {
-        "id": "driver1",
-        "name": "Charlie",
-        "status": "available",
-        "location": {"x": 0.0, "y": 0.0}
-    },
-    "driver2": {
-        "id": "driver2",
-        "name": "Dave",
-        "status": "busy",
-        "location": {"x": 5.0, "y": 5.0}
-    },
-    "driver3": {
-        "id": "driver3",
-        "name": "Eve",
-        "status": "available",
-        "location": {"x": 2.0, "y": 1.0}
-    }
-}
+drivers_db = {}
+
+with open("app/data/drivers.json", mode="r", encoding="utf-8") as file:
+    drivers = json.load(file)
+    for driver in drivers:
+        drivers_db[driver["id"]] = driver
 
 deliveries_db = {}
 
@@ -34,12 +20,7 @@ with open("app/data/food_delivery.csv", mode="r", encoding="utf-8") as file:
             "delivery_distance": float(row["delivery_distance"]),
             "assigned_driver_id": None,
         }
-
-#helper functions
-def calculate_distance(x1: float, y1: float, x2: float, y2: float) -> float:
-    return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-
-#error handling                
+       
 def get_driver_or_404(driver_id:str) -> dict:
     driver = drivers_db.get(driver_id)
     if not driver:
@@ -58,10 +39,15 @@ def get_delivery_or_404(delivery_id:str) -> dict:
         )
     return delivery
 
-#update driver location & status
-def update_driver_location(driver_id: str, x: float, y: float) -> dict:
+def update_driver_distance(driver_id: str, driver_distance: float) -> dict:
+    if driver_distance < 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Distance must be non-negative"
+        )
+    
     driver = get_driver_or_404(driver_id)
-    driver["location"] = {"x": x, "y": y}
+    driver["driver_distance"] = driver_distance
     return driver
 
 def update_driver_status(driver_id:str, status_value:str) -> dict:
@@ -75,8 +61,6 @@ def update_driver_status(driver_id:str, status_value:str) -> dict:
     driver["status"] = status_value
     return driver
 
-
-#delivery assignment logic
 def find_nearest_available_driver(delivery_id: str) -> dict:
     delivery = get_delivery_or_404(delivery_id)
     target_distance = delivery["delivery_distance"]
@@ -88,12 +72,10 @@ def find_nearest_available_driver(delivery_id: str) -> dict:
         if driver["status"] != "available":
             continue
     
-        drx = driver["location"]["x"] 
-        dry = driver["location"]["y"]
-        driver_distance = calculate_distance(0, 0, drx, dry)
-        diff = abs(driver_distance - target_distance)
-        if diff < min_distance:
-            min_distance = diff
+        driver_distance = driver["driver_distance"]
+        difference = abs(driver_distance - target_distance)
+        if difference < min_distance:
+            min_distance = difference
             nearest_driver = driver
 
     if not nearest_driver:

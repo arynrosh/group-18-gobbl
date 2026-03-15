@@ -1,8 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-class DriverLocationUpdate(BaseModel):
-    x: float
-    y: float
+class DriverDistanceUpdate(BaseModel):
+    driver_distance: float = Field(..., ge=0)
 
 class DriverStatusUpdate(BaseModel):
     status: str
