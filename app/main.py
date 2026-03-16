@@ -11,6 +11,7 @@ from app.routers.restaurant_search import router as restaurant_search_router
 from app.routers.fulfillment import router as fulfillment_router
 from app.routers.menu_search import router as menu_search_router
 from app.routers.order_notification import router as order_notification_router
+from app.routers.statistics import router as statistics_router 
 
 app = FastAPI(
     title="Gobbl Food Delivery API",
@@ -30,6 +31,7 @@ app.include_router(restaurant_search_router)
 app.include_router(fulfillment_router)
 app.include_router(menu_search_router)
 app.include_router(order_notification_router)
+app.include_router(statistics_router)
 
 @app.get("/")
 def root():
