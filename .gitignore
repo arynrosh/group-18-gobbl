@@ -5,3 +5,4 @@ __pycache__/
 .DS_Store
 test_reports/coverage_html/
 data/notifications.json
+app/data/notifications.json
