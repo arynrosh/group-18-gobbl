@@ -11,9 +11,7 @@ App = FastAPI()
 #Task 4.2: Implement API to create, modify, and submit orders (cart system)
 #Task 4.3: Implement logic to prevent modifications after order completion
 #Task 4.4: Implement API to fetch order status for a customer or restaurant
-#Task 4.5: Unit tests for order creation, modification, and status updates
-
-#FastAPI lab presentation 
+#Task 4.5: Unit tests for order creation, modification, and status updates-
 
 def addToOrder(orderItem: OrderItem) -> Order:
     if Order.sent == False:
