@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from app.services.order_service import App
 from app.schemas.order import Order, OrderItem, Status
 #app\services\order_service.py
-from app.services.order_service import updateStatus, completeOrderStatus, addToOrder, removeFromOrder, sendOrder
+from app.services.order_service import updateStatus, getStatusCurrent, completeOrderStatus, getStatusComplete, addToOrder, removeFromOrder, sendOrder, getOrderSent, getOrderItems
 
 client2 = TestClient(App)
 
@@ -23,26 +23,26 @@ def orderTester():
 
 def test_updateStatus(statusTester):
     statusUpdate = "Ready"
-    statusTester.updateStatus("Ready")
-    result = statusTester.current
+    updateStatus(statusTester, "Ready")
+    result = getStatusCurrent(statusTester)
     assert statusUpdate == result
 
 def test_completeOrderStatus(statusTester):
-    statusTester.completeOrderStatus()
-    result = statusTester.complete
+    completeOrderStatus(statusTester)
+    result = getStatusComplete(statusTester)
     assert result == True
 
 def test_addToOrder(orderTester, orderItemTester):
-    orderTester.addToOrder(orderItemTester)
-    assert any(orderTester.items, orderItemTester)
+    addToOrder(orderTester, orderItemTester)
+    assert any(getOrderItems(orderTester), orderItemTester)
 
 def test_removeFromOrder(orderTester, orderItemTester):
-    orderTester.addToOrder(orderItemTester)
-    orderTester.removeFromOrder(orderItemTester)
-    assert any(orderTester.items, orderItemTester) == False
+    addToOrder(orderTester, orderItemTester)
+    removeFromOrder(orderTester, orderItemTester)
+    assert any(getOrderItems(orderTester), orderItemTester) == False
 
 def test_sendOrder(orderTester):
-    orderTester.sendOrder()
-    result = orderTester.sent
+    sendOrder(orderTester)
+    result = getOrderSent(orderTester)
     assert result
 

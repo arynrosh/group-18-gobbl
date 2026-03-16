@@ -13,23 +13,42 @@ App = FastAPI()
 #Task 4.4: Implement API to fetch order status for a customer or restaurant
 #Task 4.5: Unit tests for order creation, modification, and status updates-
 
-def addToOrder(orderItem: OrderItem) -> Order:
-    if Order.sent == False:
-        Order.items.append(orderItem)
+def addToOrder(order: Order, orderItem: OrderItem) -> Order:
+    if order.sent == False:
+        order.items.append(orderItem)
 
-def removeFromOrder(orderItem: OrderItem) -> Order:
-    if Order.sent == False:
-            if any(Order.items, orderItem):
-                Order.items.remove(orderItem)
+def removeFromOrder(order: Order, orderItem: OrderItem) -> Order:
+    if order.sent == False:
+            if any(order.items, orderItem):
+                order.items.remove(orderItem)
 
-def sendOrder(orderId: str) -> Order:
-    Order.sent = True
+def sendOrder(order: Order, orderId: str) -> Order:
+    order.sent = True
 
-def updateStatus(status: str) -> Status:
-    if Status.complete == False:
-        current = status
+def getOrderId(order: Order) -> Order:
+    return order.order_id
 
-def completeOrderStatus() -> Status:
-    Status.complete = True
+def getOrderCustomer(order: Order) -> Order:
+    return order.customer_id
 
+def getOrderResturant(order: Order) -> Order:
+    return order.restaurant_id
 
+def getOrderItems(order: Order) -> Order:
+    return order.items
+
+def getOrderSent(order: Order) -> Order:
+    return order.sent
+
+def updateStatus(status: Status, msg: str) -> Status:
+    if status.complete == False:
+        current = msg
+
+def completeOrderStatus(status: Status) -> Status:
+    status.complete = True
+
+def getStatusCurrent(status: Status) -> Status:
+    return status.current
+
+def getStatusComplete(status: Status) -> Status:
+    return status.complete
