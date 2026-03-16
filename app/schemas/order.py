@@ -63,4 +63,4 @@ class Status(BaseModel):
     """
     order_id: str
     current: str
-    complete: str
+    complete: bool
