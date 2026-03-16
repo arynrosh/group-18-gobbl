@@ -42,7 +42,7 @@ def getOrderSent(order: Order) -> Order:
 
 def updateStatus(status: Status, msg: str) -> Status:
     if status.complete == False:
-        current = msg
+        status.current = msg
 
 def completeOrderStatus(status: Status) -> Status:
     status.complete = True

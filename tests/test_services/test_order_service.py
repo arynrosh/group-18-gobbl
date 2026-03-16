@@ -10,28 +10,38 @@ client2 = TestClient(App)
 
 @pytest.fixture
 def statusTester():
-    return Status("1d8e87M")
+    stat=Status()
+    stat.order_id = "123456"
+    stat.current = "sent"
+    stat.complete = False
+    return stat
 
 @pytest.fixture
 def orderItemTester():
-    foodName = "Tacos"
-    foodPrice = 12.99
-    foodRid = 13
-    return OrderItem(foodName, foodPrice, foodRid)
+    item = OrderItem()
+    item.food_item = "Tacos"
+    item.quantity = 1
+    item.order_value = 12.99
+    item.resturant_id = 13
+    return item
 
 @pytest.fixture
 def orderTester():
-    return Order("2f9r98Z", "custest")
+    ord = Order()
+    ord.order_id = "123456"
+    ord.customer_id = "gertrude"
+    ord.restaurant_id = 13
+    ord.items = [orderItemTester]
+    ord.sent = False
+    return ord
 
 
 def test_updateStatus(statusTester):
     statusUpdate = "Ready"
-    assert statusUpdate == "Ready"
     updateStatus(statusTester, "Ready")
     result = getStatusCurrent(statusTester)
     assert statusUpdate == result
 
-"""
 def test_completeOrderStatus(statusTester):
     completeOrderStatus(statusTester)
     result = getStatusComplete(statusTester)
@@ -50,5 +60,3 @@ def test_sendOrder(orderTester):
     sendOrder(orderTester)
     result = getOrderSent(orderTester)
     assert result
-
-"""
