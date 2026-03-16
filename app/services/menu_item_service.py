@@ -4,7 +4,7 @@ from app.schemas.menu_item import MenuItem
 
 menu_items = []
 
-with open("data/food_delivery.csv", newline="") as f:
+with open("app/data/food_delivery.csv", newline="") as f:
     reader = csv.DictReader(f)
     for i, row in enumerate(reader):
         menu_items.append({
