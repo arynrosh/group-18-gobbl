@@ -670,5 +670,101 @@
     "message": "Your order has been placed.",
     "status": "delivered",
     "timestamp": "2026-03-15T17:29:58.510202"
+  },
+  {
+    "notification_id": 85,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.002672"
+  },
+  {
+    "notification_id": 86,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.107139"
+  },
+  {
+    "notification_id": 87,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.138534"
+  },
+  {
+    "notification_id": 88,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order has been placed.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.170534"
+  },
+  {
+    "notification_id": 89,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.210369"
+  },
+  {
+    "notification_id": 90,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M is out for delivery with driver Charlie.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.253570"
+  },
+  {
+    "notification_id": 91,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.297331"
+  },
+  {
+    "notification_id": 92,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M is delayed by 15.0 minutes. We apologize for the inconvenience.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.391472"
+  },
+  {
+    "notification_id": 93,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.457484"
+  },
+  {
+    "notification_id": 94,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M is out for delivery with driver Charlie.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.488979"
+  },
+  {
+    "notification_id": 95,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.522210"
+  },
+  {
+    "notification_id": 96,
+    "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+    "restaurant_id": 16,
+    "message": "Your order 1d8e87M is delayed by 15.0 minutes. We apologize for the inconvenience.",
+    "status": "delivered",
+    "timestamp": "2026-03-15T20:01:36.555448"
   }
 ]
