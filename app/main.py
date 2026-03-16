@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.routers.auth import router as auth_router
-from app.routers.restaurant import router as menu_router
+from app.routers.menu import router as menu_router
 from app.routers.cost import router as cost_router
 from app.routers.users import router as users_router
 from app.routers.delivery import router as delivery_router
@@ -10,6 +10,7 @@ from app.routers.payment_methods import router as payment_methods_router
 from app.routers.restaurant_search import router as restaurant_search_router
 from app.routers.fulfillment import router as fulfillment_router
 
+from app.routers.menu_search import router as menu_search_router
 
 app = FastAPI(
     title="Gobbl Food Delivery API",
@@ -28,6 +29,7 @@ app.include_router(payment_methods_router)
 app.include_router(restaurant_search_router)
 app.include_router(fulfillment_router)
 
+app.include_router(menu_search_router)
 
 @app.get("/")
 def root():
