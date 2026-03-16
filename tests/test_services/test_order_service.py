@@ -26,6 +26,7 @@ def orderTester():
 
 def test_updateStatus(statusTester):
     statusUpdate = "Ready"
+    assert statusUpdate == "Ready"
     updateStatus(statusTester, "Ready")
     result = getStatusCurrent(statusTester)
     assert statusUpdate == result
