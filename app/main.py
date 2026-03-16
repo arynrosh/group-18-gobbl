@@ -8,6 +8,8 @@ from app.routers.payment import router as payment_router
 from app.routers.notification import router as notifications_router
 from app.routers.payment_methods import router as payment_methods_router
 from app.routers.restaurant_search import router as restaurant_search_router
+from app.routers.fulfillment import router as fulfillment_router
+
 from app.routers.menu_search import router as menu_search_router
 
 app = FastAPI(
@@ -25,6 +27,8 @@ app.include_router(payment_router)
 app.include_router(notifications_router)
 app.include_router(payment_methods_router)
 app.include_router(restaurant_search_router)
+app.include_router(fulfillment_router)
+
 app.include_router(menu_search_router)
 
 @app.get("/")
