@@ -41,7 +41,7 @@ def orderTester():
         order_id = "123456",
         customer_id = "gertrude",
         restaurant_id = 13,
-        items = [orderItemTester],
+        items = [],
         sent = False
     )
 
