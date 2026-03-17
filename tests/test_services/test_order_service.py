@@ -59,14 +59,17 @@ def test_completeOrderStatus(statusTester):
 
 def test_addToOrder(orderTester, orderItemTester):
     addToOrder(orderTester, orderItemTester)
-    assert any(getOrderItems(orderTester), orderItemTester)
+    assert orderTester.items[0] == orderItemTester
 
 def test_removeFromOrder(orderTester, orderItemTester):
     addToOrder(orderTester, orderItemTester)
     removeFromOrder(orderTester, orderItemTester)
-    assert any(getOrderItems(orderTester), orderItemTester) == False
+    assert orderTester.items[0] != orderItemTester
 
 def test_sendOrder(orderTester):
     sendOrder(orderTester)
     result = getOrderSent(orderTester)
     assert result
+
+#Copy of command to just run my tests for ease
+#pytest tests/test_services/test_order_service.py
