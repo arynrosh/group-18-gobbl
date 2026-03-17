@@ -1,4 +1,5 @@
 import pytest
+import requests
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from app.services.order_service import App
