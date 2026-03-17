@@ -2,7 +2,7 @@
   {
     "id": 1,
     "food_item": "Burger",
-    "price": 41.17,
+    "order_value": 41.17,
     "restaurant_id": 53,
     "customer_rating": 3,
     "delivery_time_actual": 10.74
@@ -18,7 +18,7 @@
   {
     "id": 3,
     "food_item": "Salad",
-    "price": 18.08,
+    "order_value": 18.08,
     "restaurant_id": 63,
     "customer_rating": 1,
     "delivery_time_actual": -0.34
