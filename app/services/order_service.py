@@ -22,7 +22,7 @@ def removeFromOrder(order: Order, orderItem: OrderItem) -> Order:
             if any(order.items, orderItem):
                 order.items.remove(orderItem)
 
-def sendOrder(order: Order, orderId: str) -> Order:
+def sendOrder(order: Order) -> Order:
     order.sent = True
 
 def getOrderId(order: Order) -> Order:
