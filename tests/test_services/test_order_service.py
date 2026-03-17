@@ -8,32 +8,42 @@ from app.services.order_service import updateStatus, getStatusCurrent, completeO
 
 client2 = TestClient(App)
 
+"""
 @pytest.fixture
 def statusTester():
     stat=Status()
     stat.order_id = "123456"
     stat.current = "sent"
     stat.complete = False
+    
     return stat
+"""
+@pytest.fixture
+def statusTester():
+    return Status(
+        order_id="123456",
+        current="sent",   # or the correct member
+        complete=False,
+    )
 
 @pytest.fixture
 def orderItemTester():
-    item = OrderItem()
-    item.food_item = "Tacos"
-    item.quantity = 1
-    item.order_value = 12.99
-    item.resturant_id = 13
-    return item
+    return OrderItem(
+        food_item = "Tacos",
+        quantity = 1,
+        order_value = 12.99,
+        resturant_id = 13
+    )
 
 @pytest.fixture
 def orderTester():
-    ord = Order()
-    ord.order_id = "123456"
-    ord.customer_id = "gertrude"
-    ord.restaurant_id = 13
-    ord.items = [orderItemTester]
-    ord.sent = False
-    return ord
+    return Order(
+        order_id = "123456",
+        customer_id = "gertrude",
+        restaurant_id = 13,
+        items = [orderItemTester],
+        sent = False
+    )
 
 
 def test_updateStatus(statusTester):
