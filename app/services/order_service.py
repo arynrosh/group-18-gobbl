@@ -20,7 +20,8 @@ def addToOrder(order: Order, orderItem: OrderItem) -> Order:
 
 def removeFromOrder(order: Order, orderItem: OrderItem) -> Order:
     if order.sent == False:
-            order.items.remove(orderItem)
+            if orderItem in order.items:
+                order.items.remove(orderItem)
     return order        
 
 def sendOrder(order: Order) -> Order:
