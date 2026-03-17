@@ -8,21 +8,11 @@ from app.services.order_service import updateStatus, getStatusCurrent, completeO
 
 client2 = TestClient(App)
 
-"""
-@pytest.fixture
-def statusTester():
-    stat=Status()
-    stat.order_id = "123456"
-    stat.current = "sent"
-    stat.complete = False
-    
-    return stat
-"""
 @pytest.fixture
 def statusTester():
     return Status(
-        order_id="123456",
-        current="sent",   # or the correct member
+        order_id="1234567",
+        current="sent",
         complete=False,
     )
 
