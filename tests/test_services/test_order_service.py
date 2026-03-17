@@ -60,10 +60,10 @@ def test_addToOrder(orderTester, orderItemTester):
     addToOrder(orderTester, orderItemTester)
     assert orderTester.items[0] == orderItemTester
 
-def test_removeFromOrder(orderTester, orderItemTester):
+def test_removeFromOrder(orderTester, orderItemTester, orderItemBackup):
     addToOrder(orderTester, orderItemTester)
     removeFromOrder(orderTester, orderItemTester)
-    #addToOrder(orderTester, orderItemBackup)
+    addToOrder(orderTester, orderItemBackup)
     assert orderTester.items[0] != orderItemTester
 
 def test_sendOrder(orderTester):
