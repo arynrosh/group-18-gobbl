@@ -16,11 +16,12 @@ App = FastAPI()
 def addToOrder(order: Order, orderItem: OrderItem) -> Order:
     if order.sent == False:
         order.items.append(orderItem)
+    return order
 
 def removeFromOrder(order: Order, orderItem: OrderItem) -> Order:
     if order.sent == False:
-            if any(order.items, orderItem):
-                order.items.remove(orderItem)
+            order.items.remove(orderItem)
+    return order        
 
 def sendOrder(order: Order) -> Order:
     order.sent = True
