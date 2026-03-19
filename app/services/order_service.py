@@ -42,6 +42,10 @@ def getOrderItems(order: Order) -> Order:
 def getOrderSent(order: Order) -> Order:
     return order.sent
 
+def getOrder(order: Order) -> Order:
+    Order_dict = [order.order_id, order.customer_id, order.restaurant_id, order.items, order.sent]
+    return Order_dict
+
 def updateStatus(status: Status, msg: str) -> Status:
     if status.complete == False:
         status.current = msg
