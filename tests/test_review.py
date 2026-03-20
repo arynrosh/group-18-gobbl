@@ -28,6 +28,19 @@ FAKE_REVIEWS = [  {
   }
 ]
 
+FAKE_ORDER = {
+    "order_id": "odr-123",
+    "customer_id": "cust-123",
+    "restaurant_id": 10,
+    "items": [
+        {
+            "menu_item_id": 1,
+            "food_item": "Burger",
+            "order_value": 41.17
+        }
+    ]
+}
+
 
 def test_get_review_returns_exisiting_review():
     with patch("app.services.review_service.load_all_reviews", return_value=FAKE_REVIEWS):
@@ -46,7 +59,7 @@ def test_get_review_raises_404_for_missing_review():
 def test_create_review():
     fake_reviews = FAKE_REVIEWS.copy()
     review_data = ReviewCreate(
-        order_id="999xyzA",
+        order_id="odr-123",
         rating=4,
         food_temperature="Warm",
         food_freshness=4,
@@ -55,15 +68,12 @@ def test_create_review():
     )
 
     with patch("app.services.review_service.load_all_reviews", return_value=fake_reviews), \
-        patch("app.services.review_service.save_all_reviews") as mock_save:
-        new_review = review_service.create_review(
-            review_data=review_data,
-            restaurant_id=10,
-            customer_id="cust-123"
-        )
+        patch("app.services.review_service.save_all_reviews") as mock_save, \
+        patch("app.services.review_service.get_order_or_404", return_value=FAKE_ORDER):
+        new_review = review_service.create_review(review_data)
 
         assert new_review["review_id"] >= 1
-        assert new_review["order_id"] == "999xyzA"
+        assert new_review["order_id"] == "odr-123"
         assert new_review["restaurant_id"] == 10
         assert new_review["customer_id"] >= "cust-123"
         assert new_review["rating"] == 4

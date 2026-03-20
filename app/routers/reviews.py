@@ -11,14 +11,8 @@ def submit_review(
     review_data: ReviewCreate,
     current_user: dict = Depends(require_roles("customer"))
 ):
-    restauant_id = current_user.get("restaurant_id")
-    customer_id = str(current_user.get("id"))
 
-    review = review_service.create_review(
-        review_data=review_data,
-        restaurant_id=restauant_id,
-        customer_id=customer_id
-    )
+    review = review_service.create_review(review_data)
 
     return {"message": "Review submitted successfully", "review": review}
 
