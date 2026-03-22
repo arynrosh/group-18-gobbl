@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from app.main import app
 from app.services.pagination_service import paginate
-from app.services.restaurant_service import restaurants
+from app.services.restaurant_service import _load_restaurants
 
 client = TestClient(app)
 
@@ -48,7 +48,7 @@ def test_browse_restaurants_offset_beyond_total():
 def test_browse_restaurants_total_is_correct():
     r = client.get("/browse/restaurants")
     assert r.status_code == 200
-    assert r.json()["total"] == len(restaurants)
+    assert r.json()["total"] == len(_load_restaurants())
 
 def test_browse_restaurants_invalid_limit():
     r = client.get("/browse/restaurants?limit=0")
