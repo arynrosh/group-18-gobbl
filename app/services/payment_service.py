@@ -5,14 +5,14 @@ from fastapi import HTTPException
 from app.schemas.payment import PaymentRequest
 from app.repositories.payments_repo import load_all_payments, save_all_payments
 
-def validate_card(payload: PaymentRequest) -> None:
-    # Card number has to be exactly 16 digits
-    if not payload.card_number.replace(" ", "").isdigit() or len(payload.card_number.replace(" ", "")) != 16:
+def _validate_card_number(card_number: str) -> None:
+    digits = card_number.replace(" ", "")
+    if not digits.isdigit() or len(digits) != 16:
         raise HTTPException(status_code=400, detail="Card number must be 16 digits")
 
-    # Expiry must be MM/YY and not in the past
+def _validate_expiry(expiry: str) -> None:
     try:
-        month, year = payload.expiry.split("/")
+        month, year = expiry.split("/")
         exp_month = int(month)
         exp_year = int("20" + year)
         now = datetime.now()
@@ -23,13 +23,20 @@ def validate_card(payload: PaymentRequest) -> None:
     except (ValueError, AttributeError):
         raise HTTPException(status_code=400, detail="Expiry must be in MM/YY format")
 
-    # CVV must be exactly 3 digits
-    if not payload.cvv.isdigit() or len(payload.cvv) != 3:
+def _validate_cvv(cvv: str) -> None:
+    if not cvv.isdigit() or len(cvv) != 3:
         raise HTTPException(status_code=400, detail="CVV must be 3 digits")
 
-    # Amount must be positive
-    if payload.amount <= 0:
+def _validate_amount(amount: float) -> None:
+    if amount <= 0:
         raise HTTPException(status_code=400, detail="Amount must be greater than 0")
+
+def validate_card(payload: PaymentRequest) -> None:
+    _validate_card_number(payload.card_number)
+    _validate_expiry(payload.expiry)
+    _validate_cvv(payload.cvv)
+    _validate_amount(payload.amount)
+        
 
 def process_payment(payload: PaymentRequest) -> dict:
     validate_card(payload)

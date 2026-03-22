@@ -18,10 +18,7 @@ def update_distance(
     current_user: dict = Depends(require_roles("driver")),
 ):
     updated_driver = update_driver_distance(driver_id, body.driver_distance)
-    return {
-        "message": "Driver distance updated",
-        "driver": updated_driver
-    }
+    return {"message": "Driver distance updated", "driver": updated_driver}
 
 @router.put("/drivers/{driver_id}/status")
 def update_status(
@@ -30,10 +27,7 @@ def update_status(
     current_user: dict = Depends(require_roles("driver")),
 ):
     updated_driver = update_driver_status(driver_id, body.status)
-    return {
-        "message": "Driver status updated",
-        "driver": updated_driver
-    }
+    return {"message": "Driver status updated", "driver": updated_driver}
 
 @router.post("/deliveries/{delivery_id}/auto-assign")
 def auto_assign(
