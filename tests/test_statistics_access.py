@@ -1,4 +1,5 @@
 
+
 from unittest.mock import patch
 from fastapi.testclient import TestClient
 from app.main import app
@@ -18,6 +19,11 @@ def get_admin_token():
 
 def get_customer_token():
     r = client.post("/auth/login", data={"username": "alice", "password": "password123"})
+    token = r.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+def get_driver_token():
+    r = client.post("/auth/login", data={"username": "dave", "password": "driverpass"})
     token = r.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
@@ -44,11 +50,8 @@ def test_customer_cannot_access_delivery_times():
     assert r.status_code == 403
 
 def test_driver_cannot_access_delivery_times():
-    r = client.post("/auth/login", data={"username": "dave", "password": "driverpass"})
-    token = r.json()["access_token"]
-    headers = {"Authorization": f"Bearer {token}"}
     with patch("app.services.statistics_service.load_all_orders", return_value=MOCK_ORDERS):
-        r = client.get("/statistics/delivery-times", headers=headers)
+        r = client.get("/statistics/delivery-times", headers=get_driver_token())
     assert r.status_code == 403
 
 
@@ -68,7 +71,7 @@ def test_invalid_token_cannot_access_delivery_times():
 
 # mocking
 
-def test_admin_token_is_required():
+def test_service_called_for_admin():
     with patch("app.services.statistics_service.load_all_orders", return_value=MOCK_ORDERS) as mock_load:
         client.get("/statistics/delivery-times", headers=get_admin_token())
         assert mock_load.called
