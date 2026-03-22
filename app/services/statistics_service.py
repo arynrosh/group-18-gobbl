@@ -8,6 +8,7 @@ def get_average_delivery_times() -> Dict[str, Any]:
     orders = load_all_orders()
 
     if not orders:
+        #safe default value for empty order list 
         return {"per_restaurant": {}, "system_wide_average_minutes": None}
 
     restaurant_delays = {}
