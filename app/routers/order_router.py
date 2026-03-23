@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends
-from app.services.order_service import addToOrder, removeFromOrder, sendOrder, getOrder, getOrderItem
-from app.schemas.Order import Order, OrderItem
+from app.services.order_service import addToOrder, removeFromOrder, sendOrder, getOrder, getOrderItem, updateStatus, completeOrderStatus
+from app.schemas.Order import Order, OrderItem, Status
 from app.schemas.restaurant import Restaurant
 from app.auth.dependencies import get_current_user
     
 # Reference:
 # router = APIRouter(prefix="/menu", tags=["menu"])
-OrdeRouter = APIRouter(prefix="/orders", tags=["order"])
+OrdeRouter = APIRouter(prefix="/orders", tags=["order_id"])
 foodRouter = APIRouter(prefix="/OrderItem", tags=["food_item"])
+statusRouter = APIRouter(prefix="/status", tags=["order_id"])
 
 @OrdeRouter.post("/{order_id}/")
 def createOrder(order_id: str, resturant_id: int, current_user: dict = Depends(get_current_user)):
@@ -44,3 +45,16 @@ def createOrderItem(food_name: str, howMany: int, cost: float, resturant: int):
     order_value = cost,
     resturant_id = resturant)
 
+@statusRouter.post("/{status}/")
+def createStatus(orderid: str):
+    return Status(order_id= orderid,
+                  current = "Sent",
+                  complete = False)
+
+@statusRouter.put("/{status}/")
+def updateStatusRout(orderid: str, msg: str):
+    return updateStatus(orderid, msg)
+
+@statusRouter.put("/{status}/")
+def completeStatusRout(orderid: str):
+    return completeOrderStatus(orderid)
