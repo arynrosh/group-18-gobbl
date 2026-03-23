@@ -6,17 +6,36 @@ from app.schemas.user import RegisterRequest
 
 VALID_ROLES = {"customer", "restaurant_owner", "driver", "admin"}
 
-def validate_input(payload: RegisterRequest) -> None:
-    if len(payload.username.strip()) < 3:
+
+def _validate_username(username: str) -> None:
+    if len(username.strip()) < 3:
         raise HTTPException(status_code=400, detail="Username must be at least 3 characters")
-    if "@" not in payload.email or "." not in payload.email:
+
+
+def _validate_email(email: str) -> None:
+    if "@" not in email or "." not in email:
         raise HTTPException(status_code=400, detail="Invalid email format")
-    if len(payload.password) < 8:
+
+
+def _validate_password(password: str) -> None:
+    if len(password) < 8:
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
-    if not any(ch.isdigit() for ch in payload.password):
+    if not any(ch.isdigit() for ch in password):
         raise HTTPException(status_code=400, detail="Password must contain at least one number")
-    if payload.role not in VALID_ROLES:
+
+
+def _validate_role(role: str) -> None:
+    if role not in VALID_ROLES:
         raise HTTPException(status_code=400, detail=f"Role must be one of: {VALID_ROLES}")
+
+
+def validate_input(payload: RegisterRequest) -> None:
+    # All input validation
+    _validate_username(payload.username)
+    _validate_email(payload.email)
+    _validate_password(payload.password)
+    _validate_role(payload.role)
+
 
 def ensure_unique(payload: RegisterRequest) -> None:
     users = load_all_users()
@@ -27,6 +46,7 @@ def ensure_unique(payload: RegisterRequest) -> None:
             raise HTTPException(status_code=409, detail="Username already taken")
         if u.get("email", "").lower() == email:
             raise HTTPException(status_code=409, detail="Email already registered")
+
 
 def register_user(payload: RegisterRequest) -> dict:
     validate_input(payload)
