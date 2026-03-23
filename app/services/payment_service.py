@@ -5,10 +5,14 @@ from fastapi import HTTPException
 from app.schemas.payment import PaymentRequest
 from app.repositories.payments_repo import load_all_payments, save_all_payments
 
+CARD_NUMBER_LENGTH = 16
+CVV_LENGTH = 3
+
 def _validate_card_number(card_number: str) -> None:
     digits = card_number.replace(" ", "")
-    if not digits.isdigit() or len(digits) != 16:
-        raise HTTPException(status_code=400, detail="Card number must be 16 digits")
+    if not digits.isdigit() or len(digits) != CARD_NUMBER_LENGTH:
+        raise HTTPException(status_code=400, detail=f"Card number must be {CARD_NUMBER_LENGTH} digits")
+
 
 def _validate_expiry(expiry: str) -> None:
     try:
@@ -24,8 +28,8 @@ def _validate_expiry(expiry: str) -> None:
         raise HTTPException(status_code=400, detail="Expiry must be in MM/YY format")
 
 def _validate_cvv(cvv: str) -> None:
-    if not cvv.isdigit() or len(cvv) != 3:
-        raise HTTPException(status_code=400, detail="CVV must be 3 digits")
+    if not cvv.isdigit() or len(cvv) != CVV_LENGTH:
+        raise HTTPException(status_code=400, detail=f"CVV must be {CVV_LENGTH} digits")
 
 def _validate_amount(amount: float) -> None:
     if amount <= 0:
