@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Dict, Any, List
 from app.auth.dependencies import require_roles
-from app.schemas.review import ReviewCreate, ReviewResponse
+from app.schemas.review import ReviewCreate
 from app.services import review_service
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
