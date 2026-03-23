@@ -2,7 +2,21 @@ from typing import List, Dict, Any
 from app.repositories.statistics_repo import load_all_orders
 from app.repositories.reviews_repo import load_all_reviews
 
+def _format_top_restaurants(
+    restaurant_data: Dict[str, float],
+    value_key: str,
+    limit: int
+) -> List[Dict[str, Any]]:
+    sorted_restaurants = sorted(
+        restaurant_data.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
 
+    return [
+        {"restaurant_id": rid, value_key: value}
+        for rid, value in sorted_restaurants[:limit]
+    ]
 def get_popular_restaurants_by_orders(limit: int = 10) -> List[Dict[str, Any]]:
     """
     Returns the most popular restaurants based on number of orders.
@@ -23,16 +37,9 @@ def get_popular_restaurants_by_orders(limit: int = 10) -> List[Dict[str, Any]]:
         except KeyError:
             continue
 
-    sorted_restaurants = sorted(
-        order_counts.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )
+    return _format_top_restaurants(order_counts, "total_orders", limit)
 
-    return [
-        {"restaurant_id": rid, "total_orders": count}
-        for rid, count in sorted_restaurants[:limit]
-    ]
+    
 def get_popular_restaurants_by_rating(limit: int = 10) -> List[Dict[str, Any]]:
     """
     Returns the most popular restaurants based on average rating.
@@ -59,13 +66,4 @@ def get_popular_restaurants_by_rating(limit: int = 10) -> List[Dict[str, Any]]:
         for rid, ratings in restaurant_ratings.items()
     }
 
-    sorted_restaurants = sorted(
-        averages.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )
-
-    return [
-        {"restaurant_id": rid, "average_rating": avg}
-        for rid, avg in sorted_restaurants[:limit]
-    ]
+    return _format_top_restaurants(averages, "average_rating", limit)
