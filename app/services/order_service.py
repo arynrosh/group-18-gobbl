@@ -39,6 +39,9 @@ def getOrderResturant(order: Order) -> Order:
 def getOrderItems(order: Order) -> Order:
     return order.items
 
+def getOrderItem(food: OrderItem) -> OrderItem:
+    return food
+
 def getOrderSent(order: Order) -> Order:
     return order.sent
 
