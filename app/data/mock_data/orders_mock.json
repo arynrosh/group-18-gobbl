@@ -1,0 +1,13 @@
+[{
+  "order_id": "cust-odr-1",
+  "customer_id": "some-customer-id",
+  "restaurant_id": 53,
+  "items": [
+    {
+        "menu_item_id": 1,
+        "food_item": "Burger",
+        "order_value": 41.17
+
+    }
+  ]
+}]
