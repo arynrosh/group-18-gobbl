@@ -31,5 +31,16 @@
     "food_freshness": 3,
     "packaging_quality": 1,
     "food_condition": "Good"
+  },
+  {
+    "review_id": 4,
+    "order_id": "aca6e0D",
+    "restaurant_id": 53,
+    "customer_id": "efecd3d9-44b9-4e43-b001-8d25c259d674",
+    "rating": 1,
+    "food_temperature": "Cold",
+    "food_freshness": 5,
+    "packaging_quality": 3,
+    "food_condition": "Good"
   }
 ]
