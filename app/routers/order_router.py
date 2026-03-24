@@ -10,7 +10,7 @@ foodRouter = APIRouter(prefix="/OrderItem", tags=["food_item"])
 statusRouter = APIRouter(prefix="/status", tags=["order_id"])
 
 @OrdeRouter.post("/orders/{order_id}/create_order/")
-def createOrder(order_id: str, resturant_id: int, dis: int, driver: int, current_user: dict = Depends(require_roles("customer"))):
+def createOrder(order_id: str, resturant_id: int, dis: int, driver: str, current_user: dict = Depends(require_roles("customer"))):
     return Order(order_id = order_id,
         customer_id = current_user,
         restaurant_id = resturant_id,
