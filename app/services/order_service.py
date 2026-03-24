@@ -3,7 +3,7 @@ import json
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import pytest
-from app.schemas.Order import OrderItem, Order, Status
+from app.schemas.order import OrderItem, Order, Status
 
 App = FastAPI()
 

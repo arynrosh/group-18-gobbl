@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from app.services.order_service import addToOrder, removeFromOrder, sendOrder, getOrder, getOrderItem, updateStatus, completeOrderStatus
-from app.schemas.Order import Order, OrderItem, Status
+from app.schemas.order import Order, OrderItem, Status
 from app.schemas.restaurant import Restaurant
 from app.auth.dependencies import get_current_user
     

@@ -3,7 +3,7 @@ import requests
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from app.services.order_service import App
-from app.schemas.Order import Order, OrderItem, Status
+from app.schemas.order import Order, OrderItem, Status
 #app\services\order_service.py
 from app.services.order_service import updateStatus, getStatusCurrent, completeOrderStatus, getStatusComplete, addToOrder, removeFromOrder, sendOrder, getOrderSent, getOrderItems
 
