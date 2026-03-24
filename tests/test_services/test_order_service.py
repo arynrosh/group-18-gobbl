@@ -41,11 +41,11 @@ def orderTester():
         order_id = "123456",
         customer_id = "gertrude",
         restaurant_id = 13,
+        driver_distance = 5,
+        assigned_driver_id = 2,
         items = [],
-        driver_distance = 5.5,
         sent = False
     )
-
 
 def test_updateStatus(statusTester):
     statusUpdate = "Ready"
