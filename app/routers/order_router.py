@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status, HTTPException
 from app.services.order_service import addToOrder, removeFromOrder, sendOrder, getOrder, getOrderItem, updateStatus, completeOrderStatus
 from app.schemas.order import Order, OrderItem, Status
 from app.auth.dependencies import require_roles
+from app.repositories.order_repo import load_all_orders, save_all_orders, save_all_orderitems
 
 #http://127.0.0.1:8000/docs#/menu/search_menu_items_by_name_menu_search_name_get    
-# Reference:
-# router = APIRouter(prefix="/menu", tags=["menu"])
 OrdeRouter = APIRouter(prefix="/orders", tags=["order_id"])
 foodRouter = APIRouter(prefix="/OrderItem", tags=["food_item"])
 statusRouter = APIRouter(prefix="/status", tags=["order_id"])
