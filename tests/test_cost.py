@@ -18,8 +18,11 @@ def test_calculate_cost_valid_order():
         "order_id": "1d8e87M",
         "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         "restaurant_id": 16,
+        "driver_distance": 5.0,
+        "assigned_driver_id": 1,
+        "sent": False,
         "items": [
-            {"food_item": "Tacos", "quantity": 2, "order_value": 10.00}
+            {"food_item": "Tacos", "quantity": 2, "order_value": 10.00, "restaurant_id": 16}
         ]
     }, headers=get_customer_header())
     assert response.status_code == 200
@@ -34,9 +37,12 @@ def test_calculate_cost_multiple_items():
         "order_id": "f4d84dC",
         "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         "restaurant_id": 30,
+        "driver_distance": 8.0,
+        "assigned_driver_id": 1,
+        "sent": False,
         "items": [
-            {"food_item": "Burger", "quantity": 2, "order_value": 10.00},
-            {"food_item": "Pizza", "quantity": 1, "order_value": 12.00}
+            {"food_item": "Burger", "quantity": 2, "order_value": 10.00, "restaurant_id": 30},
+            {"food_item": "Pizza", "quantity": 1, "order_value": 12.00, "restaurant_id": 30}
         ]
     }, headers=get_customer_header())
     assert response.status_code == 200
@@ -49,8 +55,11 @@ def test_calculate_cost_invalid_quantity():
         "order_id": "1d8e87M",
         "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         "restaurant_id": 16,
+        "driver_distance": 5.0,
+        "assigned_driver_id": 1,
+        "sent": False,
         "items": [
-            {"food_item": "Tacos", "quantity": 0, "order_value": 10.00}
+            {"food_item": "Tacos", "quantity": 0, "order_value": 10.00, "restaurant_id": 16}
         ]
     }, headers=get_customer_header())
     assert response.status_code == 422
@@ -60,8 +69,11 @@ def test_calculate_cost_invalid_order_value():
         "order_id": "1d8e87M",
         "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         "restaurant_id": 16,
+        "driver_distance": 5.0,
+        "assigned_driver_id": 1,
+        "sent": False,
         "items": [
-            {"food_item": "Tacos", "quantity": 1, "order_value": -5.00}
+            {"food_item": "Tacos", "quantity": 1, "order_value": -5.00, "restaurant_id": 16}
         ]
     }, headers=get_customer_header())
     assert response.status_code == 422
@@ -71,8 +83,11 @@ def test_calculate_cost_unauthorized_returns_401():
         "order_id": "1d8e87M",
         "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         "restaurant_id": 16,
+        "driver_distance": 8.0,
+        "assigned_driver_id": 1,
+        "sent": False,
         "items": [
-            {"food_item": "Tacos", "quantity": 2, "order_value": 10.00}
+            {"food_item": "Tacos", "quantity": 2, "order_value": 10.00, "restaurant_id": 16}
         ]
     })
     assert response.status_code == 401
@@ -84,8 +99,11 @@ def test_calculate_cost_wrong_role_returns_403():
         "order_id": "1d8e87M",
         "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         "restaurant_id": 16,
+        "driver_distance": 8.0,
+        "assigned_driver_id": 1,
+        "sent": False,
         "items": [
-            {"food_item": "Tacos", "quantity": 2, "order_value": 10.00}
+            {"food_item": "Tacos", "quantity": 2, "order_value": 10.00, "restaurant_id": 16}
         ]
     }, headers=restaurant_headers)
     assert response.status_code == 403
@@ -96,7 +114,10 @@ def test_unit_calculate_cost_subtotal():
         order_id="1d8e87M",
         customer_id="9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         restaurant_id=16,
-        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00)]
+        driver_distance=8.0,
+        assigned_driver_id=1,
+        sent=False,
+        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00, restaurant_id=16)]
     )
     result = calculate_cost(order)
     assert result.subtotal == 20.00
@@ -106,7 +127,10 @@ def test_unit_calculate_cost_tax():
         order_id="1d8e87M",
         customer_id="9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         restaurant_id=16,
-        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00)]
+        driver_distance=5.0,
+        assigned_driver_id=1,
+        sent=False,
+        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00, restaurant_id=16)]
     )
     result = calculate_cost(order)
     assert result.tax == round(20.00 * TAX_RATE, 2)
@@ -116,7 +140,10 @@ def test_unit_calculate_cost_total():
         order_id="1d8e87M",
         customer_id="9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
         restaurant_id=16,
-        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00)]
+        driver_distance=5.0,
+        assigned_driver_id=1,
+        sent=False,
+        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00, restaurant_id=16)]
     )
     result = calculate_cost(order)
     assert result.total == round(20.00 + (20.00 * TAX_RATE) + DELIVERY_FEE, 2)
