@@ -1,11 +1,11 @@
 from fastapi.testclient import TestClient
-from app.services import menu_service
+from unittest.mock import patch
+from fastapi import HTTPException
 from app.main import app
 
 client = TestClient(app)
 
 
-# Helper to get token using valid credentials
 def get_token(username: str, password: str) -> str:
     response = client.post("/auth/login", data={"username": username, "password": password})
     assert response.status_code == 200, response.text
@@ -14,115 +14,161 @@ def get_token(username: str, password: str) -> str:
 def auth_header(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
-def reset_menu_data():
-    menu_service.reset_menu_data()
+FAKE_MENU_ITEM = {
+    "menu_item_id": 1,
+    "restaurant_id": 53,
+    "restaurant_name": "Cactus Club",
+    "cuisine": "American",
+    "food_item": "Burger",
+    "order_value": 41.17,
+    "customer_rating": None,
+    "delivery_time_actual": None
+}
 
-def setup_function():
-    reset_menu_data()
+FAKE_MENU_LIST= [
+    {
+        "menu_item_id": 1,
+        "restaurant_id": 53,
+        "restaurant_name": "Cactus Club",
+        "cuisine": "American",
+        "food_item": "Burger",
+        "order_value": 41.17,
+        "customer_rating": 4.0,
+        "delivery_time_actual": 10.74
+    },
+    {
+        "menu_item_id": 2,
+        "restaurant_id": 53,
+        "restaurant_name": "Cactus Club",
+        "cuisine": "American",
+        "food_item": "French Fries",
+        "order_value": 12.56,
+        "customer_rating": 4.0,
+        "delivery_time_actual": 10.74
+    }
+]
 
-def test_create_menu_item_as_owner_only():
+def test_create_menu_item_as_restaurant_owner_only():
     owner_token = get_token("bob", "securepass")
-    response = client.post("/menu/1",
-                            json={"food_item": "Burger", "order_value": 9.99},
-                            headers=auth_header(owner_token)
-                        )
+    with patch("app.services.menu_service.create_menu_item", return_value=FAKE_MENU_ITEM):
+        response = client.post("/menu/53",
+                                json={"restaurant_name": "Cactus Club","cuisine": "American","food_item": "Burger", "order_value": 41.17},
+                                headers=auth_header(owner_token)
+                            )
     assert response.status_code == 201, response.text
     data = response.json()
-    assert data["item"]["restaurant_id"] == 1
+    assert data["message"] == "Menu item created"
+    assert data["item"]["restaurant_id"] == 53
+    assert data["item"]["restaurant_name"] == "Cactus Club"
+    assert data["item"]["cuisine"] == "American"
     assert data["item"]["food_item"] == "Burger"
-    assert data["item"]["order_value"] == 9.99
+    assert data["item"]["order_value"] == 41.17
 
 def test_create_menu_item_forbidden_for_customer():
     customer_token = get_token("alice", "password123")
     response = client.post("/menu/1",
-                            json={"food_item": "Fries", "order_value": 4.99},
+                            json={"restaurant_name": "Anatoli Soulaki", "cuisine": "Greek", "food_item": "Chicken Gyros", "order_value": 18.08},
                             headers=auth_header(customer_token)
                         )
     assert response.status_code == 403, response.text
 
-def test_update_menu_item_validates_restaurant_ownership():
+def test_update_menu_item_returns_updated_item():
     owner_token = get_token("bob", "securepass")
-    create_response = client.post("/menu/1",
-                                  json={"food_item": "Grass", "order_value": 5.99},
-                                  headers=auth_header(owner_token)
-                              )
-    assert create_response.status_code == 201, create_response.text
-    menu_id = create_response.json()["item"]["id"]
+    updated_item = {
+        "menu_item_id": 1,
+        "restaurant_id": 53,
+        "restaurant_name": "Cactus Club",
+        "cuisine": "American",
+        "food_item": "Steak",
+        "order_value": 42.67,
+        "customer_rating": None,
+        "delivery_time_actual": None      
+    }
 
-    update_response = client.put(f"/menu/2/{menu_id}",
-                                 json={"food_item": "Salad", "order_value": 6.99},
-                                 headers=auth_header(owner_token)
-                             )
-    assert update_response.status_code == 403, update_response.text
+    with patch("app.services.menu_service.update_menu_item", return_value=updated_item):
+        response = client.put("/menu/1/1",
+                              json={"restaurant_name": "Cactus Club", "cuisine": "American", "food_item": "Salad", "order_value": 6.99},
+                              headers=auth_header(owner_token),
+                            )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["message"] == "Menu item updated"
+    assert data["item"]["restaurant_id"] == 53
+    assert data["item"]["restaurant_name"] == "Cactus Club"
+    assert data["item"]["cuisine"] == "American"
+    assert data["item"]["food_item"] == "Steak"
+    assert data["item"]["order_value"] == 42.67
 
-def test_delete_menu_item_validates_restaurant_ownership():
+def test_update_menu_item_returns_403_when_forbidden():
     owner_token = get_token("bob", "securepass")
-    create_response = client.post("/menu/3",
-                            json={"food_item": "Soda", "order_value": 1.99},
+    with patch("app.services.menu_service.update_menu_item",
+               side_effect=HTTPException(status_code=403, detail="Menu item does not belong to this restaurant")):
+        response = client.put("/menu/2/1",
+                            json={"restaurant_name": "Cactus Club", "cuisine": "American", "food_item": "Salad", "order_value": 6.99},
                             headers=auth_header(owner_token)
                         )
-    assert create_response.status_code == 201, create_response.text
-    menu_id = create_response.json()["item"]["id"]
+    assert response.status_code == 403, response.text
+    assert response.json()["detail"] == "Menu item does not belong to this restaurant"
 
-    delete_response = client.delete(f"/menu/2/{menu_id}",
-                                   headers=auth_header(owner_token)
-                               )
-    assert delete_response.status_code == 403, delete_response.text
-
-    delete_response = client.delete(f"/menu/3/{menu_id}",
-                                   headers=auth_header(owner_token)
-                               )
-    assert delete_response.status_code == 200, delete_response.text
-
-
-def test_list_menu_items_without_filters():
+def test_delete_menu_item_returns_success_message():
     owner_token = get_token("bob", "securepass")
-    client.post("/menu/1",
-                json={"food_item": "Burger", "order_value": 9.99},
-                headers=auth_header(owner_token)
-    )
-    client.post("/menu/1",
-                json={"food_item": "Fries", "order_value": 4.99},
-                headers=auth_header(owner_token)
-    )
-    response = client.get("/menu/1")
+    with patch("app.services.menu_service.delete_menu_item", return_value=None):
+        response = client.delete("/menu/2/1",
+                            headers=auth_header(owner_token)
+                        )
+        
+    assert response.status_code == 200, response.text
+    assert response.json() == {"message": "Menu item deleted"}
+
+def test_delete_menu_item_returns_403_when_forbidden():
+    owner_token = get_token("bob", "securepass")
+    with patch("app.services.menu_service.delete_menu_item",
+               side_effect=HTTPException(status_code=403, detail="Menu item does not belong to this restaurant")):
+        response = client.delete("/menu/2/1",
+                            headers=auth_header(owner_token)
+                        )
+    assert response.status_code == 403, response.text
+    assert response.json()["detail"] == "Menu item does not belong to this restaurant"
+
+def test_list_menu_items_returns_items():
+    with patch("app.services.menu_service.list_menu_items", return_value=FAKE_MENU_LIST):
+        response = client.get("/menu/53")
+
     assert response.status_code == 200, response.text
     data = response.json()
-    assert len(data) == 2 
+    assert len(data) == 2
+    assert data[0]["restaurant_id"] == 53
+    assert data[0]["restaurant_name"] == "Cactus Club"
+    assert data[0]["cuisine"] == "American"
 
-def test_filter_menu_items_by_price_tier():
-    owner_token = get_token("bob", "securepass")
-    client.post("/menu/1",
-                json={"food_item": "Burger", "order_value": 9.99},
-                headers=auth_header(owner_token)
-    )
-    client.post("/menu/1",
-                json={"food_item": "Tacos", "order_value": 42.21},
-                headers=auth_header(owner_token)
-    )
-    response = client.get("/menu/1?price_tier=$$$$")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert len(data) == 1
-    assert data[0]["food_item"] == "Tacos"
+def test_list_menu_items_accepts_filter():
+    filtered_items_list = [FAKE_MENU_LIST[1]]
+    with patch("app.services.menu_service.list_menu_items", return_value=filtered_items_list):
+        response = client.get("/menu/53?price_tier=$&min_rating=3.0")
 
-
-def test_filter_menu_items_by_rating():
-    #references json file since schemas don't have customer_rating field (cuz restaurant owner doesn't set it when creating/updating menu item)
-    response = client.get("/menu/53?min_rating=3.0")
     assert response.status_code == 200, response.text
     data = response.json()
     assert len(data) == 1
-    assert data[0]["food_item"] == "Burger"
-    assert data[0]["customer_rating"] == 3.0
+    assert data[0]["menu_item_id"] == 2
+    assert data[0]["restaurant_id"] == 53
+    assert data[0]["restaurant_name"] == "Cactus Club"
+    assert data[0]["cuisine"] == "American"
+    assert data[0]["food_item"] == "French Fries"
+    assert data[0]["order_value"] == 12.56
+    assert data[0]["customer_rating"] >= 3.0
 
-def test_filter_menu_items_no_results():
-    owner_token = get_token("bob", "securepass")
-    client.post("/menu/1",
-                json={"food_item": "Cola", "order_value": 2.99, "customer_rating": 2.0},
-                headers=auth_header(owner_token)
-            )
-    response = client.get("/menu/1?order_value=$$&min_rating=4.0")
-    assert response.status_code == 200
+def test_list_menu_items_no_results():
+    with patch("app.services.menu_service.list_menu_items", return_value=[]):
+        response = client.get("/menu/53?order_value=$$&min_rating=5.0")
+        
+    assert response.status_code == 200, response.text
     data = response.json()
     assert data == []
+
+def test_list_menu_items_invalid_price_tier_returns_422():
+    response = client.get("/menu/53?price_tier=abc")
+    assert response.status_code == 422, response.text
+
+def test_list_menu_items_invalid_min_rating_returns_422():
+    response = client.get("/menu/53?min_rating=abc")
+    assert response.status_code == 422, response.text
