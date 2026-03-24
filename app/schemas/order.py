@@ -51,3 +51,16 @@ class CostBreakdown(BaseModel):
     tax: float
     delivery_fee: float
     total: float
+
+class Status(BaseModel):
+    """
+    Used for communicating status of an order
+
+    Attributes:
+        order_id (str): The order that it is connected to
+        current (str): The current status of the order
+        complete (bool): Is the order complete or not
+    """
+    order_id: str
+    current: str
+    complete: bool
