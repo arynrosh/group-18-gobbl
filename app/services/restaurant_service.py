@@ -1,39 +1,32 @@
-import csv
+import json
 from pathlib import Path
 from typing import List
 from app.schemas.restaurant import Restaurant
 
-CSV_PATH = Path(__file__).resolve().parents[1] / "data" / "restaurants.csv"
+MENU_PATH = Path(__file__).resolve().parents[1] / "data" / "menu.json"
 
-def _load_restaurants() -> List[dict]:
-    """Loads all restaurants from the CSV file."""
-    if not CSV_PATH.exists():
+def _load_restaurants() -> List[Restaurant]:
+    """Loads unique restaurants from the menu JSON file."""
+    if not MENU_PATH.exists():
         return []
-    with CSV_PATH.open(newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        return [
-            {
-                "id": int(row["restaurant_id"]),
-                "name": row["name"],
-                "cuisine": row["cuisine"],
-                "location": row["location"]
-            }
-            for row in reader
-        ]
-
-def _search_by_field(field: str, query: str) -> List[Restaurant]:
-    """Returns restaurants where the given field contains the query string."""
-    restaurants = _load_restaurants()
-    return [
-        Restaurant(**r)
-        for r in restaurants
-        if query.lower() in r[field].lower()
-    ]
+    with MENU_PATH.open(encoding="utf-8") as f:
+        menu_items = json.load(f)
+    seen = set()
+    restaurants = []
+    for item in menu_items:
+        if item["restaurant_id"] not in seen:
+            seen.add(item["restaurant_id"])
+            restaurants.append(Restaurant(
+                restaurant_id=item["restaurant_id"],
+                restaurant_name=item["restaurant_name"],
+                cuisine=item["cuisine"]
+            ))
+    return restaurants
 
 def search_by_name(name: str) -> List[Restaurant]:
     """Search restaurants by name."""
-    return _search_by_field("name", name)
+    return [r for r in _load_restaurants() if name.lower() in r.restaurant_name.lower()]
 
 def search_by_cuisine(cuisine: str) -> List[Restaurant]:
-    """Search restaurants by cuisine."""
-    return _search_by_field("cuisine", cuisine)
+    """Search restaurants by cuisine type."""
+    return [r for r in _load_restaurants() if cuisine.lower() in r.cuisine.lower()]
