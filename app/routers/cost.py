@@ -1,13 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException,status
 from app.schemas.order import Order, CostBreakdown
 from app.services.cost_service import calculate_cost
+from app.auth.dependencies import get_current_user
 
 router = APIRouter(prefix="/cost", tags=["cost"])
 
 @router.post("/calculate", response_model=CostBreakdown)
-def get_cost_breakdown(order: Order):
+def get_cost_breakdown(order: Order, current_user: dict = Depends(get_current_user)):
     """
     Returns the cost breakdown for a given order.
+    Accessible by customers and admins only.
 
     Args:
         order (Order): The order to calculate costs for.
@@ -15,6 +17,13 @@ def get_cost_breakdown(order: Order):
     Returns:
         CostBreakdown: Subtotal, tax, delivery fee, and total.
     """
+    if current_user.get("role") not in ["customer", "admin"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail= "Access denied. Customers and admins only."
+
+        )
+   
     return calculate_cost(order)
 
 

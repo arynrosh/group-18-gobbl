@@ -1,26 +1,102 @@
 [
   {
-    "id": 1,
+    "menu_item_id": 1,
+    "restaurant_id": 53,
+    "restaurant_name": "Cactus Club",
+    "cuisine": "American",
     "food_item": "Burger",
     "order_value": 41.17,
-    "restaurant_id": 53,
     "customer_rating": 3,
     "delivery_time_actual": 10.74
   },
   {
-    "id": 2,
+    "menu_item_id": 2,
+    "restaurant_id": 3,
+    "restaurant_name": "Twisted Tomato",
+    "cuisine": "Italian",
     "food_item": "Pasta",
     "order_value": 37.25,
-    "restaurant_id": 3,
     "customer_rating": 5,
     "delivery_time_actual": 9.09
   },
   {
-    "id": 3,
-    "food_item": "Salad",
-    "order_value": 18.08,
+    "menu_item_id": 3,
     "restaurant_id": 63,
+    "restaurant_name": "Anatoli Soulaki",
+    "cuisine": "Greek",
+    "food_item": "Chicken Gyros",
+    "order_value": 18.08,
     "customer_rating": 1,
     "delivery_time_actual": -0.34
+  },
+  {
+    "menu_item_id": 4,
+    "restaurant_id": 54,
+    "restaurant_name": "Momo Sushi",
+    "cuisine": "Japanese",
+    "food_item": "Sushi",
+    "order_value": 8.53,
+    "customer_rating": 3,
+    "delivery_time_actual": 11.42
+  },
+  {
+    "menu_item_id": 5,
+    "restaurant_id": 54,
+    "restaurant_name": "Momo Sushi",
+    "cuisine": "Japanese",
+    "food_item": "California Roll",
+    "order_value": 14.76,
+    "customer_rating": 4,
+    "delivery_time_actual": 13.08
+  },
+  {
+    "menu_item_id": 6,
+    "restaurant_id": 55,
+    "restaurant_name": "Earls Kitchen and Bar",
+    "cuisine": "American",
+    "food_item": "Steak",
+    "order_value": 42.67,
+    "customer_rating": 4,
+    "delivery_time_actual": 18.36
+  },
+  {
+    "menu_item_id": 7,
+    "restaurant_id": 56,
+    "restaurant_name": "Tandoori Garden",
+    "cuisine": "Indian",
+    "food_item": "Briyani rice",
+    "order_value": 24.82,
+    "customer_rating": 1,
+    "delivery_time_actual": 16.74
+  },
+  {
+    "menu_item_id": 8,
+    "restaurant_id": 56,
+    "restaurant_name": "Tandoori Garden",
+    "cuisine": "Indian",
+    "food_item": "Butter Chicken",
+    "order_value": 26.39,
+    "customer_rating": 5,
+    "delivery_time_actual": 14.92
+  },
+  {
+    "menu_item_id": 9,
+    "restaurant_id": 57,
+    "restaurant_name": "Pagoda Restaurant",
+    "cuisine": "Chinese",
+    "food_item": "Fried Rice",
+    "order_value": 17.84,
+    "customer_rating": 4,
+    "delivery_time_actual": 12.65
+  },
+  {
+    "menu_item_id": 10,
+    "restaurant_id": 57,
+    "restaurant_name": "Pagoda Restaurant",
+    "cuisine": "Chinese",
+    "food_item": "Sweet and Sour Pork",
+    "order_value": 23.11,
+    "customer_rating": 3,
+    "delivery_time_actual": 17.03
   }
 ]

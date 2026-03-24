@@ -11,12 +11,7 @@ router = APIRouter(prefix="/payment-methods", tags=["payment-methods"])
 @router.post("", response_model=PaymentMethodResponse, status_code=201)
 def save_method(payload: SavePaymentMethodRequest, current_user: dict = Depends(get_current_user)):
     # Saves a card for the currently logged in user
-    return save_payment_method(
-        current_user["sub"],
-        payload.cardholder_name,
-        payload.card_number,
-        payload.expiry
-    )
+    return save_payment_method(current_user["sub"],payload.cardholder_name, payload.card_number, payload.expiry)
 
 
 @router.get("", response_model=list[PaymentMethodResponse])

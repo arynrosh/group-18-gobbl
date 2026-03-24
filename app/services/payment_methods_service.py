@@ -4,14 +4,16 @@
 import uuid
 from fastapi import HTTPException
 from app.repositories.payment_methods_repo import load_all_payment_methods, save_all_payment_methods
+from app.schemas.payment_method import SavePaymentMethodRequest
+
+CARD_NUMBER_LENGTH = 16
 
 def save_payment_method(username: str, cardholder_name: str, card_number: str, expiry: str) -> dict:
     # Validate card number before saving
     digits = card_number.replace(" ", "")
-    if not digits.isdigit() or len(digits) != 16:
-        raise HTTPException(status_code=400, detail="Card number must be 16 digits")
+    if not digits.isdigit() or len(digits) != CARD_NUMBER_LENGTH:
+        raise HTTPException(status_code=400, detail=f"Card number must be {CARD_NUMBER_LENGTH} digits")
 
-    # Only store last 4 digits for security
     last_four = digits[-4:]
     method_id = str(uuid.uuid4())
 
@@ -35,7 +37,7 @@ def get_payment_methods(username: str) -> list:
     return [m for m in methods if m.get("username") == username]
 
 def delete_payment_method(username: str, method_id: str) -> dict:
-    # Deletes a saved card - only the owner can delete their own card
+    # Deletes a saved card, only the owner can delete their own card
     methods = load_all_payment_methods()
     match = next((m for m in methods if m.get("method_id") == method_id), None)
 
