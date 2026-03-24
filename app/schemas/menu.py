@@ -12,16 +12,14 @@ class MenuItem(BaseModel):
     customer_rating: Optional[int] = None
     delivery_time_actual: Optional[int] = None
 
-#commented out for the sake of not breaking existing code, will be reimplemented :)
-
 class MenuItemCreate(BaseModel):
-    # restaurant_name: str = Field(..., min_length=1, max_length=100)
-    # cuisine: str = Field(..., min_length=1, max_length=100)
+    restaurant_name: str = Field(..., min_length=1, max_length=100)
+    cuisine: str = Field(..., min_length=1, max_length=100)
     food_item: str = Field(..., min_length=1, max_length=100)
     order_value: float = Field(..., gt=0)
 
 class MenuItemUpdate(BaseModel):
-    # restaurant_name: str = Field(..., min_length=1, max_length=100)
-    # cuisine: str = Field(..., min_length=1, max_length=100)
+    restaurant_name: Optional[str] = Field(..., min_length=1, max_length=100)
+    cuisine: Optional[str] = Field(..., min_length=1, max_length=100)
     food_item: Optional[str] = Field(None, min_length=1, max_length=100)
     order_value: Optional[float] = Field(None, gt=0)
