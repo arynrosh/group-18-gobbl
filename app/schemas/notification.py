@@ -6,7 +6,6 @@ class Notification(BaseModel):
     customer_id: str
     restaurant_id: int
     message: str
-    
     status: str
     timestamp: str
 

@@ -20,9 +20,9 @@ def save_payment_method(username: str, cardholder_name: str, card_number: str, e
     record = {
         "method_id": method_id,
         "username": username,
-        "cardholder_name": payload.cardholder_name,
+        "cardholder_name": cardholder_name,
         "last_four": last_four,
-        "expiry": payload.expiry
+        "expiry": expiry
     }
 
     methods = load_all_payment_methods()
