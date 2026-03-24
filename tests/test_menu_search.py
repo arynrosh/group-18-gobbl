@@ -10,18 +10,18 @@ def test_search_by_name_valid():
     r = client.get("/menu/search/name?name=Pasta")
     assert r.status_code == 200
     data = r.json()
-    assert len(data) > 0
-    assert any("Pasta" in item["name"] for item in data)
+    assert len(data["items"]) > 0
+    assert any("Pasta" in item["food_item"] for item in data["items"])
 
 def test_search_by_name_case_insensitive():
     r = client.get("/menu/search/name?name=pasta")
     assert r.status_code == 200
-    assert len(r.json()) > 0
+    assert len(r.json()["items"]) > 0
 
 def test_search_by_name_no_match():
     r = client.get("/menu/search/name?name=xyznonexistentitem")
     assert r.status_code == 200
-    assert r.json() == []
+    assert r.json()["items"] == []
 
 def test_search_by_name_empty_string():
     r = client.get("/menu/search/name?name=")
@@ -31,22 +31,22 @@ def test_search_by_name_partial_match():
     r = client.get("/menu/search/name?name=burg")
     assert r.status_code == 200
     data = r.json()
-    assert len(data) > 0
+    assert len(data["items"]) > 0
 
 def test_search_by_name_returns_correct_fields():
     r = client.get("/menu/search/name?name=Pasta")
     assert r.status_code == 200
     data = r.json()
-    assert all("id" in item for item in data)
-    assert all("name" in item for item in data)
-    assert all("price" in item for item in data)
-    assert all("restaurant_id" in item for item in data)
+    assert all("menu_item_id" in item for item in data["items"])
+    assert all("food_item" in item for item in data["items"])
+    assert all("order_value" in item for item in data["items"])
+    assert all("restaurant_id" in item for item in data["items"])
 
 def test_search_by_name_across_multiple_restaurants():
-    r = client.get("/menu/search/name?name=Pasta")
+    r = client.get("/menu/search/name?name=rice")
     assert r.status_code == 200
     data = r.json()
-    restaurant_ids = set(item["restaurant_id"] for item in data)
+    restaurant_ids = set(item["restaurant_id"] for item in data["items"])
     assert len(restaurant_ids) > 1
 
 # Unit Tests
@@ -54,7 +54,7 @@ def test_search_by_name_across_multiple_restaurants():
 def test_unit_search_by_name_returns_results():
     result = search_by_name("Pasta")
     assert len(result) > 0
-    assert all("Pasta" in item.name for item in result)
+    assert all("Pasta" in item.food_item for item in result)
 
 def test_unit_search_by_name_no_match():
     result = search_by_name("xyznonexistentitem")
