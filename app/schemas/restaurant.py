@@ -1,7 +1,6 @@
 from pydantic import BaseModel
-class Restaurant(BaseModel):
 
-    id: int
-    name: str
+class Restaurant(BaseModel):
+    restaurant_id: int
+    restaurant_name: str
     cuisine: str
-    location: str
