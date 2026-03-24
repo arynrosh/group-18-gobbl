@@ -101,28 +101,27 @@ def getOrder(order: Order) -> Order:
     Order_dict = [order.order_id, order.customer_id, order.restaurant_id, order.items, order.sent]
     return Order_dict
 
-def updateStatus(status: Status, msg: str) -> Status:
+def updateStatus(order_status: Status, msg: str) -> Status:
     statuses = load_all_status()
-    if status not in statuses:
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    if status.complete == False:
-        status.current = msg
+    if order_status not in statuses:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    if order_status.complete == False:
+        order_status.current = msg
 
-def completeOrderStatus(status: Status) -> Status:
+def completeOrderStatus(order_status: Status) -> Status:
     statuses = load_all_status()
-    if status not in statuses:
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    status.complete = True
+    if order_status not in statuses:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    order_status.complete = True
 
-def getStatusCurrent(status: Status) -> Status:
+def getStatusCurrent(order_status: Status) -> Status:
     statuses = load_all_status()
-    if status not in statuses:
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return status.current
+    if order_status not in statuses:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return order_status.current
 
-def getStatusComplete(status: Status) -> Status:
+def getStatusComplete(order_status: Status) -> Status:
     statuses = load_all_status()
-    if status not in statuses:
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return status.complete
-
+    if order_status not in statuses:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return order_status.complete
