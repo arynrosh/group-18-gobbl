@@ -22,5 +22,13 @@
     "assigned_driver_id": 2,
     "items": [],
     "sent": false
+    },
+    {"order_id": "123456",
+    "customer_id": "gertrude",
+    "restaurant_id": 13,
+    "driver_distance": 5,
+    "assigned_driver_id": 2,
+    "items": [],
+    "sent": false
     }
 ]

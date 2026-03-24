@@ -13,5 +13,15 @@
     "quanity": 1,
     "order_value": 8.99,
     "resturant_id": 16
+    },
+    {"food_item": "Cheese",
+    "quanity": 2,
+    "order_value": 6.66,
+    "resturant_id": 13
+    },
+    {"food_item": "Tacos",
+    "quanity": 1,
+    "order_value": 12.99,
+    "resturant_id": 13
     }
 ]
