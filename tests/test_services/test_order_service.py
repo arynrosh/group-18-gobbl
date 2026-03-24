@@ -42,6 +42,7 @@ def orderTester():
         customer_id = "gertrude",
         restaurant_id = 13,
         items = [],
+        driver_distance = 5.5
         sent = False
     )
 

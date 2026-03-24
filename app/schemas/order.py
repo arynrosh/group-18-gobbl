@@ -32,6 +32,7 @@ class Order(BaseModel):
     customer_id: str
     restaurant_id: int
     items: List[OrderItem]
+    driver_distance: float
     sent: bool
 
 
