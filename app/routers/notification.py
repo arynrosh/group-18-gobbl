@@ -39,11 +39,11 @@ def get_customer_notifications(customer_id: str, current_user: dict = Depends(ge
 def get_restaurant_notifications(restaurant_id: int, current_user: dict = Depends(get_current_user)):
     """
     Retrieves all notifications for a given restaurant.
-    Accessible by restaurants and admin only
+    Accessible by restaurant owners and admin only
     """
-    if current_user.get("role") not in ["restaurant", "admin"]:
+    if current_user.get("role") not in ["restaurant_owner", "admin"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied. Restaurants and admins only."
+            detail="Access denied. Restaurant owners and admins only."
         )
     return get_notifications_for_restaurant(restaurant_id)
