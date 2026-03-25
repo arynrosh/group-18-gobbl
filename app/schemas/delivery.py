@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 
 #defined but not used (yet)
 class Driver(BaseModel):
-    id: int
+    menu_id: int
     name: str
     status: str
     driver_distance: float
