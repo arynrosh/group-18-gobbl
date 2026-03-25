@@ -11,6 +11,9 @@ TEST_USERS = [
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "users.json"
 PAYMENTS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "payments.json"
+ORDERS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "orders.json"
+STATUS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "status.json"
+ORDERITEMS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "OrderItem.json"
 
 
 @pytest.fixture(autouse=True)
@@ -27,10 +30,6 @@ def restore_payments():
     original = PAYMENTS_PATH.read_text() if PAYMENTS_PATH.exists() else "[]"
     yield
     PAYMENTS_PATH.write_text(original)
-
-    ORDERS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "orders.json"
-STATUS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "status.json"
-ORDERITEMS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "OrderItem.json"
 
 
 @pytest.fixture(autouse=True)
