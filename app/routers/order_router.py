@@ -12,7 +12,7 @@ router = APIRouter(prefix="/orders", tags=["orders"])
 def create_new_order(
     order_id: str,
     restaurant_id: int,
-    driver_distance: int,
+    delivery_distance: float,
     assigned_driver_id: int,
     current_user: dict = Depends(require_roles("customer"))
 ):
@@ -20,7 +20,7 @@ def create_new_order(
         order_id=order_id,
         customer_id=current_user["sub"],
         restaurant_id=restaurant_id,
-        driver_distance=driver_distance,
+        delivery_distance=delivery_distance,
         assigned_driver_id=assigned_driver_id
     )
 
@@ -33,13 +33,12 @@ def get_order_by_id(order_id: str, current_user: dict = Depends(get_current_user
 @router.post("/{order_id}/items")
 def add_item(
     order_id: str,
+    restaurant_id: int,
     food_item: str,
     quantity: int,
-    order_value: float,
-    restaurant_id: int,
     current_user: dict = Depends(require_roles("customer"))
 ):
-    return add_to_order(order_id, food_item, quantity, order_value, restaurant_id)
+    return add_to_order(order_id, restaurant_id, food_item, quantity)
 
 
 @router.delete("/{order_id}/items/{food_item}")

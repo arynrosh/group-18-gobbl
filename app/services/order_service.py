@@ -6,8 +6,9 @@ from app.repositories.order_repo import (
     load_all_status, save_all_status
 )
 
-def _get_order_or_404(order_id: str) -> dict:
-    orders = load_all_orders()
+from app.services.menu_service import get_menu_item
+
+def _get_order_or_404(order_id: str, orders: list[dict]) -> dict:
     order = next((o for o in orders if o.get("order_id") == order_id), None)
     if not order:
         raise HTTPException(status_code=404, detail=f"Order {order_id} not found")
@@ -22,7 +23,7 @@ def _get_status_or_404(order_id: str) -> dict:
     return record
 
 
-def create_order(order_id: str, customer_id: str, restaurant_id: int, driver_distance: int, assigned_driver_id: int) -> dict:
+def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_distance: float, assigned_driver_id: int) -> dict:
     orders = load_all_orders()
     if any(o.get("order_id") == order_id for o in orders):
         raise HTTPException(status_code=409, detail="Order ID already exists")
@@ -31,7 +32,7 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, driver_dis
         "order_id": order_id,
         "customer_id": customer_id,
         "restaurant_id": restaurant_id,
-        "driver_distance": driver_distance,
+        "delivery_distance": delivery_distance,
         "assigned_driver_id": assigned_driver_id,
         "items": [],
         "sent": False
@@ -46,19 +47,27 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, driver_dis
     return new_order
 
 
-def add_to_order(order_id: str, food_item: str, quantity: int, order_value: float, restaurant_id: int) -> dict:
+def add_to_order(order_id: str, restaurant_id: int, food_item: str, quantity: int) -> dict:
     orders = load_all_orders()
-    order = _get_order_or_404(order_id)
+    order = _get_order_or_404(order_id, orders)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
+    
+    menu_item = get_menu_item(food_item, restaurant_id)
+
+    if order["restaurant_id"] != menu_item["restaurant_id"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Item does not belong to this order's restaurant"
+        )        
 
     new_item = {
-        "food_item": food_item,
+        "food_item": menu_item["food_item"],
         "quantity": quantity,
-        "order_value": order_value,
-        "restaurant_id": restaurant_id
+        "order_value": menu_item["order_value"],
     }
+
     order["items"].append(new_item)
     save_all_orders(orders)
     return order
@@ -66,7 +75,7 @@ def add_to_order(order_id: str, food_item: str, quantity: int, order_value: floa
 
 def remove_from_order(order_id: str, food_item: str) -> dict:
     orders = load_all_orders()
-    order = _get_order_or_404(order_id)
+    order = _get_order_or_404(order_id, orders)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
@@ -83,7 +92,7 @@ def remove_from_order(order_id: str, food_item: str) -> dict:
 
 def send_order(order_id: str) -> dict:
     orders = load_all_orders()
-    order = _get_order_or_404(order_id)
+    order = _get_order_or_404(order_id, orders)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Order has already been sent")
@@ -104,7 +113,8 @@ def send_order(order_id: str) -> dict:
 
 
 def get_order(order_id: str) -> dict:
-    return _get_order_or_404(order_id)
+    orders = load_all_orders()
+    return _get_order_or_404(order_id, orders)
 
 
 def update_status(order_id: str, msg: str) -> dict:
