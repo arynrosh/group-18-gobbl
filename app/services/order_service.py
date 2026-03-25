@@ -1,143 +1,134 @@
-from fastapi import FastAPI, status, HTTPException
-from app.schemas.order import OrderItem, Order, Status
+from fastapi import HTTPException, status
+from app.schemas.order import Order, OrderItem, Status
+from app.repositories.order_repo import (
+    load_all_orders, save_all_orders,
+    load_all_orderitems, save_all_orderitems,
+    load_all_status, save_all_status
+)
 from app.services.menu_service import get_menu_item
-from typing import Dict, Any
-from app.schemas.menu_item import MenuItem
-from app.repositories.order_repo import load_all_orders, save_all_orders, save_all_orderitems, load_all_orderitems, load_all_status
 
-App = FastAPI()
-menu_db: Dict[int, Dict[str, Any]] = {}
-menu_id_counter: int = 1
-#Task 4.1: Design database tables for Orders, Order Items, and Status Tracking
-#Task 4.2: Implement API to create, modify, and submit orders (cart system)
-#Task 4.3: Implement logic to prevent modifications after order completion
-#Task 4.4: Implement API to fetch order status for a customer or restaurant
-#Task 4.5: Unit tests for order creation, modification, and status updates-
 
-"""def getItemFromMenu(item_id: int) -> MenuItem:
-    item = menu_db.get(int)
-    if not item:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Menu item with id {item_id} not found"
-        )
-    return item"""
-
-def createOrder(order_id: str, cust_id: str, rest_id: int, drive_dis: int, driver_id: int) -> Order:
+def _get_order_or_404(order_id: str) -> dict:
     orders = load_all_orders()
-
-    newOrder = {
-        "order_id": order_id,
-    "customer_id": cust_id,
-    "restaurant_id": rest_id,
-    "driver_distance": drive_dis,
-    "assigned_driver_id": driver_id,
-    "items": [],
-    "sent": False
-    }
-    orders.append(newOrder)
-    save_all_orders(orders)
-    return newOrder
-
-def menuToOrderItem(item_id: int, quant: int, customer_id: str) -> MenuItem:
-    food = get_menu_item(item_id)
-    orderItem = orderItem(food_item = food.name,
-                          quantity = quant,
-                          order_value = food.price * quant,
-                          resturant_id = food.resturant_id
-    )
-    currentOrder = getOrderId(customer_id)
-    addToOrder(currentOrder, orderItem)
-
-
-def addToOrder(order: Order, orderItem: OrderItem) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    if order.sent == False:
-        order.items.append(orderItem)
+    order = next((o for o in orders if o.get("order_id") == order_id), None)
+    if not order:
+        raise HTTPException(status_code=404, detail=f"Order {order_id} not found")
     return order
 
-def removeFromOrder(order: Order, orderItem: OrderItem) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    if order.sent == False:
-            if orderItem in order.items:
-                order.items.remove(orderItem)
-    return order        
 
-def sendOrder(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    order.sent = True
-
-def getOrderId(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return order.order_id
-
-def getOrderCustomer(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return order.customer_id
-
-def getOrderResturant(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return order.restaurant_id
-
-def getOrderItems(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return order.items
-
-def getOrderItem(food: OrderItem) -> OrderItem:
-    ordered = load_all_orderitems()
-    if food not in ordered: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    food_dict = [food.food_item, food.quantity, food.order_value, food.resturant_id]
-    return food_dict
-
-def getOrderSent(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return order.sent
-
-def getOrder(order: Order) -> Order:
-    orders = load_all_orders()
-    if order not in orders: 
-        raise HTTPException(status.HTTP_404_NOT_FOUND)
-    Order_dict = [order.order_id, order.customer_id, order.restaurant_id, order.items, order.sent]
-    return Order_dict
-
-def updateStatus(order_status: Status, msg: str) -> Status:
+def _get_status_or_404(order_id: str) -> dict:
     statuses = load_all_status()
-    if order_status not in statuses:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    if order_status.complete == False:
-        order_status.current = msg
+    record = next((s for s in statuses if s.get("order_id") == order_id), None)
+    if not record:
+        raise HTTPException(status_code=404, detail=f"Status for order {order_id} not found")
+    return record
 
-def completeOrderStatus(order_status: Status) -> Status:
-    statuses = load_all_status()
-    if order_status not in statuses:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    order_status.complete = True
 
-def getStatusCurrent(order_status: Status) -> Status:
-    statuses = load_all_status()
-    if order_status not in statuses:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return order_status.current
+def create_order(order_id: str, customer_id: str, delivery_distance: int) -> dict:
+    orders = load_all_orders()
+    if any(o.get("order_id") == order_id for o in orders):
+        raise HTTPException(status_code=409, detail="Order ID already exists")
 
-def getStatusComplete(order_status: Status) -> Status:
+    new_order = {
+        "order_id": order_id,
+        "customer_id": customer_id,
+        "delivery_distance": delivery_distance,
+        "assigned_driver_id": None,
+        "items": [],
+        "sent": False
+    }
+    orders.append(new_order)
+    save_all_orders(orders)
+
     statuses = load_all_status()
-    if order_status not in statuses:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    return order_status.complete
+    statuses.append({"order_id": order_id, "current": "pending", "complete": False})
+    save_all_status(statuses)
+
+    return new_order
+
+
+def add_to_order(order_id: str, food_item: str, quantity: int, restaurant_id: int) -> dict:
+    orders = load_all_orders()
+    order = _get_order_or_404(order_id)
+
+    if order.get("sent"):
+        raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
+
+    item = get_menu_item(food_item, restaurant_id)
+    new_item = {
+        "restaurant_id": restaurant_id,
+        "food_item": food_item,
+        "quantity": quantity,
+        "order_value": item["order_value"]
+    }
+    order["items"].append(new_item)
+    save_all_orders(orders)
+    return order
+
+
+def remove_from_order(order_id: str, food_item: str) -> dict:
+    orders = load_all_orders()
+    order = _get_order_or_404(order_id)
+
+    if order.get("sent"):
+        raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
+
+    original_count = len(order["items"])
+    order["items"] = [i for i in order["items"] if i.get("food_item") != food_item]
+
+    if len(order["items"]) == original_count:
+        raise HTTPException(status_code=404, detail=f"Item {food_item} not found in order")
+
+    save_all_orders(orders)
+    return order
+
+
+def send_order(order_id: str) -> dict:
+    orders = load_all_orders()
+    order = _get_order_or_404(order_id)
+
+    if order.get("sent"):
+        raise HTTPException(status_code=400, detail="Order has already been sent")
+
+    if not order.get("items"):
+        raise HTTPException(status_code=400, detail="Cannot send an empty order")
+
+    order["sent"] = True
+    save_all_orders(orders)
+
+    statuses = load_all_status()
+    record = next((s for s in statuses if s.get("order_id") == order_id), None)
+    if record:
+        record["current"] = "sent"
+    save_all_status(statuses)
+
+    return order
+
+
+def get_order(order_id: str) -> dict:
+    return _get_order_or_404(order_id)
+
+
+def update_status(order_id: str, msg: str) -> dict:
+    statuses = load_all_status()
+    record = _get_status_or_404(order_id)
+
+    if record.get("complete"):
+        raise HTTPException(status_code=400, detail="Cannot update status of a completed order")
+
+    record["current"] = msg
+    save_all_status(statuses)
+    return record
+
+
+def complete_order_status(order_id: str) -> dict:
+    statuses = load_all_status()
+    record = _get_status_or_404(order_id)
+
+    record["complete"] = True
+    save_all_status(statuses)
+    return record
+
+
+def get_status(order_id: str) -> dict:
+    return _get_status_or_404(order_id)

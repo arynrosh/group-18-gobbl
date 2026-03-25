@@ -11,24 +11,43 @@ TEST_USERS = [
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "users.json"
 PAYMENTS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "payments.json"
+ORDERS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "orders.json"
+STATUS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "status.json"
+ORDERITEMS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "OrderItem.json"
 
 
 @pytest.fixture(autouse=True)
 def seed_test_users():
-    # saving original contents before test
     original = DATA_PATH.read_text() if DATA_PATH.exists() else "[]"
-    # seeding known users for the test
     with DATA_PATH.open("w") as f:
         json.dump(TEST_USERS, f)
     yield
-    # restoring original contents after test
     DATA_PATH.write_text(original)
 
 
 @pytest.fixture(autouse=True)
 def restore_payments():
-    # saving original payments before test
     original = PAYMENTS_PATH.read_text() if PAYMENTS_PATH.exists() else "[]"
     yield
-    # restoring original payments after test
     PAYMENTS_PATH.write_text(original)
+
+
+@pytest.fixture(autouse=True)
+def restore_orders():
+    original = ORDERS_PATH.read_text() if ORDERS_PATH.exists() else "[]"
+    yield
+    ORDERS_PATH.write_text(original)
+
+
+@pytest.fixture(autouse=True)
+def restore_status():
+    original = STATUS_PATH.read_text() if STATUS_PATH.exists() else "[]"
+    yield
+    STATUS_PATH.write_text(original)
+
+
+@pytest.fixture(autouse=True)
+def restore_orderitems():
+    original = ORDERITEMS_PATH.read_text() if ORDERITEMS_PATH.exists() else "[]"
+    yield
+    ORDERITEMS_PATH.write_text(original)

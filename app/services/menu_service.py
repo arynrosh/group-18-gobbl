@@ -8,16 +8,16 @@ from app.repositories.menu_repo import (
     get_next_menu_id,
 )
 
-def get_menu_item(menu_id: int) -> Dict[str, Any]:
+def get_menu_item(food_item: str, restaurant_id: int) -> Dict[str, Any]:
     items = load_all_menu_items()
 
     for item in items:
-        if item["menu_item_id"] == menu_id:
+        if item["food_item"] == food_item and item["restaurant_id"] == restaurant_id:
             return item
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Menu item with id {menu_id} not found"
+        detail=f"Menu item {food_item} not found for restaurant {restaurant_id}"
     )
 
 def validate_item_belongs_to_restaurant(item: Dict[str, Any], restaurant_id: int):
