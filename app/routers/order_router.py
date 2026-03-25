@@ -1,62 +1,78 @@
-from fastapi import APIRouter, Depends, status, HTTPException
-from app.services.order_service import addToOrder, removeFromOrder, sendOrder, getOrder, getOrderItem, updateStatus, completeOrderStatus
-from app.schemas.order import Order, OrderItem, Status
-from app.auth.dependencies import require_roles
-from app.repositories.order_repo import load_all_orders, save_all_orders, save_all_orderitems
-from app.services.order_service import createOrder
+from fastapi import APIRouter, Depends
+from app.services.order_service import (
+    create_order, add_to_order, remove_from_order,
+    send_order, get_order, update_status,
+    complete_order_status, get_status
+)
+from app.auth.dependencies import get_current_user, require_roles
 
-#http://127.0.0.1:8000/docs#/menu/search_menu_items_by_name_menu_search_name_get    
-OrdeRouter = APIRouter(prefix="/orders", tags=["order_id"])
-foodRouter = APIRouter(prefix="/OrderItem", tags=["food_item"])
-statusRouter = APIRouter(prefix="/status", tags=["order_id"])
+router = APIRouter(prefix="/orders", tags=["orders"])
 
-@OrdeRouter.post("/orders/")
-def createMyOrder(order_id: str, resturant_id: int, dis: int, driver: int, current_user: dict = Depends(require_roles("customer"))):
-    return createOrder(Order(order_id = order_id,
-        customer_id = current_user,
-        restaurant_id = resturant_id,
-        driver_distance = dis,
-        assigned_driver_id = driver,
-        items = [],
-        sent = False))
+@router.post("", status_code=201)
+def create_new_order(
+    order_id: str,
+    restaurant_id: int,
+    driver_distance: int,
+    assigned_driver_id: int,
+    current_user: dict = Depends(require_roles("customer"))
+):
+    return create_order(
+        order_id=order_id,
+        customer_id=current_user["sub"],
+        restaurant_id=restaurant_id,
+        driver_distance=driver_distance,
+        assigned_driver_id=assigned_driver_id
+    )
 
-@OrdeRouter.get("/orders/{order_id}/")
-def getOrder(order_id: str):
-    return getOrder(order_id)
 
-@OrdeRouter.put("/orders/{order_id}/")
-def updateOrderAdd(order_id: str, food: str):
-    return addToOrder(order_id, food)
+@router.get("/{order_id}")
+def get_order_by_id(order_id: str, current_user: dict = Depends(get_current_user)):
+    return get_order(order_id)
 
-@OrdeRouter.put("/orders/{order_id}/")
-def updateOrderRemove(order_id: str, food: str):
-    return removeFromOrder(order_id, food)
 
-@OrdeRouter.put("/orders/{order_id}/")
-def updateOrderSend(order_id: str):
-    return sendOrder(order_id)
+@router.post("/{order_id}/items")
+def add_item(
+    order_id: str,
+    food_item: str,
+    quantity: int,
+    order_value: float,
+    restaurant_id: int,
+    current_user: dict = Depends(require_roles("customer"))
+):
+    return add_to_order(order_id, food_item, quantity, order_value, restaurant_id)
 
-@foodRouter.get("/OrderItem/{food_item}/")
-def getFood(food_item: str):
-    return getOrderItem(food_item)
 
-@foodRouter.post("/OrderItem/{food_item}/")
-def createOrderItem(food_name: str, howMany: int, cost: float, resturant: int):
-    return OrderItem(food_item = food_name,
-    quantity = howMany,
-    order_value = cost,
-    resturant_id = resturant)
+@router.delete("/{order_id}/items/{food_item}")
+def remove_item(
+    order_id: str,
+    food_item: str,
+    current_user: dict = Depends(require_roles("customer"))
+):
+    return remove_from_order(order_id, food_item)
 
-@statusRouter.post("/status/{order_id}/")
-def createStatus(orderid: str):
-    return Status(order_id= orderid,
-                  current = "Sent",
-                  complete = False)
 
-@statusRouter.put("/status/{order_id}/")
-def updateStatusRout(orderid: str, msg: str):
-    return updateStatus(orderid, msg)
+@router.put("/{order_id}/send")
+def submit_order(order_id: str, current_user: dict = Depends(require_roles("customer"))):
+    return send_order(order_id)
 
-@statusRouter.put("/status/{order_id}/")
-def completeStatusRout(orderid: str):
-    return completeOrderStatus(orderid)
+
+@router.get("/{order_id}/status")
+def get_order_status(order_id: str, current_user: dict = Depends(get_current_user)):
+    return get_status(order_id)
+
+
+@router.put("/{order_id}/status")
+def update_order_status(
+    order_id: str,
+    msg: str,
+    current_user: dict = Depends(require_roles("restaurant_owner"))
+):
+    return update_status(order_id, msg)
+
+
+@router.put("/{order_id}/complete")
+def complete_order(
+    order_id: str,
+    current_user: dict = Depends(require_roles("restaurant_owner"))
+):
+    return complete_order_status(order_id)
