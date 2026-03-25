@@ -32,3 +32,4 @@ def save_all_notifications(notifications: List[Dict[str, Any]], override: Path =
     with tmp.open("w", encoding="utf-8") as f:
         json.dump(notifications, f, ensure_ascii=False, indent=2)
     os.replace(tmp,path)
+    
