@@ -8,6 +8,7 @@ from app.auth.dependencies import get_current_user, require_roles
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
+
 @router.post("", status_code=201)
 def create_new_order(
     order_id: str,
