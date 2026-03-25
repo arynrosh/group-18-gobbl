@@ -1,13 +1,30 @@
-[{
-  "order_id": "cust-odr-1",
-  "customer_id": "some-customer-id",
-  "restaurant_id": 53,
-  "items": [
-    {
+[
+  {
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "delivery_distance": 5.0,
+    "assigned_driver_id": 2,
+    "items": [
+      {
         "menu_item_id": 1,
         "food_item": "Burger",
         "order_value": 41.17
-
-    }
-  ]
-}]
+      }
+    ]
+  },
+  {
+    "order_id": "cust-odr-2",
+    "customer_id": "some-customer-id-2",
+    "restaurant_id": 3,
+    "delivery_distance": 8.0,
+    "assigned_driver_id": 3,
+    "items": [
+      {
+        "menu_item_id": 2,
+        "food_item": "Pasta",
+        "order_value": 37.25
+      }
+    ]
+  }
+]

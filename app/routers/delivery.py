@@ -1,45 +1,53 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from app.auth.dependencies import require_roles
+from app.repositories.drivers_repo import load_all_drivers
 from app.services.delivery_service import (
     update_driver_distance,
     update_driver_status,
     auto_assign_driver,
-    assign_driver_to_delivery,
+    assign_driver_to_order,
 )
 from app.schemas.delivery import DriverDistanceUpdate, DriverStatusUpdate
 
 router = APIRouter(prefix="/delivery", tags=["delivery"])
 
-@router.put("/drivers/{driver_id}/distance")
+@router.get("/drivers")
+def get_all_driver(
+    current_user: dict = Depends(require_roles("restaurant_owner"))
+):
+    drivers = load_all_drivers()
+    return {"drivers": drivers}
+
+@router.put("/drivers/{driver_id}/driver_distance")
 def update_distance(
-    driver_id: str,
-    body: DriverDistanceUpdate,
+    driver_id: int,
+    driver_data: DriverDistanceUpdate,
     current_user: dict = Depends(require_roles("driver")),
 ):
-    updated_driver = update_driver_distance(driver_id, body.driver_distance)
+    updated_driver = update_driver_distance(driver_id, driver_data)
     return {"message": "Driver distance updated", "driver": updated_driver}
 
-@router.put("/drivers/{driver_id}/status")
+@router.put("/drivers/{driver_id}/driver_status")
 def update_status(
-    driver_id: str,
-    body: DriverStatusUpdate,
+    driver_id: int,
+    driver_data: DriverStatusUpdate,
     current_user: dict = Depends(require_roles("driver")),
 ):
-    updated_driver = update_driver_status(driver_id, body.status)
+    updated_driver = update_driver_status(driver_id, driver_data)
     return {"message": "Driver status updated", "driver": updated_driver}
 
-@router.post("/deliveries/{delivery_id}/auto-assign")
+@router.post("/orders/{order_id}/auto-assign-driver")
 def auto_assign(
-    delivery_id: str,
+    order_id: str,
     current_user: dict = Depends(require_roles("restaurant_owner")),
 ):
-    return auto_assign_driver(delivery_id)
+    return auto_assign_driver(order_id)
 
-@router.post("/deliveries/{delivery_id}/assign/{driver_id}")
+@router.post("/orders/{order_id}/assign/{driver_id}")
 def assign_driver(
-    delivery_id:str,
-    driver_id:str,
+    order_id:str,
+    driver_id:int,
     current_user: dict = Depends(require_roles("restaurant_owner")),
 ):
-    return assign_driver_to_delivery(delivery_id, driver_id)
+    return assign_driver_to_order(order_id, driver_id)
