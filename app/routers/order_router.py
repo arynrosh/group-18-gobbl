@@ -8,20 +8,17 @@ from app.auth.dependencies import get_current_user, require_roles
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
+
 @router.post("", status_code=201)
 def create_new_order(
     order_id: str,
-    restaurant_id: int,
-    driver_distance: int,
-    assigned_driver_id: int,
+    delivery_distance: int,
     current_user: dict = Depends(require_roles("customer"))
 ):
     return create_order(
         order_id=order_id,
         customer_id=current_user["sub"],
-        restaurant_id=restaurant_id,
-        driver_distance=driver_distance,
-        assigned_driver_id=assigned_driver_id
+        delivery_distance=delivery_distance
     )
 
 
@@ -35,11 +32,10 @@ def add_item(
     order_id: str,
     food_item: str,
     quantity: int,
-    order_value: float,
     restaurant_id: int,
     current_user: dict = Depends(require_roles("customer"))
 ):
-    return add_to_order(order_id, food_item, quantity, order_value, restaurant_id)
+    return add_to_order(order_id, food_item, quantity, restaurant_id)
 
 
 @router.delete("/{order_id}/items/{food_item}")
