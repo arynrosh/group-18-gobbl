@@ -1,13 +1,17 @@
-[{
-  "order_id": "cust-odr-1",
-  "customer_id": "some-customer-id",
-  "restaurant_id": 53,
-  "items": [
-    {
-        "menu_item_id": 1,
+[
+  {
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "delivery_distance": 5.0,
+    "assigned_driver_id": 2,
+    "items": [
+      {
+        "restaurant_id": 53,
         "food_item": "Burger",
+        "quantity": 2,
         "order_value": 41.17
-
-    }
-  ]
-}]
+      }
+    ],
+    "sent": true
+  }
+]

@@ -59,17 +59,17 @@ FAKE_MENU = [
 
 def test_get_menu_item_returns_existing_item():
     with patch("app.services.menu_service.load_all_menu_items", return_value=FAKE_MENU):
-        item = menu_service.get_menu_item(1)
-        assert item["menu_item_id"] == 1
+        item = menu_service.get_menu_item("Burger", 53)
         assert item["food_item"] == "Burger"
+        assert item["restaurant_id"] == 53
 
 def test_get_menu_item_raises_404_for_missing_item():
     with patch("app.services.menu_service.load_all_menu_items", return_value=FAKE_MENU):
         with pytest.raises(HTTPException) as exc:
-            menu_service.get_menu_item(9999)
+            menu_service.get_menu_item("Burger", 9999)
 
     assert exc.value.status_code == 404
-    assert exc.value.detail == "Menu item with id 9999 not found"
+    assert exc.value.detail == "Menu item Burger not found for restaurant 9999"
 
 def test_validate_item_belongs_to_restaurant_raises_403():
     item = {
