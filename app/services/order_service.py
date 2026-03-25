@@ -5,6 +5,8 @@ from app.repositories.order_repo import (
     load_all_orderitems, save_all_orderitems,
     load_all_status, save_all_status
 )
+from app.services.menu_service import get_menu_item
+
 
 def _get_order_or_404(order_id: str) -> dict:
     orders = load_all_orders()
@@ -22,7 +24,7 @@ def _get_status_or_404(order_id: str) -> dict:
     return record
 
 
-def create_order(order_id: str, customer_id: str, restaurant_id: int, driver_distance: int, assigned_driver_id: int) -> dict:
+def create_order(order_id: str, customer_id: str, delivery_distance: int) -> dict:
     orders = load_all_orders()
     if any(o.get("order_id") == order_id for o in orders):
         raise HTTPException(status_code=409, detail="Order ID already exists")
@@ -30,9 +32,8 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, driver_dis
     new_order = {
         "order_id": order_id,
         "customer_id": customer_id,
-        "restaurant_id": restaurant_id,
-        "driver_distance": driver_distance,
-        "assigned_driver_id": assigned_driver_id,
+        "delivery_distance": delivery_distance,
+        "assigned_driver_id": None,
         "items": [],
         "sent": False
     }
@@ -46,18 +47,19 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, driver_dis
     return new_order
 
 
-def add_to_order(order_id: str, food_item: str, quantity: int, order_value: float, restaurant_id: int) -> dict:
+def add_to_order(order_id: str, food_item: str, quantity: int, restaurant_id: int) -> dict:
     orders = load_all_orders()
     order = _get_order_or_404(order_id)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
 
+    item = get_menu_item(food_item, restaurant_id)
     new_item = {
+        "restaurant_id": restaurant_id,
         "food_item": food_item,
         "quantity": quantity,
-        "order_value": order_value,
-        "restaurant_id": restaurant_id
+        "order_value": item["order_value"]
     }
     order["items"].append(new_item)
     save_all_orders(orders)
