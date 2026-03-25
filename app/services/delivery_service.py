@@ -28,7 +28,7 @@ def save_all_orders(drivers: List[Dict[str, Any]]) -> None:
 def get_driver_or_404(driver_id: int) -> dict:
     drivers = load_all_drivers()
     for  driver in drivers:
-        if driver["id"] == driver_id:
+        if driver["driver_id"] == driver_id:
             return driver, drivers
         
     raise HTTPException(
@@ -95,7 +95,7 @@ def find_nearest_available_driver(order_id: str) -> dict:
     
     return nearest_driver
 
-def assign_driver_to_order(order_id: str, driver_id: int) -> dict:
+def assign_driver_to_order(order_id: str, driver_id: int, auto: bool = False) -> dict:
     order, orders = get_order_or_404(order_id)
     driver, drivers = get_driver_or_404(driver_id)
 
@@ -117,32 +117,19 @@ def assign_driver_to_order(order_id: str, driver_id: int) -> dict:
     save_all_orders(orders)
     save_all_drivers(drivers)
 
-    return {
-        "message": f"Driver {driver['name']} assigned to order {order_id}",
-        "order": order,
-        "driver": driver
-    }
+    if auto:
+        return {
+            "message": f"Driver {driver['name']} automatically assigned to order {order_id}",
+            "order": order,
+            "driver": driver
+        }
+    else:
+        return {
+            "message": f"Driver {driver['name']} assigned to order {order_id}",
+            "order": order,
+            "driver": driver
+        }
 
 def auto_assign_driver(order_id: str) -> dict:
-    order, orders = get_order_or_404(order_id)
-
-    if order["assigned_driver_id"] is not None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Order already has an assigned driver"
-        )
-
-    nearest_driver = find_nearest_available_driver(order_id)
-    driver, drivers = get_driver_or_404(nearest_driver["id"])
-
-    order["assigned_driver_id"] = driver["id"]
-    driver["status"] = "busy"
-
-    save_all_orders(orders)
-    save_all_drivers(drivers)
-
-    return {
-        "message": f"Driver {driver['name']} automatically assigned to order {order_id}",
-        "order": order,
-        "driver": driver
-    }   
+    nearest_driver = find_nearest_available_driver(order_id) 
+    return assign_driver_to_order(order_id, nearest_driver["driver_id"], True)
