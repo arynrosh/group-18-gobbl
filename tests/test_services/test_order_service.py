@@ -1,57 +1,112 @@
-import pytest
+"""
+Tests for order management (HR4 Tasks 4.2, 4.3, 4.4).
+"""
+
 from unittest.mock import patch
 from fastapi.testclient import TestClient
-from app.services.order_service import App
-from app.schemas.order import Order, OrderItem, Status
-from app.services.order_service import updateStatus, getStatusCurrent, completeOrderStatus, getStatusComplete, addToOrder, removeFromOrder, sendOrder, getOrderSent, getOrderItems
+from app.main import app
 
-client2 = TestClient(App)
+client = TestClient(app)
 
-@pytest.fixture
-def statusTester():
-    return Status(order_id="1234567", current="sent", complete=False)
+VALID_ORDER = {
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 16,
+    "driver_distance": 5,
+    "assigned_driver_id": 2,
+    "items": [],
+    "sent": False
+}
 
-@pytest.fixture
-def orderItemTester():
-    return OrderItem(food_item="Tacos", quantity=1, order_value=12.99, restaurant_id=13)
+VALID_STATUS = {"order_id": "order-001", "current": "pending", "complete": False}
 
-@pytest.fixture
-def orderItemBackup():
-    return OrderItem(food_item="Cheese", quantity=2, order_value=6.66, restaurant_id=13)
+def get_auth_header():
+    token = client.post("/auth/login", data={"username": "alice", "password": "password123"}).json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
 
-@pytest.fixture
-def orderTester():
-    return Order(order_id="123456", customer_id="gertrude", restaurant_id=13, driver_distance=5, assigned_driver_id=2, items=[], sent=False)
+def get_owner_header():
+    token = client.post("/auth/login", data={"username": "bob", "password": "securepass"}).json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
 
 
-def test_updateStatus(statusTester):
-    with patch("app.services.order_service.load_all_status", return_value=[statusTester]):
-        updateStatus(statusTester, "Ready")
-        result = getStatusCurrent(statusTester)
-    assert result == "Ready"
+# equivalence partitioning 
 
-def test_completeOrderStatus(statusTester):
-    with patch("app.services.order_service.load_all_status", return_value=[statusTester]):
-        completeOrderStatus(statusTester)
-        result = getStatusComplete(statusTester)
-    assert result == True
+def test_create_order_returns_201():
+    with patch("app.services.order_service.load_all_orders", return_value=[]):
+        with patch("app.services.order_service.save_all_orders"):
+            with patch("app.services.order_service.load_all_status", return_value=[]):
+                with patch("app.services.order_service.save_all_status"):
+                    r = client.post("/orders", params={
+                        "order_id": "order-001", "restaurant_id": 16,
+                        "driver_distance": 5, "assigned_driver_id": 2
+                    }, headers=get_auth_header())
+    assert r.status_code == 201
 
-def test_addToOrder(orderTester, orderItemTester):
-    with patch("app.services.order_service.load_all_orders", return_value=[orderTester]):
-        addToOrder(orderTester, orderItemTester)
-    assert orderTester.items[0] == orderItemTester
+def test_get_order_returns_correct_data():
+    with patch("app.services.order_service.load_all_orders", return_value=[VALID_ORDER]):
+        r = client.get("/orders/order-001", headers=get_auth_header())
+    assert r.status_code == 200
+    assert r.json()["order_id"] == "order-001"
 
-def test_removeFromOrder(orderTester, orderItemTester, orderItemBackup):
-    with patch("app.services.order_service.load_all_orders", return_value=[orderTester]):
-        addToOrder(orderTester, orderItemTester)
-        removeFromOrder(orderTester, orderItemTester)
-        addToOrder(orderTester, orderItemBackup)
-    assert orderTester.items[0] != orderItemTester
 
-def test_sendOrder(orderTester):
-    with patch("app.services.order_service.load_all_orders", return_value=[orderTester]):
-        sendOrder(orderTester)
-    assert orderTester.sent == True
+# fault injection
 
-#Copy of command to just run my tests for ease
-#pytest tests/test_services/test_order_service.py
+def test_cannot_modify_sent_order():
+    sent_order = {**VALID_ORDER, "sent": True}
+    with patch("app.services.order_service.load_all_orders", return_value=[sent_order]):
+        r = client.post("/orders/order-001/items", params={
+            "food_item": "Tacos", "quantity": 1,
+            "order_value": 10.00, "restaurant_id": 16
+        }, headers=get_auth_header())
+    assert r.status_code == 400
+
+def test_cannot_send_empty_order():
+    with patch("app.services.order_service.load_all_orders", return_value=[VALID_ORDER]):
+        r = client.put("/orders/order-001/send", headers=get_auth_header())
+    assert r.status_code == 400
+
+
+# exception handling
+
+def test_unauthenticated_cannot_create_order():
+    r = client.post("/orders", params={
+        "order_id": "order-001", "restaurant_id": 16,
+        "driver_distance": 5, "assigned_driver_id": 2
+    })
+    assert r.status_code == 401
+
+def test_non_customer_cannot_create_order():
+    r = client.post("/orders", params={
+        "order_id": "order-001", "restaurant_id": 16,
+        "driver_distance": 5, "assigned_driver_id": 2
+    }, headers=get_owner_header())
+    assert r.status_code == 403
+
+def test_nonexistent_order_returns_404_with_detail():
+    with patch("app.services.order_service.load_all_orders", return_value=[]):
+        r = client.get("/orders/fake-order", headers=get_auth_header())
+    assert r.status_code == 404
+    assert "detail" in r.json()
+
+
+# mocking 
+
+def test_create_order_saves_to_storage():
+    with patch("app.services.order_service.load_all_orders", return_value=[]):
+        with patch("app.services.order_service.save_all_orders") as mock_save:
+            with patch("app.services.order_service.load_all_status", return_value=[]):
+                with patch("app.services.order_service.save_all_status"):
+                    client.post("/orders", params={
+                        "order_id": "order-001", "restaurant_id": 16,
+                        "driver_distance": 5, "assigned_driver_id": 2
+                    }, headers=get_auth_header())
+    assert mock_save.called
+
+def test_send_order_updates_status():
+    order_with_items = {**VALID_ORDER, "items": [{"food_item": "Tacos", "quantity": 1, "order_value": 10.0, "restaurant_id": 16}]}
+    with patch("app.services.order_service.load_all_orders", return_value=[order_with_items]):
+        with patch("app.services.order_service.save_all_orders"):
+            with patch("app.services.order_service.load_all_status", return_value=[VALID_STATUS]):
+                with patch("app.services.order_service.save_all_status") as mock_save:
+                    client.put("/orders/order-001/send", headers=get_auth_header())
+    assert mock_save.called
