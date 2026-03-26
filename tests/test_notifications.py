@@ -28,7 +28,8 @@ def test_send_notification_returns_200():
             response = client.post("/notifications/send", json={
                 "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
                 "restaurant_id": 16,
-                "message": "Your order has been placed."
+                "message": "Your order has been placed.",
+                "order_id": "1d8e87M"
             }, headers=get_admin_header())
     assert response.status_code == 200
     data = response.json()
@@ -56,6 +57,7 @@ def test_send_notification_wrong_role_returns_403():
         with patch("app.services.notification_service.save_all_notifications"):
             response = client.post("/notifications/send", json={
                 "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
+                "order_id": "1d8e87M",
                 "restaurant_id": 16,
                 "message": "Your order has been placed."
             }, headers=get_customer_header())
@@ -86,6 +88,7 @@ def test_router_passes_correct_args_to_service():
     with patch("app.routers.notification.send_notification") as mock:
         mock.return_value = {
             "notification_id": 1,
+            "order_id": "1d8e87M",
             "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
             "restaurant_id": 16,
             "message": "Your order has been placed.",
@@ -95,10 +98,11 @@ def test_router_passes_correct_args_to_service():
         client.post("/notifications/send", json={
             "customer_id": "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7",
             "restaurant_id": 16,
-            "message": "Your order has been placed."
+            "message": "Your order has been placed.",
+            "order_id": "1d8e87M"
         }, headers=get_admin_header())
         mock.assert_called_once_with(
-            "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", 16, "Your order has been placed."
+            "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", "1d8e87M", 16, "Your order has been placed."
         )
 
 # Unit Tests
@@ -107,7 +111,7 @@ def test_unit_send_notification_returns_notification():
     with tempfile.NamedTemporaryFile(suffix=".json", mode="w", delete=False) as f:
         json.dump([], f)
         tmp_path = Path(f.name)
-    result = send_notification("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", 16, "Your order has been placed.", override=tmp_path)
+    result = send_notification("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", "1d8e87M", 16, "Your order has been placed.", override=tmp_path)
     assert result.customer_id == "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7"
     assert result.restaurant_id == 16
     assert result.status == "delivered"
@@ -117,7 +121,7 @@ def test_unit_get_notifications_for_customer_returns_list():
     with tempfile.NamedTemporaryFile(suffix=".json", mode="w", delete=False) as f:
         json.dump([], f)
         tmp_path = Path(f.name)
-    send_notification("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", 16, "Your order has been placed.", override=tmp_path)
+    send_notification("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", "1d8e87M", 16, "Your order has been placed.", override=tmp_path)
     result = get_notifications_for_customer("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", override=tmp_path)
     assert len(result) > 0
     assert all(n.customer_id == "9c6dbfcb-72c5-4cc4-9f76-29200f0efda7" for n in result)
@@ -127,7 +131,7 @@ def test_unit_get_notifications_for_restaurant_returns_list():
     with tempfile.NamedTemporaryFile(suffix=".json", mode="w", delete=False) as f:
         json.dump([], f)
         tmp_path = Path(f.name)
-    send_notification("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", 16, "Your order has been placed.", override=tmp_path)
+    send_notification("9c6dbfcb-72c5-4cc4-9f76-29200f0efda7", "1d8e87M", 16, "Your order has been placed.", override=tmp_path)
     result = get_notifications_for_restaurant(16, override=tmp_path)
     assert len(result) > 0
     assert all(n.restaurant_id == 16 for n in result)

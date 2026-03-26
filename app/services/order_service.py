@@ -5,6 +5,12 @@ from app.repositories.order_repo import (
     load_all_orderitems, save_all_orderitems,
     load_all_status, save_all_status
 )
+from app.services.order_notification_service import (
+    notify_order_placed,
+    notify_out_for_delivery,
+    notify_order_delivered,
+    notify_order_delayed
+)
 
 from app.services.menu_service import get_menu_item
 
@@ -126,6 +132,19 @@ def update_status(order_id: str, msg: str) -> dict:
 
     record["current"] = msg
     save_all_status(statuses)
+
+    orders = load_all_orders()
+    order = _get_order_or_404(order_id, orders)
+    customer_id = order["customer_id"]
+    restaurant_id = order["restaurant_id"]
+
+    if msg == "placed":
+        notify_order_placed(order_id, customer_id, restaurant_id)
+    elif msg == "out for delivery":
+        notify_out_for_delivery(order_id, customer_id, restaurant_id, "your driver")
+    elif msg == "delayed":
+        notify_order_delayed(order_id, customer_id, restaurant_id, 0)
+
     return record
 
 
@@ -135,6 +154,10 @@ def complete_order_status(order_id: str) -> dict:
 
     record["complete"] = True
     save_all_status(statuses)
+
+    orders = load_all_orders()
+    order = _get_order_or_404(order_id, orders)
+    notify_order_delivered(order_id, order["customer_id"], order["restaurant_id"])
     return record
 
 
