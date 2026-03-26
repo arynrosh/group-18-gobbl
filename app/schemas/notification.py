@@ -13,7 +13,7 @@ class Notification(BaseModel):
 class NotificationRequest(BaseModel):
     
     customer_id: str
-    order_id: str
+    order_id: str = None
     restaurant_id: int
     message: str
 class OrderPlacedRequest(BaseModel):
