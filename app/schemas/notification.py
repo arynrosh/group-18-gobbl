@@ -13,6 +13,7 @@ class Notification(BaseModel):
 class NotificationRequest(BaseModel):
     
     customer_id: str
+    order_id: str
     restaurant_id: int
     message: str
 class OrderPlacedRequest(BaseModel):
