@@ -9,11 +9,11 @@ from app.services.popular_restaurants_service import (
 client = TestClient(app)
 
 MOCK_ORDERS = [
-    {"restaurant_id": "16", "delivery_delay": "10.0"},
-    {"restaurant_id": "16", "delivery_delay": "20.0"},
-    {"restaurant_id": "30", "delivery_delay": "15.0"},
-    {"restaurant_id": "30", "delivery_delay": "5.0"},
-    {"restaurant_id": "30", "delivery_delay": "8.0"},
+    {"restaurant_id": "16"},
+    {"restaurant_id": "16"},
+    {"restaurant_id": "30"},
+    {"restaurant_id": "30"},
+    {"restaurant_id": "30"},
 ]
 
 MOCK_REVIEWS = [
