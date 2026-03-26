@@ -11,11 +11,17 @@ VALID_PAYMENT = {
     "cardholder_name": "John Doe",
     "card_number": "1234567890123456",
     "expiry": "12/26",
-    "cvv": "123",
-    "amount": 25.99
+    "cvv": "123"
 }
 
-VALID_ORDER = {"order_id": "order-001", "customer_id": "alice", "sent": True}
+VALID_ORDER = {
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "delivery_distance": 5,
+    "assigned_driver_id": None,
+    "items": [{"restaurant_id": 53, "food_item": "Burger", "quantity": 1, "order_value": 41.17}],
+    "sent": True
+}
 
 def get_auth_header():
     token = client.post("/auth/login", data={"username": "alice", "password": "password123"}).json()["access_token"]
@@ -41,7 +47,10 @@ def test_invalid_cvv_returns_400():
     assert r.status_code == 400
 
 def test_negative_amount_returns_400():
-    r = client.post("/payments/process", json={**VALID_PAYMENT, "amount": -5.00}, headers=get_auth_header())
+    # amount is now calculated server side - test that an order with no items returns 400
+    empty_order = {**VALID_ORDER, "items": []}
+    with patch("app.services.payment_service.load_all_orders", return_value=[empty_order]):
+        r = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
     assert r.status_code == 400
 
 
@@ -54,6 +63,11 @@ def test_expired_card_returns_400():
 def test_invalid_expiry_format_returns_400():
     r = client.post("/payments/process", json={**VALID_PAYMENT, "expiry": "1226"}, headers=get_auth_header())
     assert r.status_code == 400
+
+def test_nonexistent_order_returns_404():
+    with patch("app.services.payment_service.load_all_orders", return_value=[]):
+        r = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
+    assert r.status_code == 404
 
 
 # exception handling
