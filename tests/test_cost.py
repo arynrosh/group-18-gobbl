@@ -13,7 +13,7 @@ MOCK_ORDERS = [
         "restaurant_id": 16,
         "delivery_distance": 5,
         "assigned_driver_id": 0,
-        "items": [{"food_item": "Tacos", "quantity": 2, "order_value": 10.00}],
+        "items": [{"menu_item_id": 1, "food_item": "Tacos", "quantity": 2, "order_value": 10.00}],
         "sent": False
     },
     {
@@ -23,8 +23,8 @@ MOCK_ORDERS = [
         "delivery_distance": 8,
         "assigned_driver_id": 0,
         "items": [
-            {"food_item": "Burger", "quantity": 2, "order_value": 10.00},
-            {"food_item": "Pizza", "quantity": 1, "order_value": 12.00}
+            {"menu_item_id": 2, "food_item": "Burger", "quantity": 2, "order_value": 10.00},
+            {"menu_item_id": 3, "food_item": "Pizza", "quantity": 1, "order_value": 12.00}
         ],
         "sent": False
     }
@@ -88,7 +88,7 @@ def test_unit_calculate_cost_subtotal():
         delivery_distance=5,
         assigned_driver_id=0,
         sent=False,
-        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00)]
+        items=[OrderItem(menu_item_id=1, food_item="Tacos", quantity=2, order_value=10.00)]
     )
     result = calculate_cost(order)
     assert result.subtotal == 20.00
@@ -102,7 +102,7 @@ def test_unit_calculate_cost_tax():
         delivery_distance=5,
         assigned_driver_id=0,
         sent=False,
-        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00)]
+        items=[OrderItem(menu_item_id=1, food_item="Tacos", quantity=2, order_value=10.00)]
     )
     result = calculate_cost(order)
     assert result.tax == round(20.00 * TAX_RATE, 2)
@@ -116,7 +116,7 @@ def test_unit_calculate_cost_total():
         delivery_distance=5,
         assigned_driver_id=0,
         sent=False,
-        items=[OrderItem(food_item="Tacos", quantity=2, order_value=10.00)]
+        items=[OrderItem(menu_item_id=1, food_item="Tacos", quantity=2, order_value=10.00)]
     )
     result = calculate_cost(order)
     assert result.total == round(20.00 + (20.00 * TAX_RATE) + DELIVERY_FEE, 2)

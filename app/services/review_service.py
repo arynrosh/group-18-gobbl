@@ -15,14 +15,7 @@ from app.repositories.menu_repo import (
     save_all_menu_items,
 )
 
-ORDER_PATH = Path(__file__).resolve().parents[1] / "data" / "mock_data" / "orders_mock.json"
-
-def load_all_orders() -> List[Dict[str, Any]]:
-    if not ORDER_PATH.exists():
-        return []
-    
-    with ORDER_PATH.open("r", encoding="utf-8") as f:
-        return json.load(f)
+from app.repositories.order_repo import load_all_orders
     
 def get_order_or_404(order_id: str) -> Dict[str, Any]:
     orders = load_all_orders()

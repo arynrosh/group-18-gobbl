@@ -25,7 +25,6 @@ def create_new_order(
         delivery_time=delivery_time,
     )
 
-
 @router.get("/{order_id}")
 def get_order_by_id(order_id: str, current_user: dict = Depends(get_current_user)):
     return get_order(order_id)
