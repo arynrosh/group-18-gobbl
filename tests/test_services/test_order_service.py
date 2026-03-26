@@ -39,8 +39,7 @@ def test_create_order_returns_201():
                     r = client.post("/orders", params={
                         "order_id": "order-001",
                         "restaurant_id": 53,
-                        "delivery_distance": 5,
-                        "assigned_driver_id": 0
+                        "delivery_distance": 5
                     }, headers=get_auth_header())
     assert r.status_code == 201
 
@@ -76,8 +75,7 @@ def test_unauthenticated_cannot_create_order():
     r = client.post("/orders", params={
         "order_id": "order-001",
         "restaurant_id": 53,
-        "delivery_distance": 5,
-        "assigned_driver_id": 0
+        "delivery_distance": 5
     })
     assert r.status_code == 401
 
@@ -85,8 +83,7 @@ def test_non_customer_cannot_create_order():
     r = client.post("/orders", params={
         "order_id": "order-001",
         "restaurant_id": 53,
-        "delivery_distance": 5,
-        "assigned_driver_id": 0
+        "delivery_distance": 5
     }, headers=get_owner_header())
     assert r.status_code == 403
 
@@ -107,8 +104,7 @@ def test_create_order_saves_to_storage():
                     client.post("/orders", params={
                         "order_id": "order-001",
                         "restaurant_id": 53,
-                        "delivery_distance": 5,
-                        "assigned_driver_id": 0
+                        "delivery_distance": 5
                     }, headers=get_auth_header())
     assert mock_save.called
 

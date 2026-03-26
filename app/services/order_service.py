@@ -29,7 +29,7 @@ def _get_status_or_404(order_id: str) -> dict:
     return record
 
 
-def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_distance: float, delivery_time: float,assigned_driver_id: int) -> dict:
+def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_distance: float, delivery_time: float) -> dict:
     orders = load_all_orders()
     if any(o.get("order_id") == order_id for o in orders):
         raise HTTPException(status_code=409, detail="Order ID already exists")
@@ -40,7 +40,7 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
         "restaurant_id": restaurant_id,
         "delivery_distance": delivery_distance,
         "delivery_time": delivery_time,
-        "assigned_driver_id": assigned_driver_id,
+        "assigned_driver_id": None,
         "items": [],
         "sent": False
     }
