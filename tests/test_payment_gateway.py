@@ -15,15 +15,20 @@ VALID_PAYMENT = {
     "amount": 25.99
 }
 
+VALID_ORDER = {"order_id": "order-001", "customer_id": "alice", "sent": True}
+
 def get_auth_header():
     token = client.post("/auth/login", data={"username": "alice", "password": "password123"}).json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
 
-# equivalence partitioning 
+# equivalence partitioning
 
 def test_valid_payment_is_approved():
-    r = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
+    with patch("app.services.payment_service.load_all_orders", return_value=[VALID_ORDER]):
+        with patch("app.services.payment_service.load_all_payments", return_value=[]):
+            with patch("app.services.payment_service.save_all_payments"):
+                r = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
     assert r.status_code == 200
     assert r.json()["status"] == "approved"
 
@@ -40,7 +45,7 @@ def test_negative_amount_returns_400():
     assert r.status_code == 400
 
 
-#fault injection
+# fault injection
 
 def test_expired_card_returns_400():
     r = client.post("/payments/process", json={**VALID_PAYMENT, "expiry": "01/20"}, headers=get_auth_header())
@@ -51,7 +56,7 @@ def test_invalid_expiry_format_returns_400():
     assert r.status_code == 400
 
 
-# exception handling 
+# exception handling
 
 def test_missing_fields_returns_422():
     r = client.post("/payments/process", json={"order_id": "order-001"}, headers=get_auth_header())
@@ -65,11 +70,17 @@ def test_unauthenticated_request_returns_401():
 # mocking
 
 def test_approved_response_has_transaction_id():
-    with patch("app.services.payment_service.uuid.uuid4", return_value="test-uuid"):
-        r = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
+    with patch("app.services.payment_service.load_all_orders", return_value=[VALID_ORDER]):
+        with patch("app.services.payment_service.load_all_payments", return_value=[]):
+            with patch("app.services.payment_service.save_all_payments"):
+                with patch("app.services.payment_service.uuid.uuid4", return_value="test-uuid"):
+                    r = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
     assert r.json()["transaction_id"] == "test-uuid"
 
 def test_unique_transaction_ids_generated():
-    r1 = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
-    r2 = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
+    with patch("app.services.payment_service.load_all_orders", return_value=[VALID_ORDER]):
+        with patch("app.services.payment_service.load_all_payments", return_value=[]):
+            with patch("app.services.payment_service.save_all_payments"):
+                r1 = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
+                r2 = client.post("/payments/process", json=VALID_PAYMENT, headers=get_auth_header())
     assert r1.json()["transaction_id"] != r2.json()["transaction_id"]
