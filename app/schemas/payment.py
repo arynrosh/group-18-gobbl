@@ -8,7 +8,6 @@ class PaymentRequest(BaseModel):
     card_number: str
     expiry: str
     cvv: str
-    amount: float
 
 class PaymentResponse(BaseModel):
     order_id: str
