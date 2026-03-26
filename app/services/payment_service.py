@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi import HTTPException
 from app.schemas.payment import PaymentRequest
 from app.repositories.payments_repo import load_all_payments, save_all_payments
+from app.repositories.order_repo import load_all_orders
 
 CARD_NUMBER_LENGTH = 16
 CVV_LENGTH = 3
@@ -44,8 +45,12 @@ def validate_card(payload: PaymentRequest) -> None:
 
 def process_payment(payload: PaymentRequest) -> dict:
     validate_card(payload)
+    # Verify the order exists before processing payment
+    orders = load_all_orders()
+    order = next((o for o in orders if o.get("order_id") == payload.order_id), None)
+    if not order:
+        raise HTTPException(status_code=404, detail=f"Order {payload.order_id} not found")
 
-    # All valid cards will be approved
     transaction_id = str(uuid.uuid4())
     record = {
         "transaction_id": transaction_id,
