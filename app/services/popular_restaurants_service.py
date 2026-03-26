@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from app.repositories.statistics_repo import load_all_orders
+from app.repositories.order_repo import load_all_orders
 from app.repositories.reviews_repo import load_all_reviews
 
 def _format_top_restaurants(

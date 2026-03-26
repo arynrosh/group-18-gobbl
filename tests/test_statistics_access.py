@@ -7,9 +7,9 @@ from app.main import app
 client = TestClient(app)
 
 MOCK_ORDERS = [
-    {"restaurant_id": "16", "delivery_delay": "10.0"},
-    {"restaurant_id": "16", "delivery_delay": "20.0"},
-    {"restaurant_id": "30", "delivery_delay": "15.0"},
+    {"restaurant_id": "16", "delivery_time": 10.0},
+    {"restaurant_id": "16", "delivery_time": 20.0},
+    {"restaurant_id": "30", "delivery_time": 15.0},
 ]
 
 def get_admin_token():

@@ -14,7 +14,8 @@ def create_new_order(
     order_id: str,
     restaurant_id: int,
     delivery_distance: float,
-    assigned_driver_id: int,
+    delivery_time: float = None,
+    assigned_driver_id: int=0,
     current_user: dict = Depends(require_roles("customer"))
 ):
     return create_order(
@@ -22,6 +23,7 @@ def create_new_order(
         customer_id=current_user["sub"],
         restaurant_id=restaurant_id,
         delivery_distance=delivery_distance,
+        delivery_time=delivery_time,
         assigned_driver_id=assigned_driver_id
     )
 
