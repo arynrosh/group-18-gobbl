@@ -11,12 +11,26 @@ VALID_PAYMENT = {
     "cardholder_name": "John Doe",
     "card_number": "1234567890123456",
     "expiry": "12/26",
-    "cvv": "123",
-    "amount": 25.99
+    "cvv": "123"
 }
 
-VALID_ORDER = {"order_id": "order-001", "customer_id": "alice", "sent": True}
-VALID_ORDER_002 = {"order_id": "order-002", "customer_id": "alice", "sent": True}
+VALID_ORDER = {
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "delivery_distance": 5,
+    "assigned_driver_id": None,
+    "items": [{"restaurant_id": 53, "food_item": "Burger", "quantity": 1, "order_value": 41.17}],
+    "sent": True
+}
+
+VALID_ORDER_002 = {
+    "order_id": "order-002",
+    "customer_id": "alice",
+    "delivery_distance": 5,
+    "assigned_driver_id": None,
+    "items": [{"restaurant_id": 53, "food_item": "Burger", "quantity": 1, "order_value": 41.17}],
+    "sent": True
+}
 
 def get_auth_header():
     token = client.post("/auth/login", data={"username": "alice", "password": "password123"}).json()["access_token"]
