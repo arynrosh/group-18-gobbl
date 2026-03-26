@@ -16,12 +16,20 @@ def submit_review(
 
     return {"message": "Review submitted successfully", "review": review}
 
+@router.get("/order/{order_id}/items")
+def get_review_items(order_id: str):
+    items = review_service.get_reviewable_items_for_order(order_id)
+    return {
+        "order_id": order_id,
+        "items": items
+    }
+
 @router.get("/restaurant/{restaurant_id}")
 def get_reviews_for_restarant(restaurant_id: int):
     return review_service.list_reviews_for_restaurant(restaurant_id)
 
 @router.get("/restaurant/{restaurant_id}/average")
 def get_average_rating_for_restaurant(restaurant_id: int):
-    avg_rating = review_service.get_average_rating(restaurant_id)
+    avg_rating = review_service.get_average_rating_for_restaurant(restaurant_id)
     
     return {"average_rating": avg_rating}

@@ -6,8 +6,9 @@
     "cuisine": "American",
     "food_item": "Burger",
     "order_value": 41.17,
-    "customer_rating": 3,
-    "delivery_time_actual": 10.74
+    "customer_rating": null,
+    "delivery_time_actual": 10.74,
+    "rating_count": 0
   },
   {
     "menu_item_id": 2,
@@ -16,8 +17,9 @@
     "cuisine": "Italian",
     "food_item": "Pasta",
     "order_value": 37.25,
-    "customer_rating": 5,
-    "delivery_time_actual": 9.09
+    "customer_rating": 4.0,
+    "delivery_time_actual": 9.09,
+    "rating_count": 1
   },
   {
     "menu_item_id": 3,
@@ -26,8 +28,9 @@
     "cuisine": "Greek",
     "food_item": "Chicken Gyros",
     "order_value": 18.08,
-    "customer_rating": 1,
-    "delivery_time_actual": -0.34
+    "customer_rating": null,
+    "delivery_time_actual": -0.34,
+    "rating_count": 0
   },
   {
     "menu_item_id": 4,
@@ -36,8 +39,9 @@
     "cuisine": "Japanese",
     "food_item": "Sushi",
     "order_value": 8.53,
-    "customer_rating": 3,
-    "delivery_time_actual": 11.42
+    "customer_rating": null,
+    "delivery_time_actual": 11.42,
+    "rating_count": 0
   },
   {
     "menu_item_id": 5,
@@ -46,8 +50,9 @@
     "cuisine": "Japanese",
     "food_item": "California Roll",
     "order_value": 14.76,
-    "customer_rating": 4,
-    "delivery_time_actual": 13.08
+    "customer_rating": null,
+    "delivery_time_actual": 13.08,
+    "rating_count": 0
   },
   {
     "menu_item_id": 6,
@@ -56,8 +61,9 @@
     "cuisine": "American",
     "food_item": "Steak",
     "order_value": 42.67,
-    "customer_rating": 4,
-    "delivery_time_actual": 18.36
+    "customer_rating": null,
+    "delivery_time_actual": 18.36,
+    "rating_count": 0
   },
   {
     "menu_item_id": 7,
@@ -66,8 +72,9 @@
     "cuisine": "Indian",
     "food_item": "Briyani rice",
     "order_value": 24.82,
-    "customer_rating": 1,
-    "delivery_time_actual": 16.74
+    "customer_rating": null,
+    "delivery_time_actual": 16.74,
+    "rating_count": 0
   },
   {
     "menu_item_id": 8,
@@ -76,8 +83,9 @@
     "cuisine": "Indian",
     "food_item": "Butter Chicken",
     "order_value": 26.39,
-    "customer_rating": 5,
-    "delivery_time_actual": 14.92
+    "customer_rating": null,
+    "delivery_time_actual": 14.92,
+    "rating_count": 0
   },
   {
     "menu_item_id": 9,
@@ -86,8 +94,9 @@
     "cuisine": "Chinese",
     "food_item": "Fried Rice",
     "order_value": 17.84,
-    "customer_rating": 4,
-    "delivery_time_actual": 12.65
+    "customer_rating": null,
+    "delivery_time_actual": 12.65,
+    "rating_count": 0
   },
   {
     "menu_item_id": 10,
@@ -96,7 +105,8 @@
     "cuisine": "Chinese",
     "food_item": "Sweet and Sour Pork",
     "order_value": 23.11,
-    "customer_rating": 3,
-    "delivery_time_actual": 17.03
+    "customer_rating": null,
+    "delivery_time_actual": 17.03,
+    "rating_count": 0
   }
 ]
