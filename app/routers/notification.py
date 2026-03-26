@@ -20,7 +20,7 @@ def send_notification_endpoint(request: NotificationRequest, current_user: dict 
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied. Admins only."
         )
-    return send_notification(request.customer_id, request.restaurant_id, request.message)
+    return send_notification(request.customer_id, request.order_id, request.restaurant_id, request.message)
 
 @router.get("/customer/{customer_id}", response_model=List[Notification])
 def get_customer_notifications(customer_id: str, current_user: dict = Depends(get_current_user)):

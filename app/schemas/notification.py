@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class Notification(BaseModel):
     
     notification_id: int
+    order_id: str
     customer_id: str
     restaurant_id: int
     message: str
