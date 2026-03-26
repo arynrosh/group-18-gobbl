@@ -9,7 +9,7 @@ def _filter_notifications(field: str, value: Any) -> List[Notification]:
     notifications = load_all_notifications()
     return [Notification(**n) for n in notifications if n[field] == value]
 
-def send_notification(customer_id: str, order_id:str,  restaurant_id: int, message: str, override: Path = None) -> Notification:
+def send_notification(customer_id: str, order_id: str,  restaurant_id: int, message: str, override: Path = None) -> Notification:
     """
     Sends a notification to a customer and restaurant and saves it.
 
