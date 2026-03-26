@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "order_id": "cust-odr-1",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "delivery_distance": 12.67,
+    "delivery_time": 2.0,
+    "assigned_driver_id": null,
+    "items": [],
+    "sent": false
+  }
+]

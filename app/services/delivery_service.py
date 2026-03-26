@@ -9,21 +9,10 @@ from app.repositories.drivers_repo import (
     save_all_drivers
 )
 
-ORDER_PATH = Path(__file__).resolve().parents[1] / "data" / "mock_data" / "orders_mock.json"
-
-def load_all_orders() -> List[Dict[str, Any]]:
-    if not ORDER_PATH.exists():
-        return []
-    
-    with ORDER_PATH.open("r", encoding="utf-8") as f:
-        return json.load(f)
-    
-def save_all_orders(drivers: List[Dict[str, Any]]) -> None:
-    tmp = ORDER_PATH.with_suffix(".tmp")
-    with tmp.open("w", encoding="utf-8") as f:
-        json.dump(drivers, f, ensure_ascii=False, indent=2)
-
-    os.replace(tmp, ORDER_PATH)    
+from app.repositories.order_repo import ( 
+    load_all_orders, 
+    save_all_orders 
+)
     
 def get_driver_or_404(driver_id: int) -> dict:
     drivers = load_all_drivers()

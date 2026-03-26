@@ -14,14 +14,14 @@ from app.services.order_notification_service import (
 
 from app.services.menu_service import get_menu_item
 
-def _get_order_or_404(order_id: str, orders: list[dict]) -> dict:
+def get_order_or_404(order_id: str, orders: list[dict]) -> dict:
     order = next((o for o in orders if o.get("order_id") == order_id), None)
     if not order:
         raise HTTPException(status_code=404, detail=f"Order {order_id} not found")
     return order
 
 
-def _get_status_or_404(order_id: str) -> dict:
+def get_status_or_404(order_id: str) -> dict:
     statuses = load_all_status()
     record = next((s for s in statuses if s.get("order_id") == order_id), None)
     if not record:
@@ -56,7 +56,7 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
 
 def add_to_order(order_id: str, restaurant_id: int, food_item: str, quantity: int) -> dict:
     orders = load_all_orders()
-    order = _get_order_or_404(order_id, orders)
+    order = get_order_or_404(order_id, orders)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
@@ -70,6 +70,7 @@ def add_to_order(order_id: str, restaurant_id: int, food_item: str, quantity: in
         )        
 
     new_item = {
+        "menu_item_id": menu_item["menu_item_id"],
         "food_item": menu_item["food_item"],
         "quantity": quantity,
         "order_value": menu_item["order_value"],
@@ -82,7 +83,7 @@ def add_to_order(order_id: str, restaurant_id: int, food_item: str, quantity: in
 
 def remove_from_order(order_id: str, food_item: str) -> dict:
     orders = load_all_orders()
-    order = _get_order_or_404(order_id, orders)
+    order = get_order_or_404(order_id, orders)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
@@ -99,7 +100,7 @@ def remove_from_order(order_id: str, food_item: str) -> dict:
 
 def send_order(order_id: str) -> dict:
     orders = load_all_orders()
-    order = _get_order_or_404(order_id, orders)
+    order = get_order_or_404(order_id, orders)
 
     if order.get("sent"):
         raise HTTPException(status_code=400, detail="Order has already been sent")
@@ -121,12 +122,12 @@ def send_order(order_id: str) -> dict:
 
 def get_order(order_id: str) -> dict:
     orders = load_all_orders()
-    return _get_order_or_404(order_id, orders)
+    return get_order_or_404(order_id, orders)
 
 
 def update_status(order_id: str, msg: str) -> dict:
     statuses = load_all_status()
-    record = _get_status_or_404(order_id)
+    record = get_status_or_404(order_id)
 
     if record.get("complete"):
         raise HTTPException(status_code=400, detail="Cannot update status of a completed order")
@@ -135,7 +136,7 @@ def update_status(order_id: str, msg: str) -> dict:
     save_all_status(statuses)
 
     orders = load_all_orders()
-    order = _get_order_or_404(order_id, orders)
+    order = get_order_or_404(order_id, orders)
     customer_id = order["customer_id"]
     restaurant_id = order["restaurant_id"]
 
@@ -151,16 +152,16 @@ def update_status(order_id: str, msg: str) -> dict:
 
 def complete_order_status(order_id: str) -> dict:
     statuses = load_all_status()
-    record = _get_status_or_404(order_id)
+    record = get_status_or_404(order_id)
 
     record["complete"] = True
     save_all_status(statuses)
 
     orders = load_all_orders()
-    order = _get_order_or_404(order_id, orders)
+    order = get_order_or_404(order_id, orders)
     notify_order_delivered(order_id, order["customer_id"], order["restaurant_id"])
     return record
 
 
 def get_status(order_id: str) -> dict:
-    return _get_status_or_404(order_id)
+    return get_status_or_404(order_id)
