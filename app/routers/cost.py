@@ -2,19 +2,24 @@ from fastapi import APIRouter, Depends, HTTPException,status
 from app.schemas.order import Order, CostBreakdown
 from app.services.cost_service import calculate_cost
 from app.auth.dependencies import get_current_user
+from app.repositories.order_repo import load_all_orders
 
 router = APIRouter(prefix="/cost", tags=["cost"])
 
-@router.post("/calculate", response_model=CostBreakdown)
-def get_cost_breakdown(order: Order, current_user: dict = Depends(get_current_user)):
-    # Drivers and restaurant owners should not access cost breakdowns
+@router.post("/calculate/{order_id}", response_model=CostBreakdown)
+def get_cost_breakdown(order_id: str, current_user: dict = Depends(get_current_user)):
     if current_user.get("role") not in ["customer", "admin"]:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail= "Access denied. Customers and admins only."
-
-        )
-   
+        raise HTTPException(status_code=403, detail="Access denied. Customers and admins only.")
+    
+    # Look up order from orders.json
+    orders = load_all_orders()
+    order_data = next((o for o in orders if o["order_id"] == order_id), None)
+    
+    if not order_data:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # Convert to Order schema
+    order = Order(**order_data)
     return calculate_cost(order)
 
 
