@@ -15,7 +15,8 @@ VALID_ORDER = {
     "delivery_distance": 5,
     "assigned_driver_id": None,
     "items": [],
-    "sent": False
+    "sent": False,
+    "diet_restrictions": []
 }
 
 VALID_STATUS = {"order_id": "order-001", "current": "pending", "complete": False}

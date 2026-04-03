@@ -41,8 +41,6 @@ def validate_input(payload: RegisterRequest) -> None:
     _validate_email(payload.email)
     _validate_password(payload.password)
     _validate_role(payload.role)
-    #if create_diet_restrictions(payload.role):
-    #    payload.diet_restrictions = []
 
 
 def ensure_unique(payload: RegisterRequest) -> None:
@@ -96,7 +94,7 @@ def add_diet_restriction(username: str, restriction: str) -> dict:
 
     user["diet_restrictions"].append(restriction)
     save_all_users(users)
-    return user
+    return user["diet_restrictions"]
 
 def remove_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_users()
@@ -109,7 +107,6 @@ def remove_diet_restriction(username: str, restriction: str) -> dict:
         raise HTTPException(status_code=404, detail=f"Diet Restriction {restriction} not found in user's listed restrictions")
 
     save_all_users(users)
-    return user
-
+    return user["diet_restrictions"]
 
 

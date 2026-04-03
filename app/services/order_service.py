@@ -39,7 +39,7 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
     users = load_all_users()
     user = get_diet_restrictions_or_404(customer_id, users)
 
-    if user["diet_restrictions"] == False:
+    if 'diet_restrictions' not in user:
         new_order = {
             "order_id": order_id,
             "customer_id": customer_id,
@@ -49,7 +49,7 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
             "assigned_driver_id": None,
             "items": [],
             "sent": False,
-            "diet_restrictions": []
+            "diet_restrictions": None
         }
     else:
         new_order = {
