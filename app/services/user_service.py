@@ -66,6 +66,8 @@ def register_user(payload: RegisterRequest) -> dict:
             "role": payload.role,
             "diet_restrictions": List[str]
         }
+        #new_user.diet_restrictions = []
+        #new_user["diet_restrictions"] = []
     else:
         new_user = {
             "username": payload.username.strip(),
@@ -77,7 +79,7 @@ def register_user(payload: RegisterRequest) -> dict:
     save_all_users(users)
     return {"username": new_user["username"], "email": new_user["email"], "role": new_user["role"]}
 
-def get_diet_restrictions_or_404(username: str, users: list[dict]) -> dict:
+def get_user_with_diet_restrictions_or_404(username: str, users: list[dict]) -> dict:
     user = next((u for u in users if u.get("username") == username), None)
     if not user:
         raise HTTPException(status_code=404, detail=f"User {username} not found")
@@ -90,7 +92,7 @@ def get_diet_restrictions_or_404(username: str, users: list[dict]) -> dict:
 
 def add_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_users()
-    user = get_diet_restrictions_or_404(username, users)
+    user = get_user_with_diet_restrictions_or_404(username, users)
 
     user["diet_restrictions"].append(restriction)
     save_all_users(users)
@@ -98,7 +100,7 @@ def add_diet_restriction(username: str, restriction: str) -> dict:
 
 def remove_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_users()
-    user = get_diet_restrictions_or_404(username, users)
+    user = get_user_with_diet_restrictions_or_404(username, users)
 
     original_count = len(user["diet_restrictions"])
     user["diet_restrictions"] = [i for i in user["diet_restrictions"] if i.get("restriction") != restriction]
