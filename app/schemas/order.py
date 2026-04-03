@@ -1,16 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 class OrderItem(BaseModel):
-    """
-    Represents a signle item in an order.
-
-    Attributes:
-    - food_item (str) : name of the food item
-    - quantity (int): quantity ordered
-    -order_value (float): price per item
-    """
-
     food_item: str
     quantity: int = Field(..., gt = 0)
     order_value: float = Field(..., gt = 0)
@@ -24,6 +15,7 @@ class Order(BaseModel):
     assigned_driver_id: int
     items: List[OrderItem]
     sent: bool
+    diet_restrictions: Optional[List[str]] = None
 
 class CostBreakdown(BaseModel):
     order_id: str
