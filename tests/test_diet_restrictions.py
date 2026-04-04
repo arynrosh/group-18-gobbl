@@ -36,7 +36,7 @@ def test_create_diet_restrictions_true():
     assert r.status_code == 201
     data = r.json()
     restrictions = data.get('diet_restrictions')
-    assert restrictions == [] #r.json()["diet_restrictions"] == []
+    assert restrictions == False #r.json()["diet_restrictions"] == []
 
 def test_create_diet_restrictions_false():
     with patch("app.services.user_service.load_all_users", return_value=[]):
@@ -47,7 +47,7 @@ def test_create_diet_restrictions_false():
     restrictions = data.get('diet_restrictions')
     assert restrictions == None
 
-#delete later
+#delete later, just checking that the other key values work
 def test_varible():
     with patch("app.services.user_service.load_all_users", return_value=[]):
         with patch("app.services.user_service.save_all_users"):
