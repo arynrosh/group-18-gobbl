@@ -30,10 +30,9 @@ def _validate_role(role: str) -> None:
         raise HTTPException(status_code=400, detail=f"Role must be one of: {VALID_ROLES}")
 
 def create_diet_restrictions(role: str) -> None:
-    if role == "customer":
-        return True
-    else:
-        False
+    if role != "customer":
+        return False
+    return True
 
 def validate_input(payload: RegisterRequest) -> None:
     # All input validation
@@ -58,16 +57,15 @@ def register_user(payload: RegisterRequest) -> dict:
     validate_input(payload)
     ensure_unique(payload)
     users = load_all_users()
+    list = []
     if create_diet_restrictions(payload.role):
         new_user = {
              "username": payload.username.strip(),
             "email": payload.email.strip(),
             "password": payload.password,
             "role": payload.role,
-            "diet_restrictions": List[str]
+            "diet_restrictions": list
         }
-        #new_user.diet_restrictions = []
-        #new_user["diet_restrictions"] = []
     else:
         new_user = {
             "username": payload.username.strip(),
@@ -79,7 +77,7 @@ def register_user(payload: RegisterRequest) -> dict:
     save_all_users(users)
     return {"username": new_user["username"], "email": new_user["email"], "role": new_user["role"]}
 
-def get_user_with_diet_restrictions_or_404(username: str, users: list[dict]) -> dict:
+def get_diet_restrictions_or_404(username: str, users: list[dict]) -> dict:
     user = next((u for u in users if u.get("username") == username), None)
     if not user:
         raise HTTPException(status_code=404, detail=f"User {username} not found")
@@ -92,7 +90,7 @@ def get_user_with_diet_restrictions_or_404(username: str, users: list[dict]) -> 
 
 def add_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_users()
-    user = get_user_with_diet_restrictions_or_404(username, users)
+    user = get_diet_restrictions_or_404(username, users)
 
     user["diet_restrictions"].append(restriction)
     save_all_users(users)
@@ -100,7 +98,7 @@ def add_diet_restriction(username: str, restriction: str) -> dict:
 
 def remove_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_users()
-    user = get_user_with_diet_restrictions_or_404(username, users)
+    user = get_diet_restrictions_or_404(username, users)
 
     original_count = len(user["diet_restrictions"])
     user["diet_restrictions"] = [i for i in user["diet_restrictions"] if i.get("restriction") != restriction]

@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.services.user_service import (
     create_diet_restrictions,
-    get_user_with_diet_restrictions_or_404,
+    get_diet_restrictions_or_404,
     add_diet_restriction,
     remove_diet_restriction
 )
@@ -72,7 +72,7 @@ def test_remove_diet_restriction_completed():
     assert restriction not in restrictions
 
 def test_create_diet_restrictions():
-    costumer = create_diet_restrictions("costumer")
+    costumer = create_diet_restrictions("customer")
     not_costumer = create_diet_restrictions("restaurant_owner")
     assert costumer == True
     assert not_costumer == False
