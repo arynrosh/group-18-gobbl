@@ -11,8 +11,7 @@ from app.services.order_notification_service import (
     notify_order_delivered,
     notify_order_delayed
 )
-from app.services.user_service import get_diet_restrictions_or_404
-from app.repositories.users_repo import load_all_users
+from app.services.diet_restrictions_services import get_diet_restrictions_or_404
 
 from app.services.menu_service import get_menu_item
 
@@ -35,34 +34,22 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
     orders = load_all_orders()
     if any(o.get("order_id") == order_id for o in orders):
         raise HTTPException(status_code=409, detail="Order ID already exists")
-    
-    users = load_all_users()
-    user = get_diet_restrictions_or_404(customer_id, users)
 
-    if 'diet_restrictions' not in user:
-        new_order = {
-            "order_id": order_id,
-            "customer_id": customer_id,
-            "restaurant_id": restaurant_id,
-            "delivery_distance": delivery_distance,
-            "delivery_time": delivery_time,
-            "assigned_driver_id": None,
-            "items": [],
-            "sent": False,
-            "diet_restrictions": None
-        }
-    else:
-        new_order = {
-            "order_id": order_id,
-            "customer_id": customer_id,
-            "restaurant_id": restaurant_id,
-            "delivery_distance": delivery_distance,
-            "delivery_time": delivery_time,
-            "assigned_driver_id": None,
-            "items": [],
-            "sent": False,
-            "diet_restrictions": user["diet_restrictions"]
-        }
+    new_order = {
+        "order_id": order_id,
+        "customer_id": customer_id,
+        "restaurant_id": restaurant_id,
+        "delivery_distance": delivery_distance,
+        "delivery_time": delivery_time,
+        "assigned_driver_id": None,
+        "items": [],
+        "sent": False,
+    }
+    if get_diet_restrictions_or_404(customer_id) != None:
+        restrictions = get_diet_restrictions_or_404(customer_id)
+        new_order["diet_restrictions"] = restrictions
+
+    
     orders.append(new_order)
     save_all_orders(orders)
 

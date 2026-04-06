@@ -3,15 +3,13 @@
     "username": "alice",
     "email": "alice@example.com",
     "password": "password123",
-    "role": "customer",
-    "diet_restrictions": []
+    "role": "customer"
   },
   {
     "username": "sadie",
     "email": "sadie@example.com",
     "password": "typepassword",
-    "role": "customer",
-    "diet_restrictions": ["Banana allergy", "Vegetarian"]
+    "role": "customer"
   },
   {
     "username": "bob",
