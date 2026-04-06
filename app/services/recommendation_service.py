@@ -53,6 +53,7 @@ def get_recommendations(customer_id: str, limit: int = 5) -> List[RecommendedIte
             menu_item_id=item["menu_item_id"],
             food_item=item["food_item"],
             cuisine=item["cuisine"],
+            restaurant_id=item["restaurant_id"],
             restaurant_name=item["restaurant_name"],
             order_value=item["order_value"],
             customer_rating=item.get("customer_rating")
