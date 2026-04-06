@@ -24,7 +24,7 @@ def get_recommendations(customer_id: str, limit: int = 5) -> List[RecommendedIte
             food_item = item.get("food_item")
             if food_item:
                 ordered_food_items.add(food_item.lower())
-            # find the cuisine for this item from the menu
+            
             menu_match = next(
                 (m for m in menu_items if m["food_item"] == food_item), None
             )
