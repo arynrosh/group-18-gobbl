@@ -1,5 +1,7 @@
+import random
 from fastapi import HTTPException, status
-from app.schemas.order import Order, OrderItem, Status
+from app.schemas.order import Order, OrderItem, Status, MysteryBagRequest
+from app.repositories.menu_repo import load_all_menu_items
 from app.repositories.order_repo import (
     load_all_orders, save_all_orders,
     load_all_orderitems, save_all_orderitems,
@@ -165,3 +167,58 @@ def complete_order_status(order_id: str) -> dict:
 
 def get_status(order_id: str) -> dict:
     return get_status_or_404(order_id)
+
+def make_my_mystery_bag(order_id: str, mystery_data: MysteryBagRequest) -> dict:
+    orders = load_all_orders()
+    order = get_order_or_404(order_id, orders)
+
+    if order.get("sent"):
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot modify order after it has been sent"
+        )
+    
+    menu_items = load_all_menu_items()
+    valid_items = [
+        item for item in menu_items
+        if item["restaurant_id"] == order["restaurant_id"]
+    ]
+
+    if not valid_items:
+        raise HTTPException(
+            status_code=404,
+            detail="No menu items found for this restaurant"            
+        )
+    
+    budget = mystery_data.budget
+    selected_items = []
+    total = 0.0
+
+    shuffled_items = valid_items.copy()
+    random.shuffle(shuffled_items)
+
+    for item in shuffled_items:
+        price = item["order_value"]
+
+        if total + price <= budget:
+            selected_items.append({
+                "menu_item_id": item["menu_item_id"],
+                "food_item": item["food_item"],
+                "quantity": 1,
+                "order_value": price                
+            })
+            total += price
+
+    if not selected_items:
+        raise HTTPException(
+            status_code=400,
+            detail="No valid mystery bag could be generated within the budget"            
+        )
+    
+    order["items"].extend(selected_items)
+    save_all_orders(orders)
+
+    return {
+        "budget": budget
+    }
+
