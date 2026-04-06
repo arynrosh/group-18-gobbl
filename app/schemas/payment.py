@@ -1,5 +1,3 @@
-# Pydantic schemas for payment request and response validation
-
 from pydantic import BaseModel
 
 class PaymentRequest(BaseModel):
@@ -8,10 +6,10 @@ class PaymentRequest(BaseModel):
     card_number: str
     expiry: str
     cvv: str
+    discount_code: str | None = None
 
 class PaymentResponse(BaseModel):
     order_id: str
-      # approved or rejected
     status: str
     message: str
     transaction_id: str

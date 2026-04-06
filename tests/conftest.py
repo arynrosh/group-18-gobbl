@@ -14,6 +14,7 @@ PAYMENTS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "payments
 ORDERS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "orders.json"
 STATUS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "status.json"
 ORDERITEMS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "OrderItem.json"
+DISCOUNTS_PATH = Path(__file__).resolve().parents[1] / "app" / "data" / "discounts.json"
 
 
 @pytest.fixture(autouse=True)
@@ -51,3 +52,9 @@ def restore_orderitems():
     original = ORDERITEMS_PATH.read_text() if ORDERITEMS_PATH.exists() else "[]"
     yield
     ORDERITEMS_PATH.write_text(original)
+
+@pytest.fixture(autouse=True)
+def restore_discounts():
+    original = DISCOUNTS_PATH.read_text() if DISCOUNTS_PATH.exists() else "[]"
+    yield
+    DISCOUNTS_PATH.write_text(original)
