@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class OrderItem(BaseModel):
+    menu_item_id: int
     food_item: str
     quantity: int = Field(..., gt = 0)
     order_value: float = Field(..., gt = 0)
