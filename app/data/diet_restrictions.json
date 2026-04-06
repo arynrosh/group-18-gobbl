@@ -2,7 +2,8 @@
   {
     "username": "alice",
     "diet_restrictions": [
-      "Lactose Intolerance"
+      "Lactose Intolerance",
+      "Vegan"
     ]
   }
 ]

@@ -69,15 +69,17 @@ def test_varible():
 def test_add_diet_restriction():
     restriction = "Nut Allergy"
     username = "alice"
+    user = get_diet_restrictions_or_404(username)
     add_diet_restriction(username, restriction)
-    assert username["diet_restrictions"] == "Nut Allergy"
+    assert "Nut Allergy" in user["diet_restrictions"]
 
 #is saying diet_restrictions don't exist
 def test_remove_diet_restriction_nonlisted_restriction():
     restriction = "Banana Allergy"
     username = "alice"
+    user = get_diet_restrictions_or_404(username)
     remove_diet_restriction(username, restriction)
-    assert username["diet_restrictions"] != "Banana Allergy"
+    assert "Banana Allergy" not in user["diet_restrictions"]
 
 def test_create_diet_restrictions():
     costumer = create_diet_restrictions("customer")

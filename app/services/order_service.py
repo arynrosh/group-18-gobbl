@@ -43,7 +43,7 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
         "delivery_time": delivery_time,
         "assigned_driver_id": None,
         "items": [],
-        "sent": False,
+        "sent": False
     }
     if get_diet_restrictions_or_404(customer_id) != None:
         restrictions = get_diet_restrictions_or_404(customer_id)

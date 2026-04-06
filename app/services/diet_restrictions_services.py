@@ -3,6 +3,7 @@ from app.repositories.users_repo import load_all_users
 from app.schemas.diet_restrictions import diet_restrictions
 from app.repositories.diet_restrictions_repo import load_all_diet_restrictions, save_all_diet_restrictions
 
+
 def create_diet_restrictions(role: str) -> None:
     if role != "customer":
         return False
@@ -35,20 +36,42 @@ def get_diet_restrictions_or_404(username: str) -> dict:
 def add_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_diet_restrictions()
     user = get_diet_restrictions_or_404(username)
-
-    user["diet_restrictions"].append(restriction)
+    restrict = user["diet_restrictions"]
+    restrict.append(restriction)
+    user["diet_restrictions"] = restrict
     save_all_diet_restrictions(users)
-    return user["diet_restrictions"]
+    #return user["diet_restrictions"]
+
+"""def add_to_order(order_id: str, restaurant_id: int, food_item: str, quantity: int) -> dict:
+    orders = load_all_orders()
+    order = _get_order_or_404(order_id, orders)
+
+    if order.get("sent"):
+        raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
+    
+    menu_item = get_menu_item(food_item, restaurant_id)
+
+    if order["restaurant_id"] != menu_item["restaurant_id"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Item does not belong to this order's restaurant"
+        )        
+
+    new_item = {
+        "food_item": menu_item["food_item"],
+        "quantity": quantity,
+        "order_value": menu_item["order_value"],
+    }
+
+    order["items"].append(new_item)
+    save_all_orders(orders)
+    return order"""
 
 def remove_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_diet_restrictions()
     user = get_diet_restrictions_or_404(username)
-
-    original_count = len(user["diet_restrictions"])
-    user["diet_restrictions"] = [i for i in user["diet_restrictions"] if i.get("diet_restrictions") != restriction]
-
-    if len(user["diet_restrictions"]) == original_count:
-        raise HTTPException(status_code=404, detail=f"Diet Restriction {restriction} not found in user's listed restrictions")
-
+    
+    if restriction in user["diet_restrictions"]:
+        user["diet_restrictions"].remove(restriction)
     save_all_diet_restrictions(users)
-    return user["diet_restrictions"]
+    #return user["diet_restrictions"]
