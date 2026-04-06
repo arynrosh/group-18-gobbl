@@ -19,6 +19,8 @@ from app.routers.statistics import router as statistics_router
 from app.routers.popular_restaurants import router as popular_restaurants_router
 from app.routers.order_router import router as order_router
 from app.routers.recommendation_router import router as recommendation_router
+from app.routers.discount_router import router as discount_router
+
 
 
 app = FastAPI(
@@ -45,6 +47,8 @@ app.include_router(statistics_router)
 app.include_router(popular_restaurants_router)
 app.include_router(order_router)
 app.include_router(recommendation_router)
+app.include_router(discount_router)
+
 
 
 @app.get("/")

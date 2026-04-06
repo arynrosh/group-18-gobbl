@@ -6,6 +6,7 @@ from app.schemas.payment import PaymentRequest
 from app.repositories.payments_repo import load_all_payments, save_all_payments
 from app.repositories.order_repo import load_all_orders
 from app.services.cost_service import TAX_RATE, DELIVERY_FEE
+from app.services.discount_service import validate_and_apply_discount
 
 CARD_NUMBER_LENGTH = 16
 CVV_LENGTH = 3
@@ -42,10 +43,9 @@ def validate_card(payload: PaymentRequest) -> None:
     _validate_cvv(payload.cvv)
 
 
-def process_payment(payload: PaymentRequest) -> dict:
+def process_payment(payload: PaymentRequest, username: str) -> dict:
     validate_card(payload)
 
-    # Verify the order exists
     orders = load_all_orders()
     order = next((o for o in orders if o.get("order_id") == payload.order_id), None)
     if not order:
@@ -57,6 +57,10 @@ def process_payment(payload: PaymentRequest) -> dict:
     subtotal = round(sum(item["order_value"] * item["quantity"] for item in items), 2)
     tax = round(subtotal * TAX_RATE, 2)
     amount = round(subtotal + tax + DELIVERY_FEE, 2)
+
+    # Apply discount if provided
+    if payload.discount_code:
+        amount = validate_and_apply_discount(payload.discount_code, username, amount)
 
     transaction_id = str(uuid.uuid4())
     record = {
