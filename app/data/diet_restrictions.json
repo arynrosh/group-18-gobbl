@@ -1,5 +1,8 @@
 [
-    {"username": "alice",
-    "diet_restrictions": []
-    }
+  {
+    "username": "alice",
+    "diet_restrictions": [
+      "Lactose Intolerance"
+    ]
+  }
 ]

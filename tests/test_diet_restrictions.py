@@ -12,7 +12,7 @@ from app.repositories.diet_restrictions_repo import load_all_diet_restrictions
 
 client = TestClient(app)
 
-VALID_USER_COSTUMER = {
+VALID_USER_CUSTOMER = {
     "username": "testuser",
     "email": "test@example.com",
     "password": "password1",
@@ -38,7 +38,7 @@ VALID_USER_OTHER = {
 def test_create_diet_restrictions_true():
     with patch("app.services.user_service.load_all_users", return_value=[]):
         with patch("app.services.user_service.save_all_users"):
-            r = client.post("/users/register", json=VALID_USER_COSTUMER)
+            r = client.post("/users/register", json=VALID_USER_CUSTOMER)
     assert r.status_code == 201
     data = r.json()
     restrictions = data.get('diet_restrictions')
@@ -58,7 +58,7 @@ def test_create_diet_restrictions_false():
 def test_varible():
     with patch("app.services.user_service.load_all_users", return_value=[]):
         with patch("app.services.user_service.save_all_users"):
-            r = client.post("/users/register", json=VALID_USER_COSTUMER)
+            r = client.post("/users/register", json=VALID_USER_CUSTOMER)
     assert r.status_code == 201
     data = r.json()
     name = data.get('username')
@@ -70,14 +70,14 @@ def test_add_diet_restriction():
     restriction = "Nut Allergy"
     username = "alice"
     add_diet_restriction(username, restriction)
-    assert restriction in username["diet_restrictions"]
+    assert username["diet_restrictions"] == "Nut Allergy"
 
 #is saying diet_restrictions don't exist
-def test_remove_diet_restriction_completed():
+def test_remove_diet_restriction_nonlisted_restriction():
     restriction = "Banana Allergy"
     username = "alice"
-    restrictions = remove_diet_restriction(username, restriction)
-    assert restriction not in restrictions
+    remove_diet_restriction(username, restriction)
+    assert username["diet_restrictions"] != "Banana Allergy"
 
 def test_create_diet_restrictions():
     costumer = create_diet_restrictions("customer")

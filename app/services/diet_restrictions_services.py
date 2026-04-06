@@ -35,7 +35,6 @@ def get_diet_restrictions_or_404(username: str) -> dict:
 def add_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_diet_restrictions()
     user = get_diet_restrictions_or_404(username)
-    
 
     user["diet_restrictions"].append(restriction)
     save_all_diet_restrictions(users)
