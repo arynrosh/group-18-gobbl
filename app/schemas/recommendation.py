@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class RecommendedItem(BaseModel):
     menu_item_id: int
@@ -7,4 +8,4 @@ class RecommendedItem(BaseModel):
     restaurant_id: int
     restaurant_name: str
     order_value: float
-    customer_rating: float = None
+    customer_rating: Optional[float] = None
