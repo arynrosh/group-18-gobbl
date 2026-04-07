@@ -2,9 +2,11 @@ from fastapi import APIRouter, Depends
 from app.services.order_service import (
     create_order, add_to_order, remove_from_order,
     send_order, get_order, update_status,
-    complete_order_status, get_status
+    complete_order_status, get_status,
+    make_my_mystery_bag
 )
 from app.auth.dependencies import get_current_user, require_roles
+from app.schemas.order import MysteryBagRequest
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -24,7 +26,6 @@ def create_new_order(
         delivery_distance=delivery_distance,
         delivery_time=delivery_time,
     )
-
 
 @router.get("/{order_id}")
 def get_order_by_id(order_id: str, current_user: dict = Depends(get_current_user)):
@@ -76,3 +77,13 @@ def complete_order(
     current_user: dict = Depends(require_roles("restaurant_owner"))
 ):
     return complete_order_status(order_id)
+
+@router.post("/{order_id}/mystery-bag")
+def make_mystery_bag(
+    order_id: str,
+    mystery_data: MysteryBagRequest,
+    current_user: dict = Depends(require_roles("customer"))
+):
+    mystery_bag = make_my_mystery_bag(order_id, mystery_data)
+
+    return {"message": "Mystery bag added to order", "mystery_bag": mystery_bag}

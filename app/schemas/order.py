@@ -28,3 +28,6 @@ class Status(BaseModel):
     order_id: str
     current: str
     complete: bool
+
+class MysteryBagRequest(BaseModel):
+    budget: float = Field(..., gt=0)
