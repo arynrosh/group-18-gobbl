@@ -36,36 +36,12 @@ def get_diet_restrictions_or_404(username: str) -> dict:
 def add_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_diet_restrictions()
     user = get_diet_restrictions_or_404(username)
-    restrict = user["diet_restrictions"]
-    restrict.append(restriction)
-    user["diet_restrictions"] = restrict
+    #restrict = user["diet_restrictions"]
+    #restrict.append(restriction)
+    #user["diet_restrictions"] = restrict
+    user["diet_restrictions"].append(restriction)
     save_all_diet_restrictions(users)
     #return user["diet_restrictions"]
-
-"""def add_to_order(order_id: str, restaurant_id: int, food_item: str, quantity: int) -> dict:
-    orders = load_all_orders()
-    order = _get_order_or_404(order_id, orders)
-
-    if order.get("sent"):
-        raise HTTPException(status_code=400, detail="Cannot modify order after it has been sent")
-    
-    menu_item = get_menu_item(food_item, restaurant_id)
-
-    if order["restaurant_id"] != menu_item["restaurant_id"]:
-        raise HTTPException(
-            status_code=400,
-            detail="Item does not belong to this order's restaurant"
-        )        
-
-    new_item = {
-        "food_item": menu_item["food_item"],
-        "quantity": quantity,
-        "order_value": menu_item["order_value"],
-    }
-
-    order["items"].append(new_item)
-    save_all_orders(orders)
-    return order"""
 
 def remove_diet_restriction(username: str, restriction: str) -> dict:
     users = load_all_diet_restrictions()
