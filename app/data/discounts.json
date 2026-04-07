@@ -1,0 +1,12 @@
+[
+  {
+    "code_id": "89c2d49d-6348-4166-9238-fb29230e3f4a",
+    "code": "SAVE10",
+    "percentage": 10.0,
+    "expiry": "2099-12-31",
+    "assigned_to": [
+      "alice"
+    ],
+    "used_by": []
+  }
+]

@@ -17,9 +17,9 @@
     "cuisine": "Italian",
     "food_item": "Pasta",
     "order_value": 37.25,
-    "customer_rating": 4.0,
+    "customer_rating": null,
     "delivery_time_actual": 9.09,
-    "rating_count": 1
+    "rating_count": 0
   },
   {
     "menu_item_id": 3,
@@ -39,9 +39,9 @@
     "cuisine": "Japanese",
     "food_item": "Sushi",
     "order_value": 8.53,
-    "customer_rating": null,
+    "customer_rating": 5.0,
     "delivery_time_actual": 11.42,
-    "rating_count": 0
+    "rating_count": 1
   },
   {
     "menu_item_id": 5,

@@ -42,5 +42,22 @@
     "food_freshness": 5,
     "packaging_quality": 3,
     "food_condition": "Good"
+  },
+  {
+    "review_id": 5,
+    "order_id": "cust-odr-1",
+    "restaurant_id": 54,
+    "customer_id": "alice",
+    "food_temperature": "Hot",
+    "food_freshness": 5,
+    "packaging_quality": 4,
+    "food_condition": "Good",
+    "item_ratings": [
+      {
+        "menu_item_id": 4,
+        "food_item": "Sushi",
+        "customer_rating": 5
+      }
+    ]
   }
 ]
