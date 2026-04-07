@@ -8,7 +8,7 @@ from app.services.diet_restrictions_services import (
     add_diet_restriction,
     remove_diet_restriction
 )
-from app.repositories.diet_restrictions_repo import load_all_diet_restrictions
+from app.repositories.diet_restrictions_repo import load_all_diet_restrictions, save_all_diet_restrictions
 
 client = TestClient(app)
 
@@ -16,27 +16,31 @@ client = TestClient(app)
 def test_add_diet_restriction():
     restriction = "Nut Allergy"
     username = "alice"
+    original = load_all_diet_restrictions() 
     all_restrictions = load_all_diet_restrictions()
     add_diet_restriction(username, restriction)
-    
     user = get_diet_restrictions_or_404(username, all_restrictions)
+    save_all_diet_restrictions(original)
     assert restriction in user["diet_restrictions"]
 
-#is saying diet_restrictions don't exist
 def test_remove_diet_restriction_nonlisted_restriction():
     restriction = "Banana Allergy"
     username = "alice"
+    original = load_all_diet_restrictions() 
     all_restrictions = load_all_diet_restrictions()
     remove_diet_restriction(username, restriction)
     user = get_diet_restrictions_or_404(username, all_restrictions)
+    save_all_diet_restrictions(original)
     assert "Banana Allergy" not in user["diet_restrictions"]
 
 def test_remove_diet_restriction_listed_restriction():
     restriction = "Vegan"
     username = "alice"
+    original = load_all_diet_restrictions() 
     all_restrictions = load_all_diet_restrictions()
     remove_diet_restriction(username, restriction)
     user = get_diet_restrictions_or_404(username, all_restrictions)
+    save_all_diet_restrictions(original)
     assert "Vegan" not in user["diet_restrictions"]
 
 def test_create_diet_restrictions():
