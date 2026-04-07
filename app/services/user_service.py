@@ -28,7 +28,6 @@ def _validate_role(role: str) -> None:
     if role not in VALID_ROLES:
         raise HTTPException(status_code=400, detail=f"Role must be one of: {VALID_ROLES}")
 
-
 def validate_input(payload: RegisterRequest) -> None:
     # All input validation
     _validate_username(payload.username)
@@ -46,8 +45,7 @@ def ensure_unique(payload: RegisterRequest) -> None:
             raise HTTPException(status_code=409, detail="Username already taken")
         if u.get("email", "").lower() == email:
             raise HTTPException(status_code=409, detail="Email already registered")
-
-
+    
 def register_user(payload: RegisterRequest) -> dict:
     validate_input(payload)
     ensure_unique(payload)
@@ -58,6 +56,11 @@ def register_user(payload: RegisterRequest) -> dict:
         "password": payload.password,
         "role": payload.role
     }
+        
     users.append(new_user)
     save_all_users(users)
     return {"username": new_user["username"], "email": new_user["email"], "role": new_user["role"]}
+
+
+
+

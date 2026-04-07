@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.schemas.user import RegisterRequest, UserResponse
 from app.services.user_service import register_user
+from app.auth.dependencies import get_current_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
