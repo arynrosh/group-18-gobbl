@@ -34,6 +34,9 @@ function RoleLinks({ role }: { role: string }) {
         <NavLink to="/notifications" className={linkClass}>
           Alerts
         </NavLink>
+        <NavLink to="/diet-restrictions" className={linkClass}>
+          Diet
+        </NavLink>
       </>
     )
   }

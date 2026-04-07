@@ -23,6 +23,7 @@ import { MyDiscountsPage } from './pages/MyDiscountsPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { ReviewOrderPage } from './pages/ReviewOrderPage'
 import { RecommendationsPage } from './pages/RecommendationsPage'
+import { DietRestrictionsPage } from './pages/DietRestrictionsPage'
 
 import { OwnerDashboardPage } from './pages/owner/OwnerDashboardPage'
 import { OwnerMenuPage } from './pages/owner/OwnerMenuPage'
@@ -88,6 +89,7 @@ export default function App() {
               <Route path="notifications" element={<NotificationsPage />} />
               <Route path="reviews/order/:orderId" element={<ReviewOrderPage />} />
               <Route path="recommendations" element={<RecommendationsPage />} />
+              <Route path="diet-restrictions" element={<DietRestrictionsPage />} />
             </Route>
 
             <Route element={<ProtectedRoute roles={['restaurant_owner']} />}>

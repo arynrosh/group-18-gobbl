@@ -27,7 +27,8 @@ FAKE_REVIEWS = [
             {
                 "menu_item_id": 1,
                 "food_item": "Burger",
-                "customer_rating": 3
+                "customer_rating": 3,
+                "written_review": "It was okay."
             }
         ]
     },
@@ -44,32 +45,16 @@ FAKE_REVIEWS = [
             {
                 "menu_item_id": 1,
                 "food_item": "Burger",
-                "customer_rating": 1
+                "customer_rating": 1,
+                "written_review": "Terrible!"
             }
         ]
     }
 ]
 
-FAKE_REVIEW = {
-    "review_id": 1,
-    "order_id": "15760aC",
-    "restaurant_id": 53,
-    "customer_id": "411b8170-4b51-48d6-8695-43cb3dbafc25",
-    "food_temperature": "Cold",
-    "food_freshness": 4,
-    "packaging_quality": 1,
-    "food_condition": "Poor",
-    "item_ratings": [
-        {
-            "menu_item_id": 1,
-            "food_item": "Burger",
-            "customer_rating": 3
-        }
-    ]
-}
-
 def test_customer_can_submit_review():
     customer_token = get_token("alice", "password123")
+    FAKE_REVIEW = FAKE_REVIEWS[0]
     with patch("app.services.review_service.create_review", return_value=FAKE_REVIEW):
         response = client.post("/reviews/",
             json={
@@ -116,6 +101,7 @@ def test_non_customer_cannot_submit_review():
     assert response.status_code == 403, response.text
 
 def test_get_reviews_for_restaurant():
+    FAKE_REVIEW = FAKE_REVIEWS[0]
     with patch("app.services.review_service.list_reviews_for_restaurant", return_value=FAKE_REVIEWS):
         response = client.get("/reviews/restaurant/53")
 

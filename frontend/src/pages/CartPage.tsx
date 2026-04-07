@@ -1,54 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore, hasRole } from '../store/authStore'
-import {
-  fetchOrder,
-  removeOrderItem,
-  sendOrder,
-  calculateCost,
-  addMysteryBag,
-} from '../features/orders/orderApi'
-import type { CostBreakdown, Order } from '../types'
+import { fetchOrder, removeOrderItem } from '../features/orders/orderApi'
+import type { Order } from '../types'
+import { computeCostBreakdown, COST_DELIVERY_FEE, COST_TAX_RATE } from '../utils/costBreakdown'
 import { getApiErrorMessage } from '../utils/apiError'
+import { normalizeOrderDietRestrictions } from '../utils/dietRestrictions'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input, Label } from '../components/ui/Input'
 import { StatusPill } from '../components/ui/StatusPill'
 import { Skeleton } from '../components/ui/Skeleton'
+import { OrderLineItemsTable } from '../components/OrderLineItemsTable'
 
 export function CartPage() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const { orderId, deliveryDistance, deliveryTime, patchDelivery, clear } = useCartStore()
   const [order, setOrder] = useState<Order | null>(null)
-  const [cost, setCost] = useState<CostBreakdown | null>(null)
   const [loading, setLoading] = useState(false)
-  const [budget, setBudget] = useState('25')
-  const [mysteryOpen, setMysteryOpen] = useState(false)
   const [busy, setBusy] = useState(false)
 
   async function refresh() {
     if (!orderId) {
       setOrder(null)
-      setCost(null)
       return
     }
     setLoading(true)
     try {
       const o = await fetchOrder(orderId)
       setOrder(o)
-      try {
-        const c = await calculateCost(orderId)
-        setCost(c)
-      } catch {
-        setCost(null)
-      }
     } catch (e) {
       toast.error(getApiErrorMessage(e))
       setOrder(null)
-      setCost(null)
     } finally {
       setLoading(false)
     }
@@ -58,6 +44,8 @@ export function CartPage() {
     void refresh()
     // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh when orderId changes
   }, [orderId])
+
+  const cost = useMemo(() => (order ? computeCostBreakdown(order) : null), [order])
 
   if (!user || !hasRole(user, ['customer'])) {
     return (
@@ -84,6 +72,7 @@ export function CartPage() {
   }
 
   const sent = order?.sent
+  const dr = normalizeOrderDietRestrictions(order)
 
   return (
     <div className="space-y-6">
@@ -104,13 +93,41 @@ export function CartPage() {
             disabled={busy || sent}
             onClick={() => {
               clear()
-              toast.message('Cart cleared locally — backend order may still exist.')
+              toast.message('Cart cleared locally ? backend order may still exist.')
             }}
           >
             Forget cart
           </Button>
         </div>
       </div>
+
+      <Card>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-display text-lg font-bold text-gobbl-ink">Diet restrictions on this order</h2>
+          <Link to="/diet-restrictions">
+            <Button variant="secondary" className="!py-2 !text-sm">
+              Manage diet
+            </Button>
+          </Link>
+        </div>
+        {dr ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {dr.diet_restrictions.length ? (
+              dr.diet_restrictions.map((r) => (
+                <StatusPill key={r} variant="info">
+                  {r}
+                </StatusPill>
+              ))
+            ) : (
+              <p className="text-sm text-gobbl-ink/70">No restrictions currently saved for this user.</p>
+            )}
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-gobbl-ink/70">
+            This order has no diet restriction metadata yet. If you just updated restrictions, create a new order to apply them.
+          </p>
+        )}
+      </Card>
 
       <Card>
         <h2 className="font-display text-lg font-bold text-gobbl-ink">Delivery hints</h2>
@@ -146,142 +163,79 @@ export function CartPage() {
       ) : order ? (
         <Card>
           <h2 className="font-display text-lg font-bold text-gobbl-ink">Items</h2>
-          <ul className="mt-4 space-y-3">
-            {order.items.length === 0 && <li className="text-gobbl-ink/70">No line items yet.</li>}
-            {order.items.map((it) => (
-              <li
-                key={`${it.menu_item_id}-${it.food_item}`}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/70 px-4 py-3"
-              >
-                <div>
-                  <p className="font-bold text-gobbl-ink">{it.food_item}</p>
-                  <p className="text-xs text-gobbl-ink/60">
-                    qty {it.quantity} × ${it.order_value.toFixed(2)}
-                  </p>
-                </div>
-                <Button
-                  variant="secondary"
-                  className="!py-2 !text-sm"
-                  disabled={sent || busy}
-                  onClick={async () => {
-                    setBusy(true)
-                    try {
-                      await removeOrderItem(orderId, it.food_item)
-                      toast.success('Removed')
-                      await refresh()
-                    } catch (e) {
-                      toast.error(getApiErrorMessage(e))
-                    } finally {
-                      setBusy(false)
-                    }
-                  }}
-                >
-                  Remove
-                </Button>
-              </li>
-            ))}
-          </ul>
+          <p className="mt-1 text-xs text-gobbl-ink/55">
+            Unit price is per item; line total is quantity ? unit price.
+          </p>
+          <div className="mt-4">
+            {order.items.length === 0 ? (
+              <p className="text-sm text-gobbl-ink/70">No line items yet.</p>
+            ) : (
+              <OrderLineItemsTable
+                items={order.items}
+                renderAction={(it) => (
+                  <Button
+                    variant="secondary"
+                    className="!py-1.5 !text-xs"
+                    disabled={sent || busy}
+                    onClick={async () => {
+                      setBusy(true)
+                      try {
+                        await removeOrderItem(orderId, it.food_item)
+                        toast.success('Removed')
+                        await refresh()
+                      } catch (e) {
+                        toast.error(getApiErrorMessage(e))
+                      } finally {
+                        setBusy(false)
+                      }
+                    }}
+                  >
+                    Remove
+                  </Button>
+                )}
+              />
+            )}
+          </div>
         </Card>
       ) : null}
 
-      <Card>
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="font-display text-lg font-bold text-gobbl-ink">Cost breakdown</h2>
-            <p className="text-xs text-gobbl-ink/60">POST /cost/calculate/:order_id</p>
-          </div>
-          <Button variant="mint" disabled={loading || !orderId} onClick={() => void refresh()}>
-            Recalculate
-          </Button>
+      <Card className="!border-gobbl-ink/10 !bg-white shadow-[0_1px_3px_rgba(45,42,50,0.08)]">
+        <div>
+          <h2 className="font-display text-lg font-bold text-gobbl-ink">Cost breakdown</h2>
+          <p className="mt-1 text-xs text-gobbl-ink/50">
+            {(COST_TAX_RATE * 100).toFixed(0)}% tax � ${COST_DELIVERY_FEE.toFixed(2)} delivery (same as server rules)
+          </p>
         </div>
         {cost ? (
-          <dl className="mt-4 grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
-            <div className="rounded-2xl bg-gobbl-peach/40 px-3 py-2">
-              <dt className="text-xs font-bold uppercase text-gobbl-ink/60">Subtotal</dt>
-              <dd className="text-lg font-black">${cost.subtotal.toFixed(2)}</dd>
+          <dl className="mt-4 overflow-hidden rounded-2xl border border-gobbl-ink/10 bg-white text-sm">
+            <div className="flex items-center justify-between gap-4 border-b border-gobbl-ink/8 px-4 py-3">
+              <dt className="text-gobbl-ink/65">Subtotal</dt>
+              <dd className="tabular-nums font-semibold text-gobbl-ink">${cost.subtotal.toFixed(2)}</dd>
             </div>
-            <div className="rounded-2xl bg-gobbl-lemon/35 px-3 py-2">
-              <dt className="text-xs font-bold uppercase text-gobbl-ink/60">Tax</dt>
-              <dd className="text-lg font-black">${cost.tax.toFixed(2)}</dd>
+            <div className="flex items-center justify-between gap-4 border-b border-gobbl-ink/8 px-4 py-3">
+              <dt className="text-gobbl-ink/65">Tax</dt>
+              <dd className="tabular-nums font-semibold text-gobbl-ink">${cost.tax.toFixed(2)}</dd>
             </div>
-            <div className="rounded-2xl bg-gobbl-teal/15 px-3 py-2">
-              <dt className="text-xs font-bold uppercase text-gobbl-ink/60">Delivery</dt>
-              <dd className="text-lg font-black">${cost.delivery_fee.toFixed(2)}</dd>
+            <div className="flex items-center justify-between gap-4 border-b border-gobbl-ink/8 px-4 py-3">
+              <dt className="text-gobbl-ink/65">Delivery</dt>
+              <dd className="tabular-nums font-semibold text-gobbl-ink">${cost.delivery_fee.toFixed(2)}</dd>
             </div>
-            <div className="rounded-2xl bg-gobbl-mint/25 px-3 py-2">
-              <dt className="text-xs font-bold uppercase text-gobbl-ink/60">Total</dt>
-              <dd className="text-lg font-black text-gobbl-tomato">${cost.total.toFixed(2)}</dd>
+            <div className="flex items-center justify-between gap-4 bg-gobbl-ink/[0.02] px-4 py-3.5">
+              <dt className="font-display text-base font-bold text-gobbl-ink">Total</dt>
+              <dd className="tabular-nums font-display text-xl font-extrabold text-gobbl-ink">${cost.total.toFixed(2)}</dd>
             </div>
           </dl>
         ) : (
-          <p className="mt-3 text-sm text-gobbl-ink/65">
-            Cost unavailable (empty cart or backend validation). Note: backend loads orders with strict schemas — if calculation
-            fails, check server logs.
+          <p className="mt-3 text-sm text-gobbl-ink/55">
+            {loading ? 'Loading order?' : 'Load your order to see totals.'}
           </p>
         )}
       </Card>
 
-      <Card className="border-2 border-dashed border-gobbl-mango/70 bg-gradient-to-br from-gobbl-lemon/25 to-gobbl-mango/20">
-        <button
-          type="button"
-          className="flex w-full items-center justify-between gap-3 text-left"
-          onClick={() => setMysteryOpen((v) => !v)}
-        >
-          <div>
-            <h2 className="font-display text-xl font-extrabold text-gobbl-ink">Mystery bag ✨</h2>
-            <p className="text-sm text-gobbl-ink/70">POST /orders/:id/mystery-bag — backend extends items silently; we re-fetch.</p>
-          </div>
-          <span className="font-display text-2xl">{mysteryOpen ? '−' : '+'}</span>
-        </button>
-        {mysteryOpen && (
-          <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end">
-            <div className="min-w-[200px] flex-1">
-              <Label htmlFor="bud">Budget</Label>
-              <Input id="bud" type="number" step="0.01" min="0.01" value={budget} onChange={(e) => setBudget(e.target.value)} />
-            </div>
-            <Button
-              disabled={sent || busy}
-              onClick={async () => {
-                setBusy(true)
-                try {
-                  const b = Number(budget)
-                  await addMysteryBag(orderId, b)
-                  toast.success('Mystery bag added — revealing…')
-                  await refresh()
-                } catch (e) {
-                  toast.error(getApiErrorMessage(e))
-                } finally {
-                  setBusy(false)
-                }
-              }}
-            >
-              Surprise me
-            </Button>
-          </div>
-        )}
-      </Card>
-
-      <div className="flex flex-wrap gap-3">
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-3">
         <Button
-          variant="secondary"
-          disabled={!order || sent || busy || !order.items.length}
-          onClick={async () => {
-            setBusy(true)
-            try {
-              await sendOrder(orderId)
-              toast.success('Order sent!')
-              await refresh()
-            } catch (e) {
-              toast.error(getApiErrorMessage(e))
-            } finally {
-              setBusy(false)
-            }
-          }}
-        >
-          Send order
-        </Button>
-        <Button
-          disabled={!order || !order.sent || busy}
+          disabled={!order || busy || !order.items.length}
           onClick={() => navigate(`/checkout?orderId=${encodeURIComponent(orderId)}`)}
         >
           Go to checkout
@@ -291,6 +245,10 @@ export function CartPage() {
             Track
           </Button>
         </Link>
+        </div>
+        <p className="text-xs text-gobbl-ink/55">
+          You pay at checkout first; the restaurant is notified right after your payment clears.
+        </p>
       </div>
     </div>
   )

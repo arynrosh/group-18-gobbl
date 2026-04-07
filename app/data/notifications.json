@@ -34,5 +34,167 @@
     "message": "Your order 1011 has been placed successfully.",
     "status": "delivered",
     "timestamp": "2026-04-06T23:46:18.468044"
+  },
+  {
+    "notification_id": 5,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:20:54.870851"
+  },
+  {
+    "notification_id": 6,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:20:54.897509"
+  },
+  {
+    "notification_id": 7,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:20:55.298282"
+  },
+  {
+    "notification_id": 8,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:22:35.926878"
+  },
+  {
+    "notification_id": 9,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:22:35.949321"
+  },
+  {
+    "notification_id": 10,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:22:36.366339"
+  },
+  {
+    "notification_id": 11,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:27:29.076973"
+  },
+  {
+    "notification_id": 12,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:27:29.103632"
+  },
+  {
+    "notification_id": 13,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:27:29.495076"
+  },
+  {
+    "notification_id": 14,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:31:47.190772"
+  },
+  {
+    "notification_id": 15,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:31:47.221789"
+  },
+  {
+    "notification_id": 16,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:31:47.625737"
+  },
+  {
+    "notification_id": 17,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:33:00.430618"
+  },
+  {
+    "notification_id": 18,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:33:00.455661"
+  },
+  {
+    "notification_id": 19,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T09:33:00.849617"
+  },
+  {
+    "notification_id": 20,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T10:52:12.801453"
+  },
+  {
+    "notification_id": 21,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T10:52:12.994706"
+  },
+  {
+    "notification_id": 22,
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order d2a06105-e3ca-4a10-882c-ea7d084c1d95 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T11:02:51.491116"
   }
 ]

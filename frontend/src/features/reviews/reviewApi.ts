@@ -14,8 +14,25 @@ export async function getReviewableItems(orderId: string): Promise<{
   return data
 }
 
-export async function getRestaurantReviews(restaurantId: number): Promise<unknown[]> {
-  const { data } = await api.get<unknown[]>(`/reviews/restaurant/${restaurantId}`)
+export interface RestaurantReview {
+  review_id: number
+  order_id: string
+  restaurant_id: number
+  customer_id: string
+  food_temperature: string
+  food_freshness: number
+  packaging_quality: number
+  food_condition: string
+  item_ratings: Array<{
+    menu_item_id: number
+    food_item: string
+    customer_rating: number
+    written_review?: string | null
+  }>
+}
+
+export async function getRestaurantReviews(restaurantId: number): Promise<RestaurantReview[]> {
+  const { data } = await api.get<RestaurantReview[]>(`/reviews/restaurant/${restaurantId}`)
   return data
 }
 

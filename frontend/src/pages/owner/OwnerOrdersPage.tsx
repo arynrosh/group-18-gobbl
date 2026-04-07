@@ -13,6 +13,7 @@ import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Input, Label } from '../../components/ui/Input'
 import { StatusPill } from '../../components/ui/StatusPill'
+import { OrderLineItemsTable } from '../../components/OrderLineItemsTable'
 
 const MSGS = ['placed', 'out for delivery', 'delayed', 'custom']
 
@@ -55,13 +56,9 @@ export function OwnerOrdersPage() {
             {ful?.fulfillment_status && <StatusPill variant="info">{ful.fulfillment_status}</StatusPill>}
           </div>
           <p className="mt-3 font-mono text-sm">{order.order_id}</p>
-          <ul className="mt-3 text-sm">
-            {order.items.map((i) => (
-              <li key={`${i.menu_item_id}-${i.food_item}`}>
-                {i.food_item} × {i.quantity}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-4">
+            <OrderLineItemsTable items={order.items} />
+          </div>
           <div className="mt-6 flex flex-col gap-3">
             <p className="text-sm font-bold">PUT /orders/:id/status?msg=…</p>
             <div className="flex flex-wrap gap-2">

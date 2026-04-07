@@ -1,5 +1,5 @@
 import { api } from '../../api/client'
-import type { CostBreakdown, Order, OrderStatusRecord } from '../../types'
+import type { Order, OrderStatusRecord } from '../../types'
 
 export async function createOrder(params: {
   order_id: string
@@ -64,11 +64,6 @@ export async function updateOrderStatus(orderId: string, msg: string): Promise<O
 
 export async function completeOrder(orderId: string): Promise<OrderStatusRecord> {
   const { data } = await api.put<OrderStatusRecord>(`/orders/${orderId}/complete`)
-  return data
-}
-
-export async function calculateCost(orderId: string): Promise<CostBreakdown> {
-  const { data } = await api.post<CostBreakdown>(`/cost/calculate/${orderId}`)
   return data
 }
 

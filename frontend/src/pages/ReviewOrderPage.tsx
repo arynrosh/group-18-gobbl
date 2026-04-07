@@ -14,6 +14,7 @@ export function ReviewOrderPage() {
   const user = useAuthStore((s) => s.user)
   const [items, setItems] = useState<ReviewableItem[]>([])
   const [ratings, setRatings] = useState<Record<number, number>>({})
+  const [writtenReviews, setWrittenReviews] = useState<Record<number, string>>({})
   const [food_temperature, setFoodTemperature] = useState('hot')
   const [food_freshness, setFoodFreshness] = useState(5)
   const [packaging_quality, setPackagingQuality] = useState(5)
@@ -29,10 +30,13 @@ export function ReviewOrderPage() {
         if (!cancelled) {
           setItems(res.items)
           const init: Record<number, number> = {}
+          const initWritten: Record<number, string> = {}
           res.items.forEach((i) => {
             init[i.menu_item_id] = 5
+            initWritten[i.menu_item_id] = i.written_review ?? ''
           })
           setRatings(init)
+          setWrittenReviews(initWritten)
         }
       } catch (e) {
         if (!cancelled) toast.error(getApiErrorMessage(e))
@@ -69,6 +73,15 @@ export function ReviewOrderPage() {
                 onChange={(e) =>
                   setRatings((r) => ({ ...r, [it.menu_item_id]: Number(e.target.value) }))
                 }
+              />
+              <Label htmlFor={`w-${it.menu_item_id}`}>written_review (optional)</Label>
+              <Input
+                id={`w-${it.menu_item_id}`}
+                value={writtenReviews[it.menu_item_id] ?? ''}
+                onChange={(e) =>
+                  setWrittenReviews((r) => ({ ...r, [it.menu_item_id]: e.target.value }))
+                }
+                placeholder="How was this specific item?"
               />
             </li>
           ))}
@@ -118,6 +131,7 @@ export function ReviewOrderPage() {
                 menu_item_id: it.menu_item_id,
                 food_item: it.food_item,
                 customer_rating: ratings[it.menu_item_id] ?? 5,
+                written_review: (writtenReviews[it.menu_item_id] ?? '').trim() || null,
               }))
               await submitReview({
                 order_id: orderId,
