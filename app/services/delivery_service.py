@@ -8,15 +8,16 @@ from app.repositories.drivers_repo import (
     load_all_drivers,
     save_all_drivers
 )
-
 from app.repositories.order_repo import ( 
     load_all_orders, 
     save_all_orders 
 )
+from app.services.order_notification_service import notify_out_for_delivery
+
     
 def get_driver_or_404(driver_id: int) -> dict:
     drivers = load_all_drivers()
-    for  driver in drivers:
+    for driver in drivers:
         if driver["driver_id"] == driver_id:
             return driver, drivers
         
@@ -38,10 +39,8 @@ def get_order_or_404(order_id: str) -> Dict[str, Any]:
 
 def update_driver_distance(driver_id: int, driver_data: DriverDistanceUpdate) -> dict:
     driver, drivers = get_driver_or_404(driver_id)
-
     driver["driver_distance"] = driver_data.driver_distance
     save_all_drivers(drivers)
-
     return driver
 
 def update_driver_status(driver_id: int, driver_data: DriverStatusUpdate) -> dict:
@@ -55,7 +54,6 @@ def update_driver_status(driver_id: int, driver_data: DriverStatusUpdate) -> dic
     driver, drivers = get_driver_or_404(driver_id)
     driver["status"] = driver_data.status
     save_all_drivers(drivers)
-
     return driver
 
 def find_nearest_available_driver(order_id: str) -> dict:
@@ -105,6 +103,8 @@ def assign_driver_to_order(order_id: str, driver_id: int, auto: bool = False) ->
 
     save_all_orders(orders)
     save_all_drivers(drivers)
+
+    notify_out_for_delivery(order_id, order["customer_id"], order["restaurant_id"], driver["name"])
 
     if auto:
         return {
