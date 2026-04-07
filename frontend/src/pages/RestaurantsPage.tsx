@@ -7,6 +7,7 @@ import {
   searchRestaurantsByCuisine,
 } from '../features/restaurants/restaurantApi'
 import type { Restaurant } from '../types'
+import { getRestaurantAverageRating } from '../features/reviews/reviewApi'
 import { getApiErrorMessage } from '../utils/apiError'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
 import { Card } from '../components/ui/Card'
@@ -16,6 +17,10 @@ import { Skeleton } from '../components/ui/Skeleton'
 import { StatusPill } from '../components/ui/StatusPill'
 
 const PAGE = 12
+
+function starsExact(n: number) {
+  return '★'.repeat(Math.max(0, Math.min(5, Math.round(Number(n)))))
+}
 
 export function RestaurantsPage() {
   const [mode, setMode] = useState<'browse' | 'name' | 'cuisine'>('browse')
@@ -28,6 +33,7 @@ export function RestaurantsPage() {
   const [total, setTotal] = useState(0)
   const [offset, setOffset] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [avgByRestaurant, setAvgByRestaurant] = useState<Record<number, number>>({})
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -56,6 +62,36 @@ export function RestaurantsPage() {
   useEffect(() => {
     setOffset(0)
   }, [mode, debouncedName, debouncedCuisine])
+
+  useEffect(() => {
+    if (!items.length) {
+      setAvgByRestaurant({})
+      return
+    }
+    let cancelled = false
+    ;(async () => {
+      const results = await Promise.all(
+        items.map((r) =>
+          getRestaurantAverageRating(r.restaurant_id)
+            .then((av) => {
+              const raw = av.average_rating
+              const n = typeof raw === 'number' ? raw : Number(raw)
+              return [r.restaurant_id, Number.isFinite(n) ? n : null] as const
+            })
+            .catch(() => [r.restaurant_id, null] as const),
+        ),
+      )
+      if (cancelled) return
+      const next: Record<number, number> = {}
+      for (const [id, val] of results) {
+        if (val != null) next[id] = val
+      }
+      setAvgByRestaurant(next)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [items])
 
   return (
     <div className="space-y-8">
@@ -106,7 +142,22 @@ export function RestaurantsPage() {
             <Link key={r.restaurant_id} to={`/restaurants/${r.restaurant_id}`}>
               <Card hoverLift className="h-full !p-0 overflow-hidden">
                 <div className="bg-gradient-to-br from-gobbl-mango/80 to-gobbl-tomato/80 p-5 text-white">
-                  <h2 className="font-display text-2xl font-bold drop-shadow-sm">{r.restaurant_name}</h2>
+                  <div className="flex min-w-0 items-center gap-3">
+                    <h2 className="min-w-0 flex-1 font-display text-2xl font-bold leading-tight drop-shadow-sm">
+                      {r.restaurant_name}
+                    </h2>
+                    {avgByRestaurant[r.restaurant_id] != null && (
+                      <div
+                        className="flex shrink-0 items-center gap-1.5"
+                        title={`${avgByRestaurant[r.restaurant_id].toFixed(2)} average (out of 5)`}
+                      >
+                        <span className="text-[9px] font-bold uppercase tracking-wide text-white/80">Rating</span>
+                        <span className="font-display text-sm leading-none tracking-tight text-white drop-shadow-sm">
+                          {starsExact(Math.round(avgByRestaurant[r.restaurant_id]))}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <StatusPill variant="warning" className="mt-3 !bg-white/30 !text-white !border-white/40">
                     {r.cuisine}
                   </StatusPill>

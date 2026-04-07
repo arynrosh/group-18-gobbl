@@ -42,5 +42,83 @@
       }
     ],
     "sent": true
+  },
+  {
+    "order_id": "989747f0-026d-43cc-8c21-75214827b204",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 4,
+        "food_item": "Sushi",
+        "quantity": 1,
+        "order_value": 8.53
+      },
+      {
+        "menu_item_id": 5,
+        "food_item": "California Roll",
+        "quantity": 1,
+        "order_value": 14.76
+      }
+    ],
+    "sent": false,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    }
+  },
+  {
+    "order_id": "8d0cf1ae-63ad-48dd-ba74-189063e0818e",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 4,
+        "food_item": "Sushi",
+        "quantity": 1,
+        "order_value": 8.53
+      }
+    ],
+    "sent": false,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    }
+  },
+  {
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 5,
+        "food_item": "California Roll",
+        "quantity": 1,
+        "order_value": 14.76
+      }
+    ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    }
   }
 ]

@@ -5,6 +5,7 @@ class ItemRatingInput(BaseModel):
     menu_item_id: int = Field(..., example=1)
     food_item: str = Field(..., example="Burger")
     customer_rating: int = Field(..., ge=1, le=5, example=1)
+    written_review: Optional[str] = Field(default=None, min_length = 1, max_length = 300, example = "Tasted good overall and was packaged nicely.")
 
 #defined but not used
 class Review(BaseModel):

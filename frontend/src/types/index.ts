@@ -56,6 +56,11 @@ export interface OrderItem {
   order_value: number
 }
 
+export interface DietRestrictionsEntry {
+  username: string
+  diet_restrictions: string[]
+}
+
 export interface Order {
   order_id: string
   customer_id: string
@@ -65,6 +70,8 @@ export interface Order {
   assigned_driver_id: number | null
   items: OrderItem[]
   sent: boolean
+  // backend may store either list or {username, diet_restrictions}
+  diet_restrictions?: string[] | DietRestrictionsEntry | null
 }
 
 export interface CostBreakdown {
@@ -172,6 +179,7 @@ export interface ItemRatingInput {
   menu_item_id: number
   food_item: string
   customer_rating: number
+  written_review?: string | null
 }
 
 export interface ReviewCreate {
@@ -187,4 +195,5 @@ export interface ReviewableItem {
   menu_item_id: number
   food_item: string
   customer_rating: number | null
+  written_review?: string | null
 }

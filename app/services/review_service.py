@@ -41,7 +41,8 @@ def get_reviewable_items_for_order(order_id: str) -> List[Dict[str, Any]]:
         {
             "menu_item_id": item["menu_item_id"],
             "food_item": item["food_item"],
-            "customer_rating": None           
+            "customer_rating": None,
+            "written_review": None     
         }
         for item in items
     ]
@@ -113,7 +114,8 @@ def create_review(review_data: ReviewCreate) -> Dict[str, Any]:
         item_ratings.append({
             "menu_item_id": menu_item["menu_item_id"],
             "food_item": menu_item["food_item"],
-            "customer_rating": item.customer_rating
+            "customer_rating": item.customer_rating,
+            "written_review": item.written_review
         })
 
     new_review = {

@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useCartStore } from '../store/cartStore'
 import { useAuthStore, hasRole } from '../store/authStore'
-import { fetchOrder, calculateCost } from '../features/orders/orderApi'
+import { fetchOrder, sendOrder } from '../features/orders/orderApi'
 import { processPayment } from '../features/payments/paymentApi'
 import { listPaymentMethods } from '../features/payment-methods/paymentMethodsApi'
-import type { CostBreakdown, Order, PaymentMethodResponse } from '../types'
+import type { Order, PaymentMethodResponse } from '../types'
+import { computeCostBreakdown } from '../utils/costBreakdown'
 import { getApiErrorMessage } from '../utils/apiError'
 import { Card } from '../components/ui/Card'
+import { OrderLineItemsTable } from '../components/OrderLineItemsTable'
 import { Button } from '../components/ui/Button'
 import { Input, Label } from '../components/ui/Input'
 import { StatusPill } from '../components/ui/StatusPill'
@@ -22,7 +24,6 @@ export function CheckoutPage() {
   const user = useAuthStore((s) => s.user)
 
   const [order, setOrder] = useState<Order | null>(null)
-  const [cost, setCost] = useState<CostBreakdown | null>(null)
   const [methods, setMethods] = useState<PaymentMethodResponse[]>([])
   const [busy, setBusy] = useState(false)
 
@@ -44,12 +45,6 @@ export function CheckoutPage() {
         if (cancelled) return
         setOrder(o)
         setMethods(ms)
-        try {
-          const c = await calculateCost(orderId)
-          if (!cancelled) setCost(c)
-        } catch {
-          if (!cancelled) setCost(null)
-        }
       } catch (e) {
         if (!cancelled) toast.error(getApiErrorMessage(e))
       }
@@ -59,6 +54,8 @@ export function CheckoutPage() {
     }
   }, [orderId])
 
+  const cost = useMemo(() => (order ? computeCostBreakdown(order) : null), [order])
+
   if (!user || !hasRole(user, ['customer'])) {
     return <p className="text-gobbl-ink/75">Log in as a customer to checkout.</p>
   }
@@ -67,38 +64,61 @@ export function CheckoutPage() {
     return <p className="text-gobbl-ink/75">No order selected. Open your cart first.</p>
   }
 
-  const canPay = order && order.sent && order.items.length > 0
+  const canPay = Boolean(order && order.items.length > 0)
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <h1 className="font-display text-4xl font-extrabold text-gobbl-ink">Checkout</h1>
       <p className="text-sm text-gobbl-ink/65">
-        Backend requires a sent order with items before payment makes sense. Card fields map 1:1 to{' '}
+        Pay here first. After payment succeeds, your order is submitted to the restaurant. Card fields match{' '}
         <code className="rounded bg-white/80 px-1">PaymentRequest</code>.
       </p>
 
       {order && (
         <Card>
           <div className="flex flex-wrap items-center gap-2">
-            <StatusPill variant={order.sent ? 'success' : 'warning'}>{order.sent ? 'Sent' : 'Not sent'}</StatusPill>
+            <StatusPill variant={order.sent ? 'success' : 'warning'}>
+              {order.sent ? 'Sent to restaurant' : 'Not sent yet — completes after payment'}
+            </StatusPill>
             <span className="font-mono text-xs">{order.order_id}</span>
           </div>
-          {!order.sent && (
-            <p className="mt-3 text-sm text-gobbl-ink/75">Send your order from the cart page to unlock checkout.</p>
-          )}
+        </Card>
+      )}
+
+      {order && order.items.length > 0 && (
+        <Card className="!border-gobbl-ink/10 !bg-white shadow-[0_1px_3px_rgba(45,42,50,0.08)]">
+          <h2 className="font-display text-lg font-bold text-gobbl-ink">Items in this order</h2>
+          <p className="mt-1 text-xs text-gobbl-ink/55">Quantity, unit price, and line total.</p>
+          <div className="mt-4">
+            <OrderLineItemsTable items={order.items} />
+          </div>
         </Card>
       )}
 
       {cost && (
-        <Card>
-          <h2 className="font-display text-lg font-bold">Totals</h2>
-          <p className="mt-2 text-sm">
-            Subtotal ${cost.subtotal.toFixed(2)} · Tax ${cost.tax.toFixed(2)} · Delivery ${cost.delivery_fee.toFixed(2)}
-          </p>
-          <p className="mt-1 text-2xl font-black text-gobbl-tomato">${cost.total.toFixed(2)}</p>
-          <p className="mt-2 text-xs text-gobbl-ink/55">
-            Note: live discount application happens server-side in <code className="rounded bg-white/70 px-1">/payments/process</code>{' '}
-            — final charge may differ from this estimate.
+        <Card className="!border-gobbl-ink/10 !bg-white shadow-[0_1px_3px_rgba(45,42,50,0.08)]">
+          <h2 className="font-display text-lg font-bold text-gobbl-ink">Totals</h2>
+          <dl className="mt-4 overflow-hidden rounded-2xl border border-gobbl-ink/10 bg-white text-sm">
+            <div className="flex items-center justify-between gap-4 border-b border-gobbl-ink/8 px-4 py-3">
+              <dt className="text-gobbl-ink/65">Subtotal</dt>
+              <dd className="tabular-nums font-semibold text-gobbl-ink">${cost.subtotal.toFixed(2)}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-b border-gobbl-ink/8 px-4 py-3">
+              <dt className="text-gobbl-ink/65">Tax</dt>
+              <dd className="tabular-nums font-semibold text-gobbl-ink">${cost.tax.toFixed(2)}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-b border-gobbl-ink/8 px-4 py-3">
+              <dt className="text-gobbl-ink/65">Delivery</dt>
+              <dd className="tabular-nums font-semibold text-gobbl-ink">${cost.delivery_fee.toFixed(2)}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4 bg-gobbl-ink/[0.02] px-4 py-3.5">
+              <dt className="font-display text-base font-bold text-gobbl-ink">Total</dt>
+              <dd className="tabular-nums font-display text-xl font-extrabold text-gobbl-ink">${cost.total.toFixed(2)}</dd>
+            </div>
+          </dl>
+          <p className="mt-3 text-xs text-gobbl-ink/50">
+            Discounts apply at payment — final charge may differ. See{' '}
+            <code className="rounded border border-gobbl-ink/10 bg-gobbl-ink/[0.03] px-1">/payments/process</code>.
           </p>
         </Card>
       )}
@@ -149,7 +169,17 @@ export function CheckoutPage() {
                 cvv,
                 discount_code: discount_code.trim() || null,
               })
-              toast.success(res.message || 'Paid!')
+              try {
+                const latest = await fetchOrder(orderId)
+                if (!latest.sent) {
+                  await sendOrder(orderId)
+                }
+                toast.success(res.message || 'Paid — order sent!')
+              } catch (sendErr) {
+                toast.error(
+                  `Payment approved, but notifying the restaurant failed: ${getApiErrorMessage(sendErr)}`,
+                )
+              }
               navigate(`/transactions/${encodeURIComponent(res.transaction_id)}`)
             } catch (err) {
               toast.error(getApiErrorMessage(err))

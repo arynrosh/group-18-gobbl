@@ -18,7 +18,8 @@ FAKE_REVIEWS = [
             {
                 "menu_item_id": 1,
                 "food_item": "Burger",
-                "customer_rating": 3
+                "customer_rating": 3,
+                "written_review": "It was okay."
             }
         ]
     },
@@ -35,7 +36,8 @@ FAKE_REVIEWS = [
             {
                 "menu_item_id": 1,
                 "food_item": "Burger",
-                "customer_rating": 1
+                "customer_rating": 1,
+                "written_review": "Worst burger ever!"
             }
         ]
     }
@@ -49,6 +51,7 @@ FAKE_ORDER = {
         {
             "menu_item_id": 1,
             "food_item": "Burger",
+            "quantity": 1,
             "order_value": 41.17
         }
     ]
@@ -95,6 +98,8 @@ def test_get_reviewable_items_for_order_returns_items():
     assert len(items) == 1
     assert items[0]["menu_item_id"] == 1
     assert items[0]["food_item"] == "Burger"
+    assert items[0]["customer_rating"] == None
+    assert items[0]["written_review"] == None
 
 def test_get_reviewable_items_for_order_raises_404_when_no_items():
     empty_order = {
@@ -123,7 +128,8 @@ def test_create_review():
             {
                 "menu_item_id": 1,
                 "food_item": "Burger",
-                "customer_rating": 4
+                "customer_rating": 4,
+                "written_review": "Burger was juicy and fresh."
             }
         ]
     )
@@ -146,6 +152,7 @@ def test_create_review():
         assert new_review["item_ratings"][0]["menu_item_id"] == 1
         assert new_review["item_ratings"][0]["food_item"] == "Burger"
         assert new_review["item_ratings"][0]["customer_rating"] == 4
+        assert new_review["item_ratings"][0]["written_review"] == "Burger was juicy and fresh."
         mock_save.assert_called_once()
         mock_recalculation.assert_called_once()
 
@@ -160,7 +167,8 @@ def test_create_review_raises_400_when_menu_item_wrong_restaurant():
             {
                 "menu_item_id": 1,
                 "food_item": "Burger",
-                "customer_rating": 4
+                "customer_rating": 4,
+                "written_review": "Burger was juicy and fresh."
             }
         ]
     )
