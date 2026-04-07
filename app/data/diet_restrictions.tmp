@@ -3,7 +3,6 @@
     "username": "alice",
     "diet_restrictions": [
       "Lactose Intolerance",
-      "Vegan",
       "Nut Allergy"
     ]
   }

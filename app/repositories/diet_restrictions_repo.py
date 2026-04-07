@@ -10,6 +10,7 @@ def load_all_diet_restrictions() -> List[Dict[str, Any]]:
     if not DIET_RESTRICTIONS_PATH.exists():
         return []
     with DIET_RESTRICTIONS_PATH.open("r", encoding="utf-8") as f:
+        print("File opened")
         return json.load(f)
 
 
@@ -17,4 +18,5 @@ def save_all_diet_restrictions(diet_restrictions: List[Dict[str, Any]]) -> None:
     tmp = DIET_RESTRICTIONS_PATH.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8") as f:
         json.dump(diet_restrictions, f, ensure_ascii=False, indent=2)
+        print("save")
     os.replace(tmp, DIET_RESTRICTIONS_PATH)

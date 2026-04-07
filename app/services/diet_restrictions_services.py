@@ -16,38 +16,47 @@ def get_user_or_404(username: str) -> dict:
         raise HTTPException(status_code=404, detail=f"User {username} not found")
     return user
 
-def get_diet_restrictions_or_404(username: str) -> dict:
-    diet_restrictions = load_all_diet_restrictions()
-    user_restrictions = next((u for u in diet_restrictions if u.get("username") == username), None)
-    if not user_restrictions:
-        user = get_user_or_404(username)
-        user_role = user["role"]
-        if create_diet_restrictions(user_role):
-            list = []
-            new_diet_restrictions = {
-                "username": username,
-                "diet_restrictions": list
-            }
-            return new_diet_restrictions
-        else:
-            raise HTTPException(status_code=404, detail=f"User {username} not found with or eligible for diet_restrictions")
-    return user_restrictions
+def get_diet_restrictions_or_404(username: str, all_restrictions: list) -> dict:
+    user_entry = next(
+        (u for u in all_restrictions if u.get("username") == username),
+        None,
+    )
+
+    if user_entry:
+        return user_entry
+
+    user = get_user_or_404(username)
+    if not create_diet_restrictions(user["role"]):
+        raise HTTPException(
+            status_code=404,
+            detail=f"User {username} not eligible for diet restrictions",
+        )
+
+    new_entry = {
+        "username": username,
+        "diet_restrictions": [],
+    }
+    all_restrictions.append(new_entry)
+    return new_entry
 
 def add_diet_restriction(username: str, restriction: str) -> dict:
-    users = load_all_diet_restrictions()
-    user = get_diet_restrictions_or_404(username)
-    #restrict = user["diet_restrictions"]
-    #restrict.append(restriction)
-    #user["diet_restrictions"] = restrict
-    user["diet_restrictions"].append(restriction)
-    save_all_diet_restrictions(users)
-    #return user["diet_restrictions"]
+    all_restrictions = load_all_diet_restrictions()
+
+    user = get_diet_restrictions_or_404(username, all_restrictions)
+
+    if restriction not in user["diet_restrictions"]:
+        user["diet_restrictions"].append(restriction)
+
+    save_all_diet_restrictions(all_restrictions)
+    return user
 
 def remove_diet_restriction(username: str, restriction: str) -> dict:
-    users = load_all_diet_restrictions()
-    user = get_diet_restrictions_or_404(username)
-    
+    all_restrictions = load_all_diet_restrictions()
+
+    user = get_diet_restrictions_or_404(username, all_restrictions)
+
     if restriction in user["diet_restrictions"]:
         user["diet_restrictions"].remove(restriction)
-    save_all_diet_restrictions(users)
-    #return user["diet_restrictions"]
+
+    save_all_diet_restrictions(all_restrictions)
+    return user
