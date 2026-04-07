@@ -6,6 +6,12 @@
     "role": "customer"
   },
   {
+    "username": "sadie",
+    "email": "sadie@example.com",
+    "password": "typepassword",
+    "role": "customer"
+  },
+  {
     "username": "bob",
     "email": "bob@example.com",
     "password": "securepass",
