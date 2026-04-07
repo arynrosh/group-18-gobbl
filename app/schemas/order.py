@@ -12,7 +12,7 @@ class Order(BaseModel):
     restaurant_id: int
     delivery_distance: float
     delivery_time: float = None  # in minutes, optional
-    assigned_driver_id: int
+    assigned_driver_id: Optional[int] = None
     items: List[OrderItem]
     sent: bool
     diet_restrictions: Optional[List[str]] = None
