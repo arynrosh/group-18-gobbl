@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "notification_id": 1,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-06T23:42:38.215011"
+  },
+  {
+    "notification_id": 2,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-06T23:42:38.276613"
+  },
+  {
+    "notification_id": 3,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-06T23:42:39.537952"
+  },
+  {
+    "notification_id": 4,
+    "order_id": "1011",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order 1011 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-06T23:46:18.468044"
+  }
+]

@@ -8,7 +8,7 @@ router = APIRouter(prefix="/restaurant", tags=["restaurant"])
 
 @router.get("/search/name", response_model=Dict[str, Any])
 def search_restaurants_by_name(name: str, params: PaginationParams = Depends()):
-    
+        
     results = search_by_name(name)
     return paginate(results, params.limit, params.offset)
 

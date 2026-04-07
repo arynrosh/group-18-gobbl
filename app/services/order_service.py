@@ -52,7 +52,6 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
         restrictions = get_diet_restrictions_or_404(customer_id, all_restrictions)
         new_order["diet_restrictions"] = restrictions
 
-    
     orders.append(new_order)
     save_all_orders(orders)
 
@@ -125,6 +124,8 @@ def send_order(order_id: str) -> dict:
     if record:
         record["current"] = "sent"
     save_all_status(statuses)
+
+    notify_order_placed(order_id, order["customer_id"], order["restaurant_id"])
 
     return order
 
@@ -228,4 +229,3 @@ def make_my_mystery_bag(order_id: str, mystery_data: MysteryBagRequest) -> dict:
     return {
         "budget": budget
     }
-
