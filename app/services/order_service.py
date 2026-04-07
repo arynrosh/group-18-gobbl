@@ -13,7 +13,6 @@ from app.services.order_notification_service import (
     notify_order_delivered,
     notify_order_delayed
 )
-from app.services.diet_restrictions_services import get_diet_restrictions_or_404, load_all_diet_restrictions
 
 from app.services.menu_service import get_menu_item
 
@@ -47,12 +46,6 @@ def create_order(order_id: str, customer_id: str, restaurant_id: int, delivery_d
         "items": [],
         "sent": False
     }
-    all_restrictions = load_all_diet_restrictions()
-    if get_diet_restrictions_or_404(customer_id, all_restrictions) != None:
-        restrictions = get_diet_restrictions_or_404(customer_id, all_restrictions)
-        new_order["diet_restrictions"] = restrictions
-
-    
     orders.append(new_order)
     save_all_orders(orders)
 
@@ -125,6 +118,8 @@ def send_order(order_id: str) -> dict:
     if record:
         record["current"] = "sent"
     save_all_status(statuses)
+
+    notify_order_placed(order_id, order["customer_id"], order["restaurant_id"])
 
     return order
 
@@ -228,4 +223,3 @@ def make_my_mystery_bag(order_id: str, mystery_data: MysteryBagRequest) -> dict:
     return {
         "budget": budget
     }
-
