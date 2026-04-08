@@ -61,7 +61,7 @@ def get_popular_restaurants_by_rating(limit: int = 10) -> List[Dict[str, Any]]:
             if restaurant_id not in restaurant_ratings:
                restaurant_ratings[restaurant_id] = []
             restaurant_ratings[restaurant_id].append(avg_rating)
-        except (KeyError, ValueError):
+        except (KeyError, ValueError, TypeError):
             continue
 
     averages = {

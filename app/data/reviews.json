@@ -34,5 +34,23 @@
         "written_review": "Tasted good overall and was packaged nicely."
       }
     ]
+  },
+  {
+    "review_id": 8,
+    "order_id": "1011",
+    "restaurant_id": 3,
+    "customer_id": "alice",
+    "food_temperature": "hot",
+    "food_freshness": 3,
+    "packaging_quality": 4,
+    "food_condition": "good",
+    "item_ratings": [
+      {
+        "menu_item_id": 2,
+        "food_item": "Pasta",
+        "customer_rating": 4,
+        "written_review": "Tasted good overall and was packaged nicely."
+      }
+    ]
   }
 ]

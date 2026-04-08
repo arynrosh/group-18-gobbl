@@ -17,10 +17,10 @@ MOCK_ORDERS = [
 ]
 
 MOCK_REVIEWS = [
-    {"restaurant_id": 53, "rating": 3},
-    {"restaurant_id": 53, "rating": 1},
-    {"restaurant_id": 3, "rating": 5},
-    {"restaurant_id": 63, "rating": 1},
+    {"restaurant_id": 53, "item_ratings": [{"customer_rating": 3}]},
+    {"restaurant_id": 53, "item_ratings": [{"customer_rating": 1}]},
+    {"restaurant_id": 3, "item_ratings": [{"customer_rating": 5}]},
+    {"restaurant_id": 63, "item_ratings": [{"customer_rating": 1}]},
 ]
 
 
@@ -88,9 +88,9 @@ def test_popular_by_orders_missing_restaurant_id_skipped():
 
 def test_popular_by_rating_invalid_rating_skipped():
     bad_reviews = [
-        {"restaurant_id": 16, "rating": "not_a_number"},
-        {"restaurant_id": 16, "rating": 4},
-    ]
+    {"restaurant_id": 16, "item_ratings": [{"customer_rating": "not_a_number"}]},
+    {"restaurant_id": 16, "item_ratings": [{"customer_rating": 4}]},
+]
     with patch("app.services.popular_restaurants_service.load_all_reviews", return_value=bad_reviews):
         r = client.get("/statistics/popular-restaurants/ratings")
     assert r.json()[0]["average_rating"] == 4.0
