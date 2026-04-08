@@ -1,62 +1,55 @@
 [
   {
-    "review_id": 1,
-    "order_id": "15760aC",
-    "restaurant_id": 53,
-    "customer_id": "411b8170-4b51-48d6-8695-43cb3dbafc25",
-    "rating": 3,
-    "food_temperature": "Cold",
-    "food_freshness": 4,
-    "packaging_quality": 1,
-    "food_condition": "Poor"
-  },
-  {
-    "review_id": 2,
-    "order_id": "5a6006W",
+    "review_id": 6,
+    "order_id": "1011",
     "restaurant_id": 3,
-    "customer_id": "4a96f5b2-04c4-428d-a1cd-3015ff43698a",
-    "rating": 5,
-    "food_temperature": "Warm",
-    "food_freshness": 4,
-    "packaging_quality": 5,
-    "food_condition": "Good"
-  },
-  {
-    "review_id": 3,
-    "order_id": "070428H",
-    "restaurant_id": 63,
-    "customer_id": "d276487d-a0a1-42fe-a970-f4338aee3eaa",
-    "rating": 1,
-    "food_temperature": "Warm",
-    "food_freshness": 3,
-    "packaging_quality": 1,
-    "food_condition": "Good"
-  },
-  {
-    "review_id": 4,
-    "order_id": "aca6e0D",
-    "restaurant_id": 53,
-    "customer_id": "efecd3d9-44b9-4e43-b001-8d25c259d674",
-    "rating": 1,
-    "food_temperature": "Cold",
-    "food_freshness": 5,
-    "packaging_quality": 3,
-    "food_condition": "Good"
-  },
-  {
-    "review_id": 5,
-    "order_id": "cust-odr-1",
-    "restaurant_id": 54,
     "customer_id": "alice",
     "food_temperature": "Hot",
     "food_freshness": 5,
-    "packaging_quality": 4,
+    "packaging_quality": 5,
     "food_condition": "Good",
     "item_ratings": [
       {
-        "menu_item_id": 4,
-        "food_item": "Sushi",
-        "customer_rating": 5
+        "menu_item_id": 2,
+        "food_item": "Pasta",
+        "customer_rating": 5,
+        "written_review": "Yummy!"
+      }
+    ]
+  },
+  {
+    "review_id": 7,
+    "order_id": "1011",
+    "restaurant_id": 3,
+    "customer_id": "alice",
+    "food_temperature": "hotg",
+    "food_freshness": 1,
+    "packaging_quality": 4,
+    "food_condition": "good",
+    "item_ratings": [
+      {
+        "menu_item_id": 2,
+        "food_item": "Pasta",
+        "customer_rating": 1,
+        "written_review": "Tasted good overall and was packaged nicely."
+      }
+    ]
+  },
+  {
+    "review_id": 8,
+    "order_id": "1011",
+    "restaurant_id": 3,
+    "customer_id": "alice",
+    "food_temperature": "hot",
+    "food_freshness": 3,
+    "packaging_quality": 4,
+    "food_condition": "good",
+    "item_ratings": [
+      {
+        "menu_item_id": 2,
+        "food_item": "Pasta",
+        "customer_rating": 4,
+        "written_review": "Tasted good overall and was packaged nicely."
       }
     ]
   }

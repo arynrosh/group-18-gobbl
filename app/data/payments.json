@@ -194,5 +194,26 @@
     "amount": 25.99,
     "status": "approved",
     "timestamp": "2026-03-23T14:42:38.966540"
+  },
+  {
+    "transaction_id": "61e6d74b-5474-47cc-bc78-da22e3b43aec",
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "amount": 20.67,
+    "status": "approved",
+    "timestamp": "2026-04-07T11:02:51.466063"
+  },
+  {
+    "transaction_id": "170935dc-6e19-41ca-a85c-f02576922fdb",
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "amount": 20.67,
+    "status": "approved",
+    "timestamp": "2026-04-07T11:10:58.945291"
+  },
+  {
+    "transaction_id": "3a12b3dd-f3ed-4112-a264-9d101b523eeb",
+    "order_id": "8e182d1a-23f4-4e7f-ab0e-161d1891cc5b",
+    "amount": 50.51,
+    "status": "approved",
+    "timestamp": "2026-04-07T18:42:06.397790"
   }
 ]
