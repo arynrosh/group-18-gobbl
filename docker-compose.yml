@@ -1,12 +1,23 @@
-version: "3.8"
-
+# UI: http://localhost:8000  |  API: http://localhost:8001/docs
 services:
   api:
-    build: .
+    image: gobbl-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
-      - SECRET_KEY=changeme-use-a-real-secret-in-production
-    volumes:
-      - .:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      SECRET_KEY: changeme-use-a-real-secret-in-production
+
+  web:
+    image: gobbl-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:4173"
+    environment:
+      API_PROXY_TARGET: http://api:8000
+    depends_on:
+      - api
