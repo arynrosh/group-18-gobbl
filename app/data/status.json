@@ -78,5 +78,10 @@
     "order_id": "7d4c514b-7f6c-4601-a365-009d3a458d23",
     "current": "placed",
     "complete": false
+  },
+  {
+    "order_id": "8e182d1a-23f4-4e7f-ab0e-161d1891cc5b",
+    "current": "sent",
+    "complete": false
   }
 ]
