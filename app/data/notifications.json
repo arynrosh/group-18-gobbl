@@ -196,5 +196,653 @@
     "message": "Your order d2a06105-e3ca-4a10-882c-ea7d084c1d95 has been placed successfully.",
     "status": "delivered",
     "timestamp": "2026-04-07T11:02:51.491116"
+  },
+  {
+    "notification_id": 23,
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order d2a06105-e3ca-4a10-882c-ea7d084c1d95 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T11:54:13.250172"
+  },
+  {
+    "notification_id": 24,
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order d2a06105-e3ca-4a10-882c-ea7d084c1d95 is out for delivery with driver Charlie.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T11:54:25.228693"
+  },
+  {
+    "notification_id": 25,
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order d2a06105-e3ca-4a10-882c-ea7d084c1d95 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T11:54:33.120674"
+  },
+  {
+    "notification_id": 26,
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order d2a06105-e3ca-4a10-882c-ea7d084c1d95 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T11:54:38.855038"
+  },
+  {
+    "notification_id": 27,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T12:19:24.842048"
+  },
+  {
+    "notification_id": 28,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T12:21:28.392269"
+  },
+  {
+    "notification_id": 29,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 is out for delivery with driver Eve.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T13:07:05.970155"
+  },
+  {
+    "notification_id": 30,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T13:07:13.924869"
+  },
+  {
+    "notification_id": 31,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T13:07:17.129051"
+  },
+  {
+    "notification_id": 32,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T13:07:34.280081"
+  },
+  {
+    "notification_id": 33,
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 82829320-2877-484f-8c4e-5d8425ae5b88 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T13:13:44.224056"
+  },
+  {
+    "notification_id": 34,
+    "order_id": "0f3c097b-dce4-431a-bdba-b13978329e7c",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 0f3c097b-dce4-431a-bdba-b13978329e7c has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T14:05:27.746309"
+  },
+  {
+    "notification_id": 35,
+    "order_id": "0f3c097b-dce4-431a-bdba-b13978329e7c",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 0f3c097b-dce4-431a-bdba-b13978329e7c has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T14:11:42.846294"
+  },
+  {
+    "notification_id": 36,
+    "order_id": "0f3c097b-dce4-431a-bdba-b13978329e7c",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 0f3c097b-dce4-431a-bdba-b13978329e7c is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T14:11:46.730040"
+  },
+  {
+    "notification_id": 37,
+    "order_id": "0f3c097b-dce4-431a-bdba-b13978329e7c",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 0f3c097b-dce4-431a-bdba-b13978329e7c has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T14:12:12.857098"
+  },
+  {
+    "notification_id": 38,
+    "order_id": "0f3c097b-dce4-431a-bdba-b13978329e7c",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order 0f3c097b-dce4-431a-bdba-b13978329e7c has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T14:23:40.686408"
+  },
+  {
+    "notification_id": 39,
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e3f89ea4-5c8c-40ce-b80b-427ed6566d30 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T14:40:24.134947"
+  },
+  {
+    "notification_id": 40,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:00:23.966514"
+  },
+  {
+    "notification_id": 41,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:01:55.606424"
+  },
+  {
+    "notification_id": 42,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:01:55.645943"
+  },
+  {
+    "notification_id": 43,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:01:56.231138"
+  },
+  {
+    "notification_id": 44,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:07:15.995574"
+  },
+  {
+    "notification_id": 45,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:07:50.495838"
+  },
+  {
+    "notification_id": 46,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:07:50.534373"
+  },
+  {
+    "notification_id": 47,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:07:51.157903"
+  },
+  {
+    "notification_id": 48,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:10:35.232714"
+  },
+  {
+    "notification_id": 49,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:15:17.804978"
+  },
+  {
+    "notification_id": 50,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:15:17.860966"
+  },
+  {
+    "notification_id": 51,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:15:18.770803"
+  },
+  {
+    "notification_id": 52,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:17:33.126170"
+  },
+  {
+    "notification_id": 53,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver Charlie.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:18:42.771835"
+  },
+  {
+    "notification_id": 54,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:18:49.954569"
+  },
+  {
+    "notification_id": 55,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:04.095325"
+  },
+  {
+    "notification_id": 56,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:05.177946"
+  },
+  {
+    "notification_id": 57,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:05.396420"
+  },
+  {
+    "notification_id": 58,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:05.811417"
+  },
+  {
+    "notification_id": 59,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:06.191724"
+  },
+  {
+    "notification_id": 60,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:06.384816"
+  },
+  {
+    "notification_id": 61,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:06.554801"
+  },
+  {
+    "notification_id": 62,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T15:19:12.901616"
+  },
+  {
+    "notification_id": 63,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:41:54.226663"
+  },
+  {
+    "notification_id": 64,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:41:55.910420"
+  },
+  {
+    "notification_id": 65,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:43:40.868438"
+  },
+  {
+    "notification_id": 66,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:45:22.282716"
+  },
+  {
+    "notification_id": 67,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:48:39.965815"
+  },
+  {
+    "notification_id": 68,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:59:51.083988"
+  },
+  {
+    "notification_id": 69,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:59:51.107985"
+  },
+  {
+    "notification_id": 70,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T16:59:51.446337"
+  },
+  {
+    "notification_id": 71,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:01:19.352059"
+  },
+  {
+    "notification_id": 72,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:01:19.373072"
+  },
+  {
+    "notification_id": 73,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:01:19.712777"
+  },
+  {
+    "notification_id": 74,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:01:53.229477"
+  },
+  {
+    "notification_id": 75,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 is delayed by 0 minutes. We apologize for the inconvenience.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:02:30.073180"
+  },
+  {
+    "notification_id": 76,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "message": "Your order ff9894e2-e381-4652-93c0-f8f5e5ba2581 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:03:05.469462"
+  },
+  {
+    "notification_id": 77,
+    "order_id": "8d99f75b-d727-4f28-9a41-9efd27e212bc",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order 8d99f75b-d727-4f28-9a41-9efd27e212bc has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:47:19.439295"
+  },
+  {
+    "notification_id": 78,
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e3f89ea4-5c8c-40ce-b80b-427ed6566d30 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:48:06.067087"
+  },
+  {
+    "notification_id": 79,
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e3f89ea4-5c8c-40ce-b80b-427ed6566d30 is delayed by 0 minutes. We apologize for the inconvenience.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:49:20.690898"
+  },
+  {
+    "notification_id": 80,
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e3f89ea4-5c8c-40ce-b80b-427ed6566d30 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T17:49:59.196713"
+  },
+  {
+    "notification_id": 81,
+    "order_id": "8d99f75b-d727-4f28-9a41-9efd27e212bc",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order 8d99f75b-d727-4f28-9a41-9efd27e212bc has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T18:23:11.854142"
+  },
+  {
+    "notification_id": 82,
+    "order_id": "d85d2c2e-35c0-4e41-8e4c-5b041556a849",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order d85d2c2e-35c0-4e41-8e4c-5b041556a849 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T19:06:36.466448"
+  },
+  {
+    "notification_id": 83,
+    "order_id": "d85d2c2e-35c0-4e41-8e4c-5b041556a849",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Hello from Gobbl admin!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T19:07:51.454269"
+  },
+  {
+    "notification_id": 84,
+    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Hello from Gobbl admin!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T19:12:21.071706"
+  },
+  {
+    "notification_id": 85,
+    "order_id": "e9929b8a-b249-4aab-a13d-c2979d627f62",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e9929b8a-b249-4aab-a13d-c2979d627f62 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T19:22:09.913954"
+  },
+  {
+    "notification_id": 86,
+    "order_id": "e9929b8a-b249-4aab-a13d-c2979d627f62",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e9929b8a-b249-4aab-a13d-c2979d627f62 is out for delivery with driver your driver.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T19:30:20.988231"
+  },
+  {
+    "notification_id": 87,
+    "order_id": "e9929b8a-b249-4aab-a13d-c2979d627f62",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order e9929b8a-b249-4aab-a13d-c2979d627f62 has been delivered. Enjoy your meal!",
+    "status": "delivered",
+    "timestamp": "2026-04-07T19:30:33.109027"
+  },
+  {
+    "notification_id": 88,
+    "order_id": "7d4c514b-7f6c-4601-a365-009d3a458d23",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "message": "Your order 7d4c514b-7f6c-4601-a365-009d3a458d23 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T20:01:11.182609"
+  },
+  {
+    "notification_id": 89,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T20:24:41.044326"
+  },
+  {
+    "notification_id": 90,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T20:24:41.070527"
+  },
+  {
+    "notification_id": 91,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T20:24:41.412544"
+  },
+  {
+    "notification_id": 92,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T22:05:03.212698"
+  },
+  {
+    "notification_id": 93,
+    "order_id": "cust-odr-1",
+    "customer_id": "some-customer-id-1",
+    "restaurant_id": 53,
+    "message": "Your order cust-odr-1 is out for delivery with driver A.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T22:05:03.235386"
+  },
+  {
+    "notification_id": 94,
+    "order_id": "order-001",
+    "customer_id": "alice",
+    "restaurant_id": 53,
+    "message": "Your order order-001 has been placed successfully.",
+    "status": "delivered",
+    "timestamp": "2026-04-07T22:05:03.648776"
   }
 ]

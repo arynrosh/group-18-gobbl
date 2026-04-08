@@ -76,16 +76,18 @@ export function OrderTrackPage() {
               </StatusPill>
             </div>
             <ol className="space-y-3 border-l-4 border-gobbl-mango pl-4">
-              {['pending', 'sent', 'placed', 'out for delivery', 'delayed', 'delivered'].map((step) => (
+              {['pending', 'placed', 'out for delivery', 'delayed', 'delivered'].map((step) => {
+                const active = status.current === step || (step === 'delivered' && status.complete)
+                return (
                 <li
                   key={step}
                   className={
-                    status.current === step ? 'font-black text-gobbl-tomato' : 'text-gobbl-ink/55 line-through decoration-wavy'
+                    active ? 'font-black text-gobbl-tomato' : 'text-gobbl-ink/55 line-through decoration-wavy'
                   }
                 >
                   {step}
                 </li>
-              ))}
+              )})}
             </ol>
             <p className="text-xs text-gobbl-ink/55">
               Timeline labels are a friendly UI hint — your backend uses free-text status updates.

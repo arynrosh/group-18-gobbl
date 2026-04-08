@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { fetchOrder, fetchFulfillmentStatus } from '../features/orders/orderApi'
+import { fetchOrder, fetchFulfillmentStatus, fetchOrderStatus } from '../features/orders/orderApi'
 import { getPaymentByOrder } from '../features/payments/paymentApi'
-import type { Order, PaymentRecord } from '../types'
+import type { Order, OrderStatusRecord, PaymentRecord } from '../types'
 import { computeCostBreakdown } from '../utils/costBreakdown'
 import { getApiErrorMessage } from '../utils/apiError'
 import { normalizeOrderDietRestrictions } from '../utils/dietRestrictions'
@@ -18,6 +18,7 @@ export function OrderDetailPage() {
   const [order, setOrder] = useState<Order | null>(null)
   const [pay, setPay] = useState<PaymentRecord | null | undefined>(undefined)
   const [ful, setFul] = useState<{ order_id: string; fulfillment_status?: string } | null>(null)
+  const [orderStatus, setOrderStatus] = useState<OrderStatusRecord | null>(null)
 
   useEffect(() => {
     if (!orderId) return
@@ -36,6 +37,11 @@ export function OrderDetailPage() {
           setFul(await fetchFulfillmentStatus(orderId))
         } catch {
           setFul(null)
+        }
+        try {
+          setOrderStatus(await fetchOrderStatus(orderId))
+        } catch {
+          setOrderStatus(null)
         }
       } catch (e) {
         if (!cancelled) toast.error(getApiErrorMessage(e))
@@ -57,9 +63,16 @@ export function OrderDetailPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-3xl font-extrabold text-gobbl-ink">Order</h1>
-        <Link to={`/orders/${orderId}/track`}>
-          <Button variant="mint">Track</Button>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {orderStatus?.complete ? (
+            <Link to={`/reviews/order/${encodeURIComponent(orderId)}`}>
+              <Button>Write review</Button>
+            </Link>
+          ) : null}
+          <Link to={`/orders/${orderId}/track`}>
+            <Button variant="mint">Track</Button>
+          </Link>
+        </div>
       </div>
       <Card>
         <div className="flex flex-wrap gap-2">

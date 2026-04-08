@@ -23,6 +23,12 @@ export async function fetchOrder(orderId: string): Promise<Order> {
   return data
 }
 
+/** GET /orders — orders for the current user (JWT). */
+export async function fetchMyOrders(): Promise<Order[]> {
+  const { data } = await api.get<Order[]>('/orders')
+  return Array.isArray(data) ? data : []
+}
+
 export async function addOrderItem(params: {
   orderId: string
   restaurant_id: number

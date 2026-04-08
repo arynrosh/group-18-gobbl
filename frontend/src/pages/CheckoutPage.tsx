@@ -15,11 +15,15 @@ import { Button } from '../components/ui/Button'
 import { Input, Label } from '../components/ui/Input'
 import { StatusPill } from '../components/ui/StatusPill'
 
+/** Simulated PAN/CVV for saved-method checkout — backend still validates card shape; no API change. */
+const SIMULATED_SAVED_CARD_NUMBER = '4242424242424242'
+const SIMULATED_SAVED_CVV = '123'
+
 export function CheckoutPage() {
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const paramOid = params.get('orderId')
-  const { orderId: cartOid } = useCartStore()
+  const { orderId: cartOid, clear: clearCart } = useCartStore()
   const orderId = paramOid || cartOid
   const user = useAuthStore((s) => s.user)
 
@@ -32,6 +36,7 @@ export function CheckoutPage() {
   const [expiry, setExpiry] = useState('')
   const [cvv, setCvv] = useState('')
   const [discount_code, setDiscountCode] = useState('')
+  const [selectedSavedMethod, setSelectedSavedMethod] = useState<PaymentMethodResponse | null>(null)
 
   useEffect(() => {
     if (!orderId) return
@@ -45,6 +50,7 @@ export function CheckoutPage() {
         if (cancelled) return
         setOrder(o)
         setMethods(ms)
+        setSelectedSavedMethod(ms[0] ?? null)
       } catch (e) {
         if (!cancelled) toast.error(getApiErrorMessage(e))
       }
@@ -70,8 +76,8 @@ export function CheckoutPage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <h1 className="font-display text-4xl font-extrabold text-gobbl-ink">Checkout</h1>
       <p className="text-sm text-gobbl-ink/65">
-        Pay here first. After payment succeeds, your order is submitted to the restaurant. Card fields match{' '}
-        <code className="rounded bg-white/80 px-1">PaymentRequest</code>.
+        Pay here first. After payment succeeds, your order is submitted to the restaurant. With a saved card, card
+        fields are skipped (simulated checkout).
       </p>
 
       {order && (
@@ -125,30 +131,38 @@ export function CheckoutPage() {
 
       {methods.length > 0 && (
         <Card>
-          <h2 className="font-display text-lg font-bold">Saved methods (reference)</h2>
+          <h2 className="font-display text-lg font-bold">Saved payment methods</h2>
           <p className="text-xs text-gobbl-ink/60">
-            The API does not attach a saved method id to processing — pick a card below as a reminder, then type details manually.
+            Choose a saved card to pay without typing card number or CVV (simulated gateway).
           </p>
           <ul className="mt-3 space-y-2">
             {methods.map((m) => (
               <li key={m.method_id}>
                 <Button
-                  variant="secondary"
+                  variant={selectedSavedMethod?.method_id === m.method_id ? 'primary' : 'secondary'}
                   className="w-full !justify-start !py-2 !text-sm"
                   type="button"
-                  onClick={() => {
-                    setCardholderName(m.cardholder_name)
-                    setExpiry(m.expiry)
-                    setCardNumber('')
-                    setCvv('')
-                    toast.message(`Prefilled name/expiry for card ending ${m.last_four}`)
-                  }}
+                  onClick={() => setSelectedSavedMethod(m)}
                 >
                   {m.cardholder_name} · •••• {m.last_four} · {m.expiry}
                 </Button>
               </li>
             ))}
           </ul>
+          <Button
+            type="button"
+            variant="ghost"
+            className="mt-3 w-full !py-2 !text-sm text-gobbl-ink/70"
+            onClick={() => {
+              setSelectedSavedMethod(null)
+              setCardholderName('')
+              setCardNumber('')
+              setExpiry('')
+              setCvv('')
+            }}
+          >
+            Use a different card (enter details below)
+          </Button>
         </Card>
       )}
 
@@ -161,12 +175,13 @@ export function CheckoutPage() {
             if (!orderId || !canPay) return
             setBusy(true)
             try {
+              const useSaved = selectedSavedMethod != null
               const res = await processPayment({
                 order_id: orderId,
-                cardholder_name,
-                card_number: card_number.replace(/\s/g, ''),
-                expiry,
-                cvv,
+                cardholder_name: useSaved ? selectedSavedMethod.cardholder_name : cardholder_name,
+                card_number: useSaved ? SIMULATED_SAVED_CARD_NUMBER : card_number.replace(/\s/g, ''),
+                expiry: useSaved ? selectedSavedMethod.expiry : expiry,
+                cvv: useSaved ? SIMULATED_SAVED_CVV : cvv,
                 discount_code: discount_code.trim() || null,
               })
               try {
@@ -180,6 +195,7 @@ export function CheckoutPage() {
                   `Payment approved, but notifying the restaurant failed: ${getApiErrorMessage(sendErr)}`,
                 )
               }
+              clearCart()
               navigate(`/transactions/${encodeURIComponent(res.transaction_id)}`)
             } catch (err) {
               toast.error(getApiErrorMessage(err))
@@ -188,22 +204,64 @@ export function CheckoutPage() {
             }
           }}
         >
-          <div>
-            <Label htmlFor="ch">cardholder_name</Label>
-            <Input id="ch" value={cardholder_name} onChange={(e) => setCardholderName(e.target.value)} required />
-          </div>
-          <div>
-            <Label htmlFor="cn">card_number (16 digits)</Label>
-            <Input id="cn" inputMode="numeric" value={card_number} onChange={(e) => setCardNumber(e.target.value)} required />
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          {selectedSavedMethod ? (
+            <p className="rounded-2xl border border-gobbl-teal/30 bg-gobbl-teal/10 px-4 py-3 text-sm font-semibold text-gobbl-ink">
+              Paying with saved card · •••• {selectedSavedMethod.last_four} · {selectedSavedMethod.expiry}
+            </p>
+          ) : null}
+          <div
+            className={`space-y-4 rounded-2xl transition-opacity ${
+              selectedSavedMethod ? 'pointer-events-none opacity-45' : ''
+            }`}
+            aria-hidden={selectedSavedMethod != null}
+          >
+            <p className="text-xs font-bold uppercase tracking-wide text-gobbl-ink/45">
+              {selectedSavedMethod ? 'Card details (not needed — using saved method)' : 'Card details'}
+            </p>
             <div>
-              <Label htmlFor="ex">expiry (MM/YY)</Label>
-              <Input id="ex" placeholder="12/28" value={expiry} onChange={(e) => setExpiry(e.target.value)} required />
+              <Label htmlFor="ch">cardholder_name</Label>
+              <Input
+                id="ch"
+                value={cardholder_name}
+                onChange={(e) => setCardholderName(e.target.value)}
+                required={!selectedSavedMethod}
+                disabled={!!selectedSavedMethod}
+              />
             </div>
             <div>
-              <Label htmlFor="cvv">cvv</Label>
-              <Input id="cvv" value={cvv} onChange={(e) => setCvv(e.target.value)} required maxLength={4} />
+              <Label htmlFor="cn">card_number (16 digits)</Label>
+              <Input
+                id="cn"
+                inputMode="numeric"
+                value={card_number}
+                onChange={(e) => setCardNumber(e.target.value)}
+                required={!selectedSavedMethod}
+                disabled={!!selectedSavedMethod}
+              />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="ex">expiry (MM/YY)</Label>
+                <Input
+                  id="ex"
+                  placeholder="12/28"
+                  value={expiry}
+                  onChange={(e) => setExpiry(e.target.value)}
+                  required={!selectedSavedMethod}
+                  disabled={!!selectedSavedMethod}
+                />
+              </div>
+              <div>
+                <Label htmlFor="cvv">cvv</Label>
+                <Input
+                  id="cvv"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
+                  required={!selectedSavedMethod}
+                  maxLength={4}
+                  disabled={!!selectedSavedMethod}
+                />
+              </div>
             </div>
           </div>
           <div>

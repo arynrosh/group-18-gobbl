@@ -6,6 +6,10 @@ import {
   searchRestaurantsByName,
   searchRestaurantsByCuisine,
 } from '../features/restaurants/restaurantApi'
+import {
+  fetchRestaurantsRankedByAggregatedReviewRatings,
+  fetchRestaurantsRankedByOrders,
+} from '../features/restaurants/popularRestaurants'
 import type { Restaurant } from '../types'
 import { getRestaurantAverageRating } from '../features/reviews/reviewApi'
 import { getApiErrorMessage } from '../utils/apiError'
@@ -23,7 +27,9 @@ function starsExact(n: number) {
 }
 
 export function RestaurantsPage() {
-  const [mode, setMode] = useState<'browse' | 'name' | 'cuisine'>('browse')
+  const [mode, setMode] = useState<
+    'browse' | 'name' | 'cuisine' | 'popular_orders' | 'popular_ratings'
+  >('browse')
   const [nameQ, setNameQ] = useState('')
   const [cuisineQ, setCuisineQ] = useState('')
   const debouncedName = useDebouncedValue(nameQ, 350)
@@ -34,9 +40,13 @@ export function RestaurantsPage() {
   const [offset, setOffset] = useState(0)
   const [loading, setLoading] = useState(true)
   const [avgByRestaurant, setAvgByRestaurant] = useState<Record<number, number>>({})
+  const [rankedList, setRankedList] = useState<Restaurant[] | null>(null)
+  const [orderCountById, setOrderCountById] = useState<Record<number, number>>({})
 
   const load = useCallback(async () => {
+    if (mode === 'popular_orders' || mode === 'popular_ratings') return
     setLoading(true)
+    setRankedList(null)
     try {
       let res
       if (mode === 'name' && debouncedName.trim()) {
@@ -64,8 +74,47 @@ export function RestaurantsPage() {
   }, [mode, debouncedName, debouncedCuisine])
 
   useEffect(() => {
+    if (mode !== 'popular_orders' && mode !== 'popular_ratings') return
+    let cancelled = false
+    setLoading(true)
+    setRankedList(null)
+    ;(async () => {
+      try {
+        if (mode === 'popular_orders') {
+          const { restaurants, orderCountById: counts } = await fetchRestaurantsRankedByOrders(150)
+          if (cancelled) return
+          setOrderCountById(counts)
+          setAvgByRestaurant({})
+          setRankedList(restaurants)
+          setTotal(restaurants.length)
+        } else {
+          const { restaurants, ratingById } = await fetchRestaurantsRankedByAggregatedReviewRatings(200, 150)
+          if (cancelled) return
+          setOrderCountById({})
+          setAvgByRestaurant(ratingById)
+          setRankedList(restaurants)
+          setTotal(restaurants.length)
+        }
+      } catch (e) {
+        if (!cancelled) toast.error(getApiErrorMessage(e))
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [mode])
+
+  useEffect(() => {
+    if (rankedList === null) return
+    setItems(rankedList.slice(offset, offset + PAGE))
+  }, [rankedList, offset])
+
+  useEffect(() => {
+    if (mode === 'popular_ratings') return
     if (!items.length) {
-      setAvgByRestaurant({})
+      if (mode !== 'popular_orders') setAvgByRestaurant({})
       return
     }
     let cancelled = false
@@ -91,13 +140,19 @@ export function RestaurantsPage() {
     return () => {
       cancelled = true
     }
-  }, [items])
+  }, [items, mode])
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-4xl font-extrabold text-gobbl-ink">Restaurants</h1>
-        <p className="mt-1 text-gobbl-ink/70">Browse, search by name, or filter by cuisine — all backed by your API.</p>
+        <p className="mt-1 text-gobbl-ink/70">
+          Browse, search, or sort by popularity — orders use{' '}
+          <code className="rounded bg-gobbl-ink/[0.04] px-1 text-xs">/statistics/popular-restaurants/orders</code>
+          ; top ratings rank by stars in submitted reviews (aggregated from{' '}
+          <code className="rounded bg-gobbl-ink/[0.04] px-1 text-xs">/reviews/restaurant/:id</code>
+          ).
+        </p>
       </div>
 
       <Card className="flex flex-col gap-4 md:flex-row md:items-end">
@@ -110,6 +165,18 @@ export function RestaurantsPage() {
           </Button>
           <Button variant={mode === 'cuisine' ? 'primary' : 'secondary'} onClick={() => setMode('cuisine')}>
             Cuisine
+          </Button>
+          <Button
+            variant={mode === 'popular_orders' ? 'primary' : 'secondary'}
+            onClick={() => setMode('popular_orders')}
+          >
+            Popular by orders
+          </Button>
+          <Button
+            variant={mode === 'popular_ratings' ? 'primary' : 'secondary'}
+            onClick={() => setMode('popular_ratings')}
+          >
+            Popular by rating
           </Button>
         </div>
         {mode === 'name' && (
@@ -134,7 +201,13 @@ export function RestaurantsPage() {
         </div>
       ) : items.length === 0 ? (
         <Card>
-          <p className="text-gobbl-ink/75">No restaurants match — try another search or browse all.</p>
+          <p className="text-gobbl-ink/75">
+            {mode === 'popular_orders'
+              ? 'No restaurants with orders in the dataset yet — place some orders or browse all.'
+              : mode === 'popular_ratings'
+                ? 'No rated restaurants yet — reviews with item ratings will appear here.'
+                : 'No restaurants match — try another search or browse all.'}
+          </p>
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -158,9 +231,16 @@ export function RestaurantsPage() {
                       </div>
                     )}
                   </div>
-                  <StatusPill variant="warning" className="mt-3 !bg-white/30 !text-white !border-white/40">
-                    {r.cuisine}
-                  </StatusPill>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <StatusPill variant="warning" className="!bg-white/30 !text-white !border-white/40">
+                      {r.cuisine}
+                    </StatusPill>
+                    {mode === 'popular_orders' && orderCountById[r.restaurant_id] != null && (
+                      <StatusPill variant="info" className="!bg-white/25 !text-white !border-white/35">
+                        {orderCountById[r.restaurant_id]} orders
+                      </StatusPill>
+                    )}
+                  </div>
                 </div>
                 <div className="p-4">
                   <p className="text-sm font-bold text-gobbl-teal">Tap to view menu →</p>

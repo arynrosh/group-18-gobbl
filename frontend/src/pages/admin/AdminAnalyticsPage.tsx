@@ -9,8 +9,12 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { browseRestaurants } from '../../features/restaurants/restaurantApi'
-import { getDeliveryTimes, getPopularByOrders, getPopularByRatings } from '../../features/admin/statisticsApi'
+import { browseAllRestaurants } from '../../features/restaurants/restaurantApi'
+import {
+  fetchPopularOrderRows,
+  fetchRestaurantsRankedByAggregatedReviewRatings,
+} from '../../features/restaurants/popularRestaurants'
+import { getDeliveryTimes } from '../../features/admin/statisticsApi'
 import type { Restaurant } from '../../types'
 import { getApiErrorMessage } from '../../utils/apiError'
 import { Card } from '../../components/ui/Card'
@@ -26,29 +30,55 @@ export function AdminAnalyticsPage() {
   const [byOrders, setByOrders] = useState<{ restaurant_id: number; total_orders?: number }[]>([])
   const [byRatings, setByRatings] = useState<{ restaurant_id: number; average_rating?: number }[]>([])
   const [names, setNames] = useState<Record<number, string>>({})
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     ;(async () => {
-      try {
-        const [d, o, r, br] = await Promise.all([
-          getDeliveryTimes() as Promise<DeliveryPayload>,
-          getPopularByOrders(10) as Promise<{ restaurant_id: number; total_orders: number }[]>,
-          getPopularByRatings(10) as Promise<{ restaurant_id: number; average_rating: number }[]>,
-          browseRestaurants(200, 0),
-        ])
-        if (cancelled) return
-        setDelivery(d)
-        setByOrders(Array.isArray(o) ? o : [])
-        setByRatings(Array.isArray(r) ? r : [])
+      setReady(false)
+      const [dRes, oRes, brRes, rankedRes] = await Promise.allSettled([
+        getDeliveryTimes() as Promise<DeliveryPayload>,
+        fetchPopularOrderRows(10),
+        browseAllRestaurants(),
+        fetchRestaurantsRankedByAggregatedReviewRatings(200, 10),
+      ])
+      if (cancelled) return
+
+      if (dRes.status === 'fulfilled') {
+        setDelivery(dRes.value)
+      } else {
+        toast.error(`Delivery times: ${getApiErrorMessage(dRes.reason)}`)
+      }
+
+      if (oRes.status === 'fulfilled') {
+        setByOrders(oRes.value)
+      } else {
+        toast.error(`Popular by orders: ${getApiErrorMessage(oRes.reason)}`)
+      }
+
+      if (brRes.status === 'fulfilled') {
         const map: Record<number, string> = {}
-        ;(br.items as Restaurant[]).forEach((x) => {
+        ;(brRes.value as Restaurant[]).forEach((x) => {
           map[x.restaurant_id] = x.restaurant_name
         })
         setNames(map)
-      } catch (e) {
-        if (!cancelled) toast.error(getApiErrorMessage(e))
+      } else {
+        toast.error(`Restaurant names: ${getApiErrorMessage(brRes.reason)}`)
       }
+
+      if (rankedRes.status === 'fulfilled') {
+        const ranked = rankedRes.value
+        setByRatings(
+          ranked.restaurants.map((r) => ({
+            restaurant_id: r.restaurant_id,
+            average_rating: ranked.ratingById[r.restaurant_id],
+          })),
+        )
+      } else {
+        toast.error(`Popular by ratings: ${getApiErrorMessage(rankedRes.reason)}`)
+      }
+
+      setReady(true)
     })()
     return () => {
       cancelled = true
@@ -65,6 +95,7 @@ export function AdminAnalyticsPage() {
   return (
     <div className="space-y-6">
       <h1 className="font-display text-3xl font-extrabold text-gobbl-ink">Analytics</h1>
+      {!ready && <p className="text-sm text-gobbl-ink/60">Loading analytics…</p>}
 
       <Card>
         <div className="flex flex-wrap items-center gap-2">
@@ -101,7 +132,9 @@ export function AdminAnalyticsPage() {
           <ul className="mt-4 space-y-2 text-sm">
             {byOrders.map((row) => (
               <li key={row.restaurant_id} className="flex justify-between gap-3 rounded-xl bg-white/70 px-3 py-2">
-                <span className="font-semibold">{names[row.restaurant_id] ?? `Restaurant ${row.restaurant_id}`}</span>
+                <span className="font-semibold">
+                  {names[Number(row.restaurant_id)] ?? `Restaurant ${row.restaurant_id}`}
+                </span>
                 <span className="font-black text-gobbl-tomato">{row.total_orders}</span>
               </li>
             ))}
@@ -110,11 +143,15 @@ export function AdminAnalyticsPage() {
         </Card>
         <Card>
           <h2 className="font-display text-lg font-bold">Popular by ratings</h2>
-          <p className="text-xs text-gobbl-ink/55">GET /statistics/popular-restaurants/ratings</p>
+          <p className="text-xs text-gobbl-ink/55">
+            Average of all item stars in GET /reviews/restaurant/:id (submitted reviews), not menu-only averages.
+          </p>
           <ul className="mt-4 space-y-2 text-sm">
             {byRatings.map((row) => (
               <li key={row.restaurant_id} className="flex justify-between gap-3 rounded-xl bg-white/70 px-3 py-2">
-                <span className="font-semibold">{names[row.restaurant_id] ?? `Restaurant ${row.restaurant_id}`}</span>
+                <span className="font-semibold">
+                  {names[Number(row.restaurant_id)] ?? `Restaurant ${row.restaurant_id}`}
+                </span>
                 <span className="font-black text-gobbl-mint">{row.average_rating?.toFixed?.(2) ?? row.average_rating}</span>
               </li>
             ))}

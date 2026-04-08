@@ -1,7 +1,7 @@
 [
   {
     "order_id": "cust-odr-1",
-    "current": "sent",
+    "current": "placed",
     "complete": false
   },
   {
@@ -11,7 +11,7 @@
   },
   {
     "order_id": "1011",
-    "current": "sent",
+    "current": "placed",
     "complete": false
   },
   {
@@ -26,7 +26,57 @@
   },
   {
     "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
-    "current": "sent",
+    "current": "placed",
+    "complete": false
+  },
+  {
+    "order_id": "82829320-2877-484f-8c4e-5d8425ae5b88",
+    "current": "placed",
+    "complete": false
+  },
+  {
+    "order_id": "99684771-fbe2-4da5-8c65-7bf62289fe2e",
+    "current": "pending",
+    "complete": false
+  },
+  {
+    "order_id": "0f3c097b-dce4-431a-bdba-b13978329e7c",
+    "current": "placed",
+    "complete": false
+  },
+  {
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
+    "current": "delivered",
+    "complete": true
+  },
+  {
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "current": "delivered",
+    "complete": true
+  },
+  {
+    "order_id": "8d99f75b-d727-4f28-9a41-9efd27e212bc",
+    "current": "delivered",
+    "complete": true
+  },
+  {
+    "order_id": "d85d2c2e-35c0-4e41-8e4c-5b041556a849",
+    "current": "placed",
+    "complete": false
+  },
+  {
+    "order_id": "a4034542-e5a2-4aa0-8c64-9612700ec3fa",
+    "current": "pending",
+    "complete": false
+  },
+  {
+    "order_id": "e9929b8a-b249-4aab-a13d-c2979d627f62",
+    "current": "delivered",
+    "complete": true
+  },
+  {
+    "order_id": "7d4c514b-7f6c-4601-a365-009d3a458d23",
+    "current": "placed",
     "complete": false
   }
 ]

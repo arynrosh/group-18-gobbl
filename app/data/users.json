@@ -34,5 +34,11 @@
     "email": "akaboda2015@gmail.com",
     "password": "20252025",
     "role": "admin"
+  },
+  {
+    "username": "barha",
+    "email": "barha@gmail.com",
+    "password": "barha123",
+    "role": "admin"
   }
 ]
