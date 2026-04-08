@@ -25,10 +25,13 @@ export function OwnerOrdersPage() {
   const [busy, setBusy] = useState(false)
 
   async function load() {
-    if (!orderId) return
+    const id = orderId.trim()
+    if (!id) return
     try {
-      setOrder(await fetchOrder(orderId))
-      setFul(await fetchFulfillmentStatus(orderId))
+      const o = await fetchOrder(id)
+      setOrder(o)
+      setOrderId(o.order_id)
+      setFul(await fetchFulfillmentStatus(o.order_id))
     } catch (e) {
       toast.error(getApiErrorMessage(e))
       setOrder(null)
@@ -71,7 +74,7 @@ export function OwnerOrdersPage() {
                   onClick={async () => {
                     setBusy(true)
                     try {
-                      await updateOrderStatus(orderId, m)
+                      await updateOrderStatus(order.order_id, m)
                       toast.success('Status updated')
                       await load()
                     } catch (e) {
@@ -94,7 +97,7 @@ export function OwnerOrdersPage() {
                 onClick={async () => {
                   setBusy(true)
                   try {
-                    await updateOrderStatus(orderId, customMsg)
+                    await updateOrderStatus(order.order_id, customMsg)
                     toast.success('Status updated')
                     await load()
                   } catch (e) {
@@ -112,9 +115,11 @@ export function OwnerOrdersPage() {
               onClick={async () => {
                 setBusy(true)
                 try {
-                  await completeOrder(orderId)
-                  toast.success('Completed')
-                  await load()
+                  await completeOrder(order.order_id)
+                  toast.success('Order marked complete and closed')
+                  setOrder(null)
+                  setFul(null)
+                  setOrderId('')
                 } catch (e) {
                   toast.error(getApiErrorMessage(e))
                 } finally {
@@ -130,7 +135,7 @@ export function OwnerOrdersPage() {
               onClick={async () => {
                 setBusy(true)
                 try {
-                  await fulfillOrder(orderId)
+                  await fulfillOrder(order.order_id)
                   toast.success('Fulfillment requested')
                   await load()
                 } catch (e) {

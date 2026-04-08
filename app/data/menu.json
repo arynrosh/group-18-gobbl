@@ -15,9 +15,9 @@
     "restaurant_id": 3,
     "restaurant_name": "Twisted Tomato",
     "cuisine": "Italian",
-    "food_item": "Pasta",
-    "order_value": 37.25,
-    "customer_rating": 3.33,
+    "food_item": "Chicken Spagetti Pasta",
+    "order_value": 14.99,
+    "customer_rating": 4.67,
     "delivery_time_actual": 9.09,
     "rating_count": 3
   },
@@ -39,7 +39,7 @@
     "cuisine": "Japanese",
     "food_item": "Sushi",
     "order_value": 8.53,
-    "customer_rating": null,
+    "customer_rating": 3.0,
     "delivery_time_actual": 11.42,
     "rating_count": 0
   },
@@ -50,9 +50,9 @@
     "cuisine": "Japanese",
     "food_item": "California Roll",
     "order_value": 14.76,
-    "customer_rating": null,
+    "customer_rating": 1.0,
     "delivery_time_actual": 13.08,
-    "rating_count": 0
+    "rating_count": 1
   },
   {
     "menu_item_id": 6,
@@ -108,5 +108,58 @@
     "customer_rating": null,
     "delivery_time_actual": 17.03,
     "rating_count": 0
+  },
+  {
+    "menu_item_id": 11,
+    "restaurant_id": 54,
+    "restaurant_name": "Momo Sushi",
+    "cuisine": "Japanese",
+    "food_item": "taco",
+    "order_value": 0.1,
+    "customer_rating": 2.0,
+    "delivery_time_actual": null,
+    "rating_count": 1
+  },
+  {
+    "menu_item_id": 12,
+    "restaurant_id": 3,
+    "restaurant_name": "Twisted Tomato",
+    "cuisine": "Italian",
+    "food_item": "Margherita Pizza",
+    "order_value": 18.5,
+    "customer_rating": null,
+    "delivery_time_actual": 12.0,
+    "rating_count": 0
+  },
+  {
+    "menu_item_id": 13,
+    "restaurant_id": 3,
+    "restaurant_name": "Twisted Tomato",
+    "cuisine": "Italian",
+    "food_item": "Beef Lasagna",
+    "order_value": 21.99,
+    "customer_rating": null,
+    "delivery_time_actual": 14.5,
+    "rating_count": 0
+  },
+  {
+    "menu_item_id": 17,
+    "restaurant_id": 3,
+    "restaurant_name": "Twisted Tomato",
+    "cuisine": "Italian",
+    "food_item": "Chicken Alfredo Pasta",
+    "order_value": 16.99,
+    "customer_rating": null,
+    "delivery_time_actual": null
+  },
+  {
+    "menu_item_id": 18,
+    "restaurant_id": 3,
+    "restaurant_name": "Twisted Tomato",
+    "cuisine": "Italian",
+    "food_item": "Mushroom Risotto",
+    "order_value": 24.99,
+    "customer_rating": null,
+    "delivery_time_actual": null
   }
 ]

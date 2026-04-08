@@ -1,4 +1,5 @@
 import random
+from typing import Optional
 from fastapi import HTTPException, status
 from app.schemas.order import Order, OrderItem, Status, MysteryBagRequest
 from app.repositories.menu_repo import load_all_menu_items
@@ -17,6 +18,8 @@ from app.services.diet_restrictions_services import get_diet_restrictions_or_404
 
 from app.services.menu_service import get_menu_item
 
+VALID_STATUSES = ["pending", "placed", "out for delivery", "delayed", "delivered"]
+
 def get_order_or_404(order_id: str, orders: list[dict]) -> dict:
     order = next((o for o in orders if o.get("order_id") == order_id), None)
     if not order:
@@ -24,8 +27,9 @@ def get_order_or_404(order_id: str, orders: list[dict]) -> dict:
     return order
 
 
-def get_status_or_404(order_id: str) -> dict:
-    statuses = load_all_status()
+def get_status_or_404(order_id: str, statuses: Optional[list] = None) -> dict:
+    if statuses is None:
+        statuses = load_all_status()
     record = next((s for s in statuses if s.get("order_id") == order_id), None)
     if not record:
         raise HTTPException(status_code=404, detail=f"Status for order {order_id} not found")
@@ -122,7 +126,7 @@ def send_order(order_id: str) -> dict:
     statuses = load_all_status()
     record = next((s for s in statuses if s.get("order_id") == order_id), None)
     if record:
-        record["current"] = "sent"
+        record["current"] = "placed"
     save_all_status(statuses)
 
     notify_order_placed(order_id, order["customer_id"], order["restaurant_id"])
@@ -134,19 +138,43 @@ def get_order(order_id: str) -> dict:
     orders = load_all_orders()
     return get_order_or_404(order_id, orders)
 
+def get_orders(customer_id: str) -> list[dict]:
+    orders = load_all_orders()
+    return [order for order in orders if order["customer_id"] == customer_id]
 
 def update_status(order_id: str, msg: str) -> dict:
     statuses = load_all_status()
-    record = get_status_or_404(order_id)
+    record = get_status_or_404(order_id, statuses)
 
     if record.get("complete"):
         raise HTTPException(status_code=400, detail="Cannot update status of a completed order")
 
-    record["current"] = msg
-    save_all_status(statuses)
+    msg = msg.strip()
+    if msg not in VALID_STATUSES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Status must be one of: {VALID_STATUSES}",
+        )
 
     orders = load_all_orders()
     order = get_order_or_404(order_id, orders)
+
+    if msg == "pending" and order.get("sent"):
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot set pending after the order has been placed",
+        )
+    if msg in ("placed", "out for delivery", "delayed", "delivered") and not order.get("sent"):
+        raise HTTPException(
+            status_code=400,
+            detail="Order must be sent before updating to this status",
+        )
+
+    record["current"] = msg
+    if msg == "delivered":
+        record["complete"] = True
+    save_all_status(statuses)
+
     customer_id = order["customer_id"]
     restaurant_id = order["restaurant_id"]
 
@@ -156,15 +184,21 @@ def update_status(order_id: str, msg: str) -> dict:
         notify_out_for_delivery(order_id, customer_id, restaurant_id, "your driver")
     elif msg == "delayed":
         notify_order_delayed(order_id, customer_id, restaurant_id, 0)
+    elif msg == "delivered":
+        notify_order_delivered(order_id, customer_id, restaurant_id)
 
     return record
 
 
 def complete_order_status(order_id: str) -> dict:
     statuses = load_all_status()
-    record = get_status_or_404(order_id)
+    record = get_status_or_404(order_id, statuses)
+
+    if record.get("complete"):
+        raise HTTPException(status_code=400, detail="Order is already completed")
 
     record["complete"] = True
+    record["current"] = "delivered"
     save_all_status(statuses)
 
     orders = load_all_orders()

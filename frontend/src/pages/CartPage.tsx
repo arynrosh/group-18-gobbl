@@ -45,6 +45,13 @@ export function CartPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh when orderId changes
   }, [orderId])
 
+  useEffect(() => {
+    if (!orderId || loading || !order?.sent) return
+    toast.message('This order is already placed ? opening My orders.')
+    navigate('/orders', { replace: true })
+    clear()
+  }, [orderId, loading, order?.sent, clear, navigate])
+
   const cost = useMemo(() => (order ? computeCostBreakdown(order) : null), [order])
 
   if (!user || !hasRole(user, ['customer'])) {
@@ -203,7 +210,7 @@ export function CartPage() {
         <div>
           <h2 className="font-display text-lg font-bold text-gobbl-ink">Cost breakdown</h2>
           <p className="mt-1 text-xs text-gobbl-ink/50">
-            {(COST_TAX_RATE * 100).toFixed(0)}% tax � ${COST_DELIVERY_FEE.toFixed(2)} delivery (same as server rules)
+            {(COST_TAX_RATE * 100).toFixed(0)}% tax ? ${COST_DELIVERY_FEE.toFixed(2)} delivery (same as server rules)
           </p>
         </div>
         {cost ? (
@@ -233,21 +240,20 @@ export function CartPage() {
       </Card>
 
       <div className="space-y-2">
-        <div className="flex flex-wrap gap-3">
-        <Button
-          disabled={!order || busy || !order.items.length}
-          onClick={() => navigate(`/checkout?orderId=${encodeURIComponent(orderId)}`)}
-        >
-          Go to checkout
-        </Button>
-        <Link to={`/orders/${orderId}/track`}>
-          <Button variant="mint" disabled={!order}>
-            Track
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            disabled={!order || busy || !order.items.length}
+            onClick={() => navigate(`/checkout?orderId=${encodeURIComponent(orderId)}`)}
+          >
+            Go to checkout
           </Button>
-        </Link>
+          <Link to="/orders" className="text-sm font-bold text-gobbl-teal hover:underline">
+            My orders
+          </Link>
         </div>
         <p className="text-xs text-gobbl-ink/55">
-          You pay at checkout first; the restaurant is notified right after your payment clears.
+          You pay at checkout first; the restaurant is notified after payment. After that, your cart clears ? find sent
+          orders under My orders.
         </p>
       </div>
     </div>

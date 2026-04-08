@@ -69,9 +69,9 @@ export function TransactionPage() {
             <dd className="font-semibold">{p.timestamp}</dd>
           </div>
         </dl>
-        <Link to={`/orders/${p.order_id}/track`}>
+        <Link to="/orders">
           <Button className="mt-6 w-full" variant="mint">
-            Track this order
+            View my orders
           </Button>
         </Link>
       </Card>

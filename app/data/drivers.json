@@ -8,7 +8,7 @@
   {
     "driver_id": 2,
     "name": "Dave",
-    "status": "busy",
+    "status": "available",
     "driver_distance": 10.0
   },
   {

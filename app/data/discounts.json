@@ -1,8 +1,18 @@
 [
   {
-    "code_id": "89c2d49d-6348-4166-9238-fb29230e3f4a",
-    "code": "SAVE10",
-    "percentage": 10.0,
+    "code_id": "2014163d-883a-430f-9155-6368367a6d32",
+    "code": "SAVE25",
+    "percentage": 25.0,
+    "expiry": "2099-12-31",
+    "assigned_to": [
+      "alice"
+    ],
+    "used_by": []
+  },
+  {
+    "code_id": "c625f23a-dee4-417e-8579-3e4d75c8a744",
+    "code": "SAVE50",
+    "percentage": 50.0,
     "expiry": "2099-12-31",
     "assigned_to": [
       "alice"

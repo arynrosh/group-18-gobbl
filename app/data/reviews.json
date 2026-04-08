@@ -19,37 +19,67 @@
   },
   {
     "review_id": 7,
-    "order_id": "1011",
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
     "restaurant_id": 3,
     "customer_id": "alice",
-    "food_temperature": "hotg",
-    "food_freshness": 1,
-    "packaging_quality": 4,
-    "food_condition": "good",
+    "food_temperature": "Hot",
+    "food_freshness": 5,
+    "packaging_quality": 5,
+    "food_condition": "Great",
     "item_ratings": [
       {
         "menu_item_id": 2,
         "food_item": "Pasta",
-        "customer_rating": 1,
-        "written_review": "Tasted good overall and was packaged nicely."
+        "customer_rating": 5,
+        "written_review": "Pasta was really tasty, would love to make this more spicy next time!"
       }
     ]
   },
   {
     "review_id": 8,
-    "order_id": "1011",
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
     "restaurant_id": 3,
     "customer_id": "alice",
-    "food_temperature": "hot",
-    "food_freshness": 3,
-    "packaging_quality": 4,
-    "food_condition": "good",
+    "food_temperature": "Hot",
+    "food_freshness": 5,
+    "packaging_quality": 5,
+    "food_condition": "Great",
     "item_ratings": [
       {
         "menu_item_id": 2,
         "food_item": "Pasta",
         "customer_rating": 4,
-        "written_review": "Tasted good overall and was packaged nicely."
+        "written_review": "Pasta was really tasty, would love to make this more spicy next time!"
+      }
+    ]
+  },
+  {
+    "review_id": 9,
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "restaurant_id": 54,
+    "customer_id": "alice",
+    "food_temperature": "warm",
+    "food_freshness": 3,
+    "packaging_quality": 3,
+    "food_condition": "okay",
+    "item_ratings": [
+      {
+        "menu_item_id": 11,
+        "food_item": "taco",
+        "customer_rating": 2,
+        "written_review": null
+      },
+      {
+        "menu_item_id": 5,
+        "food_item": "California Roll",
+        "customer_rating": 1,
+        "written_review": null
+      },
+      {
+        "menu_item_id": 4,
+        "food_item": "Sushi",
+        "customer_rating": 3,
+        "written_review": null
       }
     ]
   }

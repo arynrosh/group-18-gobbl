@@ -19,6 +19,9 @@ function RoleLinks({ role }: { role: string }) {
         <NavLink to="/restaurants" className={linkClass}>
           Restaurants
         </NavLink>
+        <NavLink to="/orders" className={linkClass}>
+          My orders
+        </NavLink>
         <NavLink to="/cart" className={linkClass}>
           Cart
         </NavLink>

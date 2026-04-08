@@ -24,6 +24,7 @@ import { NotificationsPage } from './pages/NotificationsPage'
 import { ReviewOrderPage } from './pages/ReviewOrderPage'
 import { RecommendationsPage } from './pages/RecommendationsPage'
 import { DietRestrictionsPage } from './pages/DietRestrictionsPage'
+import { MyOrdersPage } from './pages/MyOrdersPage'
 
 import { OwnerDashboardPage } from './pages/owner/OwnerDashboardPage'
 import { OwnerMenuPage } from './pages/owner/OwnerMenuPage'
@@ -81,6 +82,7 @@ export default function App() {
             </Route>
 
             <Route element={<ProtectedRoute roles={['customer']} />}>
+              <Route path="orders" element={<MyOrdersPage />} />
               <Route path="cart" element={<CartPage />} />
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="orders/:orderId/track" element={<OrderTrackPage />} />

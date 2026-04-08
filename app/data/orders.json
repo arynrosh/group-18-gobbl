@@ -1,86 +1,49 @@
 [
   {
-    "order_id": "cust-odr-1",
-    "customer_id": "alice",
-    "restaurant_id": 54,
-    "delivery_distance": 12.67,
-    "delivery_time": 2.0,
-    "assigned_driver_id": null,
-    "items": [],
-    "sent": false
-  },
-  {
-    "order_id": "1010",
+    "order_id": "e3f89ea4-5c8c-40ce-b80b-427ed6566d30",
     "customer_id": "alice",
     "restaurant_id": 3,
-    "delivery_distance": 5.0,
-    "delivery_time": 10.0,
-    "assigned_driver_id": null,
-    "items": [
-      {
-        "menu_item_id": 2,
-        "food_item": "Pasta",
-        "quantity": 2,
-        "order_value": 37.25
-      }
-    ],
-    "sent": false
-  },
-  {
-    "order_id": "1011",
-    "customer_id": "alice",
-    "restaurant_id": 3,
-    "delivery_distance": 10.0,
-    "delivery_time": 5.0,
-    "assigned_driver_id": null,
-    "items": [
-      {
-        "menu_item_id": 2,
-        "food_item": "Pasta",
-        "quantity": 3,
-        "order_value": 37.25
-      }
-    ],
-    "sent": true
-  },
-  {
-    "order_id": "989747f0-026d-43cc-8c21-75214827b204",
-    "customer_id": "alice",
-    "restaurant_id": 54,
     "delivery_distance": 5.0,
     "delivery_time": 30.0,
     "assigned_driver_id": null,
     "items": [
       {
-        "menu_item_id": 4,
-        "food_item": "Sushi",
+        "menu_item_id": 2,
+        "food_item": "Pasta",
         "quantity": 1,
-        "order_value": 8.53
+        "order_value": 37.25
+      }
+    ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    },
+    "fulfillment_status": "fulfilled"
+  },
+  {
+    "order_id": "ff9894e2-e381-4652-93c0-f8f5e5ba2581",
+    "customer_id": "alice",
+    "restaurant_id": 54,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": 1,
+    "items": [
+      {
+        "menu_item_id": 11,
+        "food_item": "taco",
+        "quantity": 1,
+        "order_value": 0.1
       },
       {
         "menu_item_id": 5,
         "food_item": "California Roll",
         "quantity": 1,
         "order_value": 14.76
-      }
-    ],
-    "sent": false,
-    "diet_restrictions": {
-      "username": "alice",
-      "diet_restrictions": [
-        "Lactose Intolerance",
-        "Nut Allergy"
-      ]
-    }
-  },
-  {
-    "order_id": "8d0cf1ae-63ad-48dd-ba74-189063e0818e",
-    "customer_id": "alice",
-    "restaurant_id": 54,
-    "delivery_distance": 5.0,
-    "delivery_time": 30.0,
-    "assigned_driver_id": null,
-    "items": [
+      },
       {
         "menu_item_id": 4,
         "food_item": "Sushi",
@@ -88,6 +51,79 @@
         "order_value": 8.53
       }
     ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    },
+    "fulfillment_status": "fulfilled"
+  },
+  {
+    "order_id": "8d99f75b-d727-4f28-9a41-9efd27e212bc",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 12,
+        "food_item": "Margherita Pizza",
+        "quantity": 1,
+        "order_value": 18.5
+      }
+    ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    }
+  },
+  {
+    "order_id": "d85d2c2e-35c0-4e41-8e4c-5b041556a849",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 12,
+        "food_item": "Margherita Pizza",
+        "quantity": 1,
+        "order_value": 18.5
+      }
+    ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    }
+  },
+  {
+    "order_id": "a4034542-e5a2-4aa0-8c64-9612700ec3fa",
+    "customer_id": "alice",
+    "restaurant_id": 63,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 3,
+        "food_item": "Chicken Gyros",
+        "quantity": 1,
+        "order_value": 18.08
+      }
+    ],
     "sent": false,
     "diet_restrictions": {
       "username": "alice",
@@ -98,18 +134,42 @@
     }
   },
   {
-    "order_id": "d2a06105-e3ca-4a10-882c-ea7d084c1d95",
+    "order_id": "e9929b8a-b249-4aab-a13d-c2979d627f62",
     "customer_id": "alice",
-    "restaurant_id": 54,
+    "restaurant_id": 3,
     "delivery_distance": 5.0,
     "delivery_time": 30.0,
     "assigned_driver_id": null,
     "items": [
       {
-        "menu_item_id": 5,
-        "food_item": "California Roll",
+        "menu_item_id": 12,
+        "food_item": "Margherita Pizza",
         "quantity": 1,
-        "order_value": 14.76
+        "order_value": 18.5
+      }
+    ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "alice",
+      "diet_restrictions": [
+        "Lactose Intolerance",
+        "Nut Allergy"
+      ]
+    }
+  },
+  {
+    "order_id": "7d4c514b-7f6c-4601-a365-009d3a458d23",
+    "customer_id": "alice",
+    "restaurant_id": 3,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 15,
+        "food_item": "Tiramisu",
+        "quantity": 1,
+        "order_value": 8.5
       }
     ],
     "sent": true,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { getRestaurantNotifications } from '../../features/notifications/notificationApi'
 import type { Notification } from '../../types'
@@ -9,6 +9,7 @@ import type { Restaurant } from '../../types'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { StatusPill } from '../../components/ui/StatusPill'
+import { sortNotificationsNewestFirst } from '../../utils/notificationsSort'
 
 export function OwnerNotificationsPage() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
@@ -36,7 +37,10 @@ export function OwnerNotificationsPage() {
     }
   }, [effectiveRid])
 
-  const displayItems = effectiveRid === null ? [] : items
+  const displayItems = useMemo(
+    () => (effectiveRid === null ? [] : sortNotificationsNewestFirst(items)),
+    [effectiveRid, items],
+  )
 
   return (
     <div className="space-y-6">

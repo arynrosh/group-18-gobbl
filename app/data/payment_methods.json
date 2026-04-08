@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "method_id": "6c0791a9-bc02-4de6-8d80-7b800396e5ba",
+    "username": "alice",
+    "cardholder_name": "alice",
+    "last_four": "1234",
+    "expiry": "12/28"
+  },
+  {
+    "method_id": "abfe1bda-41db-4197-b9cc-991d7dc9e7d9",
+    "username": "alice",
+    "cardholder_name": "alice2",
+    "last_four": "4321",
+    "expiry": "07/28"
+  },
+  {
+    "method_id": "d92ffe50-8368-4484-97f7-07d03b049748",
+    "username": "alice",
+    "cardholder_name": "alice123",
+    "last_four": "4567",
+    "expiry": "11/30"
+  }
+]
