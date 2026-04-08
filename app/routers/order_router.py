@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from app.services.order_service import (
     create_order, add_to_order, remove_from_order,
-    send_order, get_order, update_status,
+    send_order, get_order, get_orders, update_status,
     complete_order_status, get_status,
     make_my_mystery_bag
 )
@@ -31,6 +31,9 @@ def create_new_order(
 def get_order_by_id(order_id: str, current_user: dict = Depends(get_current_user)):
     return get_order(order_id)
 
+@router.get("")
+def get_my_orders(current_user: dict = Depends(get_current_user)):
+    return get_orders(current_user["sub"])
 
 @router.post("/{order_id}/items")
 def add_item(
