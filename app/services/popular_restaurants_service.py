@@ -54,10 +54,13 @@ def get_popular_restaurants_by_rating(limit: int = 10) -> List[Dict[str, Any]]:
     for review in reviews:
         try:
             restaurant_id = review["restaurant_id"]
-            rating = float(review["rating"])
+            item_ratings = review["item_ratings"]
+            if not item_ratings:
+                continue
+            avg_rating = sum(item["customer_rating"] for item in item_ratings) / len(item_ratings)
             if restaurant_id not in restaurant_ratings:
-                restaurant_ratings[restaurant_id] = []
-            restaurant_ratings[restaurant_id].append(rating)
+               restaurant_ratings[restaurant_id] = []
+            restaurant_ratings[restaurant_id].append(avg_rating)
         except (KeyError, ValueError):
             continue
 

@@ -120,5 +120,27 @@
         "Nut Allergy"
       ]
     }
+  },
+  {
+    "order_id": "8e182d1a-23f4-4e7f-ab0e-161d1891cc5b",
+    "customer_id": "andreaa",
+    "restaurant_id": 53,
+    "delivery_distance": 5.0,
+    "delivery_time": 30.0,
+    "assigned_driver_id": null,
+    "items": [
+      {
+        "menu_item_id": 1,
+        "food_item": "Burger",
+        "quantity": 1,
+        "order_value": 41.17
+      }
+    ],
+    "sent": true,
+    "diet_restrictions": {
+      "username": "andreaa",
+      "diet_restrictions": []
+    },
+    "fulfillment_status": "fulfilled"
   }
 ]

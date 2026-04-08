@@ -34,5 +34,17 @@
     "email": "akaboda2015@gmail.com",
     "password": "20252025",
     "role": "admin"
+  },
+  {
+    "username": "andreaa",
+    "email": "andreaa@gmail.com",
+    "password": "andrea123",
+    "role": "customer"
+  },
+  {
+    "username": "andrea1012",
+    "email": "andrea1012@gmail.com",
+    "password": "password123",
+    "role": "restaurant_owner"
   }
 ]
